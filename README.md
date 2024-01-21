@@ -12,7 +12,7 @@ xml Layout을 통한 UI구성과 MVP 아키텍쳐 패턴, Firebase를 통한 간
 
 ### 새로운 발도장에서는
 
-Jetpack Compose를 통한 새로운 UI 구성, MVI 패턴을 활용해 유지보수성과 가독성이 좋은 코드를 작성할거에요.  
+Jetpack Compose를 통한 새로운 UI 구성, MVVM 패턴을 활용해 유지보수성과 가독성이 좋은 코드를 작성할거에요.  
 DB에 직접 읽고쓰는 방식보다는 Retrofit 라이브러리를 통해 RestfulAPI로 서버와 통신할거에요.  
 Hilt 라이브러리를 통해 의존성을 주입하고 클래스의 수명 주기를 관리할거에요.
 
@@ -43,5 +43,8 @@ Hilt 라이브러리를 통해 의존성을 주입하고 클래스의 수명 주
 
 ## 사용된 라이브러리
 
+Coroutine   
 Hilt   
-Glide
+Glide    
+Room  
+JUnit    
