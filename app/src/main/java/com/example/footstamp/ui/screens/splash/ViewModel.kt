@@ -1,4 +1,6 @@
 package com.example.footstamp.ui.screens.splash
 
-class ViewModel {
+import com.example.footstamp.ui.base.BaseViewModel
+
+class ViewModel : BaseViewModel() {
 }
