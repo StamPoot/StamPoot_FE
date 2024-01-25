@@ -1,5 +1,6 @@
 package com.example.footstamp
 
+import android.content.res.Resources.Theme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,7 +28,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.footstamp.MainActivity.Companion.screens
+import com.example.footstamp.ui.components.BodyText
+import com.example.footstamp.ui.components.LabelText
 import com.example.footstamp.ui.theme.FootStampTheme
+import com.example.footstamp.ui.theme.MainColor
+import com.example.footstamp.ui.theme.SubColor
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,12 +108,9 @@ fun BottomNavigation(navController: NavHostController, navItems: List<Navigation
                     Icon(
                         painter = painterResource(nav.iconRoutes.first),
                         contentDescription = nav.name,
-                        tint = if (isCurrentRoute) Color.Blue else Color.Black
+                        tint = if (isCurrentRoute) MainColor else SubColor
                     )
-                    Text(
-                        text = nav.name,
-                        color = if (isCurrentRoute) Color.Blue else Color.LightGray
-                    )
+                    if (isCurrentRoute) BodyText(nav.name, MainColor)
                 }
             }
         }
