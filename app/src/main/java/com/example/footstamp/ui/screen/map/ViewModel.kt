@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screens.splash
+package com.example.footstamp.ui.screen.map
 
 import com.example.footstamp.ui.base.BaseViewModel
 

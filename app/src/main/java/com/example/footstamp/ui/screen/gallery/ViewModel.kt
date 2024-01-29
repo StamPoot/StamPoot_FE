@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screens.gallery
+package com.example.footstamp.ui.screen.gallery
 
 import com.example.footstamp.ui.base.BaseViewModel
 

@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screens.gallery
+package com.example.footstamp.ui.screen.gallery
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

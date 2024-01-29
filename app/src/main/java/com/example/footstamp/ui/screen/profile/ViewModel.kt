@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screens.profile
+package com.example.footstamp.ui.screen.profile
 
 import com.example.footstamp.ui.base.BaseViewModel
 
