@@ -7,8 +7,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,9 +19,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -28,7 +30,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.footstamp.MainActivity.Companion.screens
 import com.example.footstamp.ui.components.BodyText
-import com.example.footstamp.ui.components.LabelText
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
@@ -36,9 +37,11 @@ import com.example.footstamp.ui.theme.SubColor
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         installSplashScreen()
+
         setContent {
-            FootStampTheme {
+            FootStampTheme(darkTheme = false) {
                 MainView()
             }
         }
@@ -74,7 +77,8 @@ fun MainView() {
     val navController = rememberNavController()
     val navItems = screens
 
-    Scaffold(bottomBar = { BottomNavigation(navController, navItems) }) { paddingValues ->
+    Scaffold(
+        bottomBar = { BottomNavigation(navController, navItems) }) { paddingValues ->
         NavHost(
             navController = navController,
             startDestination = navItems.first().route,
@@ -98,7 +102,8 @@ fun BottomNavigation(navController: NavHostController, navItems: List<Navigation
             navItems.forEach { nav ->
                 val currentRoute =
                     navController.currentBackStackEntryAsState().value?.destination?.route
-                Column(verticalArrangement = Arrangement.Center,
+                Column(
+                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxHeight()
@@ -110,7 +115,10 @@ fun BottomNavigation(navController: NavHostController, navItems: List<Navigation
                         contentDescription = nav.name,
                         tint = if (isCurrentRoute) MainColor else SubColor
                     )
-                    if (isCurrentRoute) BodyText(nav.name, MainColor)
+                    if (isCurrentRoute) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        BodyText(nav.name, MainColor)
+                    }
                 }
             }
         }

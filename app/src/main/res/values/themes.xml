@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.FootStamp" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.FootStamp.Theme" parent="android:Theme.Material.Light.NoActionBar">
+
+        <item name="windowSplashScreenBackground">@color/main_color</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_circle_small</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/sub_color</item>
+        <item name="windowSplashScreenAnimationDuration">500</item>
+    </style>
 </resources>
