@@ -1,4 +1,4 @@
-# 발도장 (FootStamp)
+# 발도장 (StamPoot)
 
 ### 발도장 앱은?
 
