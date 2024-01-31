@@ -1,6 +1,7 @@
 package com.example.footstamp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -29,6 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.footstamp.MainActivity.Companion.screens
+import com.example.footstamp.data.database.DiaryDatabase
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.example.footstamp.ui.theme.MainColor
@@ -49,23 +51,10 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         val screens = listOf(
-            NavigationItem(
-                name = "map",
-                iconRoutes = Pair(R.drawable.icon_map, R.drawable.icon_map_gray),
-                "tab1"
-            ), NavigationItem(
-                name = "gallery",
-                iconRoutes = Pair(R.drawable.icon_gallery, R.drawable.icon_gallery_gray),
-                "tab2"
-            ), NavigationItem(
-                name = "board",
-                iconRoutes = Pair(R.drawable.icon_board, R.drawable.icon_board_gray),
-                "tab3"
-            ), NavigationItem(
-                name = "profile",
-                iconRoutes = Pair(R.drawable.icon_profile, R.drawable.icon_profile_gray),
-                "tab4"
-            )
+            NavigationItem(name = "map", iconRoute = R.drawable.icon_map, "tab_map"),
+            NavigationItem(name = "gallery", iconRoute = R.drawable.icon_gallery, "tab_gallery"),
+            NavigationItem(name = "board", iconRoute = R.drawable.icon_board, "tab_board"),
+            NavigationItem(name = "profile", iconRoute = R.drawable.icon_profile, "tab_profile")
         )
 
     }
@@ -84,10 +73,10 @@ fun MainView() {
             startDestination = navItems.first().route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable("tab1") { com.example.footstamp.ui.screen.map.Screen() }
-            composable("tab2") { com.example.footstamp.ui.screen.gallery.Screen() }
-            composable("tab3") { com.example.footstamp.ui.screen.board.Screen() }
-            composable("tab4") { com.example.footstamp.ui.screen.profile.Screen() }
+            composable("tab_map") { com.example.footstamp.ui.screen.map.Screen() }
+            composable("tab_gallery") { com.example.footstamp.ui.screen.gallery.Screen() }
+            composable("tab_board") { com.example.footstamp.ui.screen.board.Screen() }
+            composable("tab_profile") { com.example.footstamp.ui.screen.profile.Screen() }
         }
     }
 }
@@ -111,7 +100,7 @@ fun BottomNavigation(navController: NavHostController, navItems: List<Navigation
                         .clickable { navController.navigate(nav.route) }) {
                     val isCurrentRoute = nav.route == currentRoute
                     Icon(
-                        painter = painterResource(nav.iconRoutes.first),
+                        painter = painterResource(nav.iconRoute),
                         contentDescription = nav.name,
                         tint = if (isCurrentRoute) MainColor else SubColor
                     )
@@ -126,7 +115,7 @@ fun BottomNavigation(navController: NavHostController, navItems: List<Navigation
 }
 
 data class NavigationItem(
-    val name: String, val iconRoutes: Pair<Int, Int>, val route: String
+    val name: String, val iconRoute: Int, val route: String
 )
 
 @Preview(showBackground = true)

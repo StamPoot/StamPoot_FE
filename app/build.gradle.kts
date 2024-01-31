@@ -83,6 +83,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("com.google.code.gson:gson:2.9.0")
 
     // Compose Dependencies
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
@@ -108,9 +109,9 @@ dependencies {
     ksp("com.github.bumptech.glide:compiler:4.12.0")
 
     // Room
-    implementation("androidx.room:room-runtime:2.5.0")
-    ksp("androidx.room:room-compiler:2.5.0")
-    implementation("androidx.room:room-ktx:2.5.0")
+    implementation("androidx.room:room-runtime:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
 
     // Kotlin extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:2.6.1")
