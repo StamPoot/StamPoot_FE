@@ -1,7 +1,6 @@
 package com.example.footstamp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -30,12 +29,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.footstamp.MainActivity.Companion.screens
-import com.example.footstamp.data.database.DiaryDatabase
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,10 +73,10 @@ fun MainView() {
             startDestination = navItems.first().route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable("tab_map") { com.example.footstamp.ui.screen.map.Screen() }
-            composable("tab_gallery") { com.example.footstamp.ui.screen.gallery.Screen() }
-            composable("tab_board") { com.example.footstamp.ui.screen.board.Screen() }
-            composable("tab_profile") { com.example.footstamp.ui.screen.profile.Screen() }
+            composable("tab_map") { com.example.footstamp.ui.screen.map.MapScreen() }
+            composable("tab_gallery") { com.example.footstamp.ui.screen.gallery.GalleryScreen() }
+            composable("tab_board") { com.example.footstamp.ui.screen.board.BoardScreen() }
+            composable("tab_profile") { com.example.footstamp.ui.screen.profile.ProfileScreen() }
         }
     }
 }

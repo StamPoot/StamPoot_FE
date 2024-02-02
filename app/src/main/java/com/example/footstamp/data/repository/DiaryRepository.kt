@@ -1,21 +1,26 @@
 package com.example.footstamp.data.repository
 
 import com.example.footstamp.data.dao.DiaryDao
-import com.example.footstamp.data.util.Diary
+import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.SeoulLocation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
 import java.util.Date
+import javax.inject.Inject
 
-class DiaryRepository(private val diaryDao: DiaryDao) {
+class DiaryRepository @Inject constructor(private val diaryDao: DiaryDao) {
 
-    val diarys: List<Diary> = diaryDao.getAll()
+    val diaries: Flow<List<Diary>> = diaryDao.getAll().flowOn(Dispatchers.IO).conflate()
 
     // 생성
-    suspend fun insertDiarys(diaryList: List<Diary>) {
-        diaryDao.insertDiarys(diaryList)
+    suspend fun insertDiaries(diaryList: List<Diary>) {
+        diaryDao.insertDiaries(diaryList)
     }
 
     suspend fun insertDiary(diary: Diary) {
-        diaryDao.insertDiary(diary)
+        diaryDao.insertDiaries(diary)
     }
 
     // 삭제
@@ -57,11 +62,11 @@ class DiaryRepository(private val diaryDao: DiaryDao) {
     }
 
     // 탐색
-    suspend fun getAll() {
-        diaryDao.getAll()
+    suspend fun getAll(): Flow<List<Diary>> {
+        return diaryDao.getAll().flowOn(Dispatchers.IO).conflate()
     }
 
-    suspend fun getDiary(id: Long) {
-        diaryDao.getDiary(id)
+    suspend fun getDiary(id: Long): Diary {
+        return diaryDao.getDiary(id)
     }
 }

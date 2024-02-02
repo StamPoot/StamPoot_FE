@@ -1,14 +1,16 @@
-package com.example.footstamp.data.util
+package com.example.footstamp.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.footstamp.data.util.SeoulLocation
+import java.time.Instant
 import java.util.Date
 
-@Entity(tableName = "diarys")
+@Entity(tableName = "diaries")
 data class Diary(
     @ColumnInfo(name = "diary_title") var title: String,
-    @ColumnInfo(name = "diary_date") var date: Date,
+    @ColumnInfo(name = "diary_date") var date: Date = Date.from(Instant.now()),
     @ColumnInfo(name = "diary_message") var message: String,
     @ColumnInfo(name = "diary_shared") var isShared: Boolean = false,
     @ColumnInfo(name = "diary_location") var location: SeoulLocation,
