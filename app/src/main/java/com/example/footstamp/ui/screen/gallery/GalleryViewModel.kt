@@ -1,6 +1,7 @@
 package com.example.footstamp.ui.screen.gallery
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.DiaryRepository
@@ -10,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,12 +36,28 @@ class GalleryViewModel @Inject constructor(
             photoURLs = listOf(),
             thumbnail = 0,
             uid = ""
+        ),
+        Diary(
+            title = "",
+            date = Date.from(Instant.now()),
+            location = SeoulLocation.CENTRAL,
+            message = "",
+            photoURLs = listOf(),
+            thumbnail = 0,
+            uid = ""
         )
     )
 
     init {
-        addDiaries(tempDiaries)
-        getAllDiaries()
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getAll().distinctUntilChanged().collect { diaryList ->
+                if (diaryList.isEmpty()) {
+                    Log.d("TAG", "EMPTY")
+                } else {
+                    _diaries.value = diaryList
+                }
+            }
+        }
     }
 
     fun addDiary(diary: Diary) {
@@ -66,17 +84,7 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun getAllDiaries() {
-        viewModelScope.launch() {
-            withContext(Dispatchers.IO) {
-                repository.getAll().distinctUntilChanged().collect { diaryList ->
-                    if (diaryList.isEmpty()) {
-                        Log.d("TAG", "빈 리스트")
-                    } else {
-                        _diaries.value = diaryList
-                    }
-                }
-            }
-        }
+    fun getAllDiaries(): List<Diary> {
+        return diaries.value
     }
 }

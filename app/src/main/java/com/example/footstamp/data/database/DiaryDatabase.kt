@@ -13,26 +13,4 @@ import com.example.footstamp.data.util.ListConverters
 @TypeConverters(ListConverters::class)
 abstract class DiaryDatabase : RoomDatabase() {
     abstract fun diaryDao(): DiaryDao
-
-    companion object {
-        private var Instance: DiaryDatabase? = null
-
-        fun getInstance(context: Context): DiaryDatabase? {
-            if (Instance == null) {
-                synchronized(DiaryDatabase::class) {
-                    Instance = Room.databaseBuilder(
-                        context,
-                        DiaryDatabase::class.java,
-                        "diary"
-                    ).build()
-                }
-            }
-            return Instance
-        }
-
-        fun deleteInstance() {
-            Instance = null
-        }
-
-    }
 }
