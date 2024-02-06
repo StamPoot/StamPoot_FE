@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
-import java.util.Date
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class DiaryRepository @Inject constructor(private val diaryDao: DiaryDao) {
@@ -38,7 +38,7 @@ class DiaryRepository @Inject constructor(private val diaryDao: DiaryDao) {
         diaryDao.updateMessage(id, message)
 
 
-    suspend fun updateDate(id: Long, date: Date) =
+    suspend fun updateDate(id: Long, date: LocalDateTime) =
         diaryDao.updateDate(id, date)
 
 

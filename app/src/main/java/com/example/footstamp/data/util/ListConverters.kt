@@ -2,7 +2,7 @@ package com.example.footstamp.data.util
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import java.util.Date
+import java.time.LocalDateTime
 
 class ListConverters {
 
@@ -17,12 +17,12 @@ class ListConverters {
     }
 
     @TypeConverter
-    fun longToDate(value: Long?): Date? {
-        return value?.let { Date(it) }
+    fun longToDate(value: String?): LocalDateTime? {
+        return value?.let { LocalDateTime.parse(it) }
     }
 
     @TypeConverter
-    fun dateToLong(date: Date?): Long? {
-        return date?.time?.toLong()
+    fun dateToLong(date: LocalDateTime?): String? {
+        return date?.toString()
     }
 }

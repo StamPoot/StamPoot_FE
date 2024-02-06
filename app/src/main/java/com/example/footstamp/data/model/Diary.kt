@@ -4,13 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.footstamp.data.util.SeoulLocation
-import java.time.Instant
-import java.util.Date
+import java.time.LocalDateTime
 
 @Entity(tableName = "diaries")
 data class Diary(
     @ColumnInfo(name = "diary_title") var title: String,
-    @ColumnInfo(name = "diary_date") var date: Date = Date.from(Instant.now()),
+    @ColumnInfo(name = "diary_date") var date: LocalDateTime = LocalDateTime.now(),
     @ColumnInfo(name = "diary_message") var message: String,
     @ColumnInfo(name = "diary_shared") var isShared: Boolean = false,
     @ColumnInfo(name = "diary_location") var location: SeoulLocation,

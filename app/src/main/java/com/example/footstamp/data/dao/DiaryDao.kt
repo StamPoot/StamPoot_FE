@@ -7,7 +7,7 @@ import androidx.room.Query
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.SeoulLocation
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
+import java.time.LocalDateTime
 
 @Dao
 interface DiaryDao {
@@ -34,7 +34,7 @@ interface DiaryDao {
     fun updateMessage(id: Long, message: String)
 
     @Query("UPDATE diaries SET diary_date = :date WHERE id = :id")
-    fun updateDate(id: Long, date: Date)
+    fun updateDate(id: Long, date: LocalDateTime)
 
     @Query("UPDATE diaries SET diary_shared = :isShared WHERE id = :id")
     fun updateIsShared(id: Long, isShared: Boolean)

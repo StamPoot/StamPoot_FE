@@ -1,7 +1,6 @@
 package com.example.footstamp.ui.screen.gallery
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.DiaryRepository
@@ -11,12 +10,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Instant
-import java.util.Date
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,7 +28,7 @@ class GalleryViewModel @Inject constructor(
     private val tempDiaries = listOf(
         Diary(
             title = "",
-            date = Date.from(Instant.now()),
+            date = LocalDateTime.now(),
             location = SeoulLocation.CENTRAL,
             message = "",
             photoURLs = listOf(),
@@ -39,7 +37,7 @@ class GalleryViewModel @Inject constructor(
         ),
         Diary(
             title = "",
-            date = Date.from(Instant.now()),
+            date = LocalDateTime.now(),
             location = SeoulLocation.CENTRAL,
             message = "",
             photoURLs = listOf(),
@@ -50,6 +48,7 @@ class GalleryViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAll()
             repository.getAll().distinctUntilChanged().collect { diaryList ->
                 if (diaryList.isEmpty()) {
                     Log.d("TAG", "EMPTY")
