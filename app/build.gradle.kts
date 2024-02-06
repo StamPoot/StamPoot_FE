@@ -104,9 +104,8 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:2.48")
     ksp("com.google.dagger:hilt-android-compiler:2.48")
 
-    // Glide
-    implementation("com.github.bumptech.glide:glide:4.12.0")
-    ksp("com.github.bumptech.glide:compiler:4.12.0")
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
