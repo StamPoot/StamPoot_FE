@@ -13,12 +13,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,6 +32,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
@@ -45,9 +50,16 @@ import java.time.LocalDateTime
 @Composable
 fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
+    var declarationDialogState by remember {
+        mutableStateOf(false)
+    }
+
     BaseScreen(
-        floatingButton = { GalleryFloatingButton() }) { paddingValue ->
+        floatingButton = {
+            GalleryFloatingButton { declarationDialogState = true }
+        }) { paddingValue ->
         val currentDiary by galleryViewModel.diaries.collectAsState()
+
         val diaryList = listOf(
             Diary(
                 title = "햄스터의 날",
@@ -82,6 +94,10 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
         )
 
         GalleryGridLayout(diaries = diaryList, paddingValues = paddingValue)
+
+        if (declarationDialogState) {
+            FootStampDialog { declarationDialogState = false }
+        }
     }
 }
 
@@ -136,15 +152,33 @@ fun GalleryItemView(diary: Diary, itemHeight: Dp) {
 }
 
 @Composable
-fun GalleryFloatingButton() {
-    FloatingActionButton(modifier = Modifier,
+fun GalleryFloatingButton(action: () -> Unit) {
+    FloatingActionButton(
+        modifier = Modifier,
         containerColor = MainColor,
         shape = CircleShape,
-        onClick = { /*TODO*/ }) {
+        onClick = action
+    ) {
         Icon(
             painter = painterResource(R.drawable.icon_pen),
             contentDescription = null,
             tint = Color.White
         )
+    }
+}
+
+
+@Composable
+fun FootStampDialog(onChangeState: () -> Unit) {
+    Dialog(
+        onDismissRequest = onChangeState,
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SubColor)
+        ) {
+            GalleryWriteScreen()
+        }
     }
 }

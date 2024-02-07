@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -23,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,6 +31,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.footstamp.MainActivity.Companion.screens
 import com.example.footstamp.ui.components.BodyText
+import com.example.footstamp.ui.screen.board.BoardScreen
+import com.example.footstamp.ui.screen.gallery.GalleryScreen
+import com.example.footstamp.ui.screen.map.MapScreen
+import com.example.footstamp.ui.screen.profile.ProfileScreen
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
@@ -74,10 +78,10 @@ fun MainView() {
             startDestination = navItems.first().route,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable("tab_map") { com.example.footstamp.ui.screen.map.MapScreen() }
-            composable("tab_gallery") { com.example.footstamp.ui.screen.gallery.GalleryScreen() }
-            composable("tab_board") { com.example.footstamp.ui.screen.board.BoardScreen() }
-            composable("tab_profile") { com.example.footstamp.ui.screen.profile.ProfileScreen() }
+            composable("tab_map") { MapScreen() }
+            composable("tab_gallery") { GalleryScreen() }
+            composable("tab_board") { BoardScreen() }
+            composable("tab_profile") { ProfileScreen() }
         }
     }
 }
