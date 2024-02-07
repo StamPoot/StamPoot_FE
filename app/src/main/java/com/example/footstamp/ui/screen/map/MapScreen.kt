@@ -19,7 +19,7 @@ import com.example.footstamp.ui.base.BaseScreen
 fun MapScreen(
     mapViewModel: MapViewModel = MapViewModel()
 ) {
-    BaseScreen(MapViewModel()) {
+    BaseScreen { paddingValue ->
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

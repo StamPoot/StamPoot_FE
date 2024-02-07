@@ -6,7 +6,7 @@ import com.example.footstamp.ui.base.BaseScreen
 
 @Composable
 fun BoardScreen() {
-    BaseScreen(BoardViewModel()) {
+    BaseScreen { paddingValue ->
         Text(text = "Board")
     }
 }

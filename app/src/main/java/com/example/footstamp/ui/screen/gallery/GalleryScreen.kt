@@ -5,12 +5,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,16 +25,19 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.DateFormatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
+import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import java.time.LocalDateTime
 
@@ -37,7 +45,8 @@ import java.time.LocalDateTime
 @Composable
 fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
-    BaseScreen(galleryViewModel) {
+    BaseScreen(
+        floatingButton = { GalleryFloatingButton() }) { paddingValue ->
         val currentDiary by galleryViewModel.diaries.collectAsState()
         val diaryList = listOf(
             Diary(
@@ -72,13 +81,13 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             ),
         )
 
-        GalleryGridLayout(diaries = diaryList)
+        GalleryGridLayout(diaries = diaryList, paddingValues = paddingValue)
     }
 }
 
 
 @Composable
-fun GalleryGridLayout(diaries: List<Diary>) {
+fun GalleryGridLayout(diaries: List<Diary>, paddingValues: PaddingValues) {
     val scrollState = rememberScrollState()
     val itemHeight = LocalConfiguration.current.screenHeightDp.dp / 4
 
@@ -86,6 +95,7 @@ fun GalleryGridLayout(diaries: List<Diary>) {
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxSize()
+            .padding(paddingValues = paddingValues)
     ) {
         diaries.sortedBy { it.date }.forEach { diary ->
             GalleryItemView(diary = diary, itemHeight = itemHeight)
@@ -123,4 +133,18 @@ fun GalleryItemView(diary: Diary, itemHeight: Dp) {
             .height(1.dp)
             .background(SubColor)
     )
+}
+
+@Composable
+fun GalleryFloatingButton() {
+    FloatingActionButton(modifier = Modifier,
+        containerColor = MainColor,
+        shape = CircleShape,
+        onClick = { /*TODO*/ }) {
+        Icon(
+            painter = painterResource(R.drawable.icon_pen),
+            contentDescription = null,
+            tint = Color.White
+        )
+    }
 }

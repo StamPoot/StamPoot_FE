@@ -17,7 +17,7 @@ import com.example.footstamp.ui.screen.map.MapViewModel
 
 @Composable
 fun ProfileScreen() {
-    BaseScreen(MapViewModel()) {
+    BaseScreen { paddingValue ->
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
