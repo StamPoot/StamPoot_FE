@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -32,7 +31,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
@@ -40,6 +38,7 @@ import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.DateFormatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
+import com.example.footstamp.ui.components.FullDialog
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.theme.MainColor
@@ -96,7 +95,9 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
         GalleryGridLayout(diaries = diaryList, paddingValues = paddingValue)
 
         if (declarationDialogState) {
-            FootStampDialog { declarationDialogState = false }
+            FullDialog(
+                screen = { GalleryWriteScreen() },
+                onChangeState = { declarationDialogState = false })
         }
     }
 }
@@ -164,21 +165,5 @@ fun GalleryFloatingButton(action: () -> Unit) {
             contentDescription = null,
             tint = Color.White
         )
-    }
-}
-
-
-@Composable
-fun FootStampDialog(onChangeState: () -> Unit) {
-    Dialog(
-        onDismissRequest = onChangeState,
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(SubColor)
-        ) {
-            GalleryWriteScreen()
-        }
     }
 }
