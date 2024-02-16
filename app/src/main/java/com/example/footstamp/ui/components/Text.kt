@@ -3,31 +3,55 @@ package com.example.footstamp.ui.components
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.footstamp.ui.theme.SubColor
 
 
 @Composable
-fun TitleLargeText(string: String, color: Color = SubColor) {
-    Text(text = string, color = color, style = MaterialTheme.typography.titleLarge)
+fun TitleLargeText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        color = color,
+        style = MaterialTheme.typography.titleLarge,
+        modifier = modifier
+    )
 }
 
 @Composable
-fun TitleText(string: String, color: Color = SubColor) {
-    Text(text = string, color = color, style = MaterialTheme.typography.titleMedium)
+fun TitleText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        color = color,
+        style = MaterialTheme.typography.titleMedium,
+        modifier = modifier
+    )
 }
 
 @Composable
-fun BodyLargeText(string: String, color: Color = SubColor) {
-    Text(text = string, color = color, style = MaterialTheme.typography.bodyLarge)
+fun BodyLargeText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+    Text(
+        text = text, color = color,
+        style = MaterialTheme.typography.bodyLarge,
+        modifier = modifier
+    )
 }
 
 @Composable
-fun BodyText(string: String, color: Color = SubColor) {
-    Text(text = string, color = color, style = MaterialTheme.typography.bodyMedium)
+fun BodyText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+    Text(
+        text = text, color = color,
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = modifier
+    )
 }
 
 @Composable
-fun LabelText(string: String, color: Color = SubColor) {
-    Text(text = string, color = color, style = MaterialTheme.typography.labelMedium)
+fun LabelText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        color = color,
+        style = MaterialTheme.typography.labelMedium,
+        modifier = modifier
+    )
 }

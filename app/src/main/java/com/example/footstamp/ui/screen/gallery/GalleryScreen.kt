@@ -35,7 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
-import com.example.footstamp.data.util.DateFormatter
+import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.FullDialog
@@ -141,7 +141,7 @@ fun GalleryItemView(diary: Diary, itemHeight: Dp) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TitleText(DateFormatter.dateToString(diary.date), Color.White)
+            TitleText(Formatter.dateToString(diary.date), Color.White)
             TitleLargeText(diary.title, Color.White)
         }
     }

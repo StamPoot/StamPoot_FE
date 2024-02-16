@@ -3,7 +3,6 @@ package com.example.footstamp.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +21,7 @@ import com.example.footstamp.ui.theme.BackColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiaryInput() {
+fun TextInput(maxLines: Int = 1) {
     val itemHeight = LocalConfiguration.current.screenHeightDp.dp
     val textState = remember {
         mutableStateOf("")
@@ -33,17 +32,16 @@ fun DiaryInput() {
         shape = CircleShape,
         modifier = Modifier
             .fillMaxWidth()
-            .height(itemHeight / 3)
+            .height(itemHeight / 45 * (maxLines + 1))
             .verticalScroll(rememberScrollState())
-            .background(BackColor)
-            .padding(5.dp),
+            .background(BackColor),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.Black,
             focusedBorderColor = Color.Transparent,
             disabledBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
         ),
-        maxLines = 15,
+        maxLines = maxLines,
+        singleLine = maxLines == 1,
         textStyle = MaterialTheme.typography.bodyLarge,
         onValueChange = { textValue -> textState.value = textValue })
 }

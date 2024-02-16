@@ -13,10 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.footstamp.data.model.Diary
+import com.example.footstamp.data.util.Formatter
+import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.AddButton
+import com.example.footstamp.ui.components.ChangeButton
 import com.example.footstamp.ui.components.PhotoSelector
-import com.example.footstamp.ui.components.DiaryInput
+import com.example.footstamp.ui.components.TextInput
+import java.time.LocalDateTime
 
 @Composable
 fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
@@ -33,11 +38,26 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
-            Text(text = "DatePicker")
+            ChangeButton(text = Formatter.dateToString(LocalDateTime.now()), onClick = { })
+
             Text(text = "Location")
+            TextInput()
             PhotoSelector(maxSelectionCount = 5)
-            DiaryInput()
-            AddButton(text = "글쓰기")
+            TextInput(maxLines = 15)
+            AddButton(text = "글쓰기", onClick = {
+                galleryViewModel.addDiary(
+                    Diary(
+                        title = "제목",
+                        date = LocalDateTime.now(),
+                        message = "메시지",
+                        isShared = false,
+                        photoURLs = listOf(),
+                        thumbnail = 0,
+                        location = SeoulLocation.CENTRAL,
+                        uid = ""
+                    )
+                )
+            })
         }
     }
 }

@@ -22,8 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.footstamp.R
+import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.theme.MainColor
 
 @Composable
@@ -31,25 +35,51 @@ fun ImagesLayout(selectedImages: List<Uri?>) {
 
     val itemWeight = LocalConfiguration.current.screenWidthDp.dp
     val itemHeight = LocalConfiguration.current.screenHeightDp.dp
-
-    LazyRow(
-        modifier = Modifier.height(itemHeight / 3),
-    ) {
-        items(selectedImages) { item ->
-            Box(
-                modifier = Modifier
-                    .width(itemWeight.times(0.8f))
-                    .background(MainColor)
-                    .padding(start = itemWeight / 10, end = itemWeight / 10)
-            ) {
-                AsyncImage(
-                    model = item,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillWidth
-                )
+    if (selectedImages.isEmpty()) PhotoItem(
+        item = R.drawable.icon_circle_big,
+        itemWeight = itemWeight,
+        itemHeight = itemHeight
+    ) else
+        LazyRow {
+            items(selectedImages) { item ->
+                PhotoItem(item, itemWeight = itemWeight, itemHeight = itemHeight)
             }
         }
+}
+
+@Composable
+fun PhotoItem(item: Uri?, itemWeight: Dp, itemHeight: Dp) {
+    Box(
+        modifier = Modifier
+            .height(itemHeight / 3)
+            .width(itemWeight.times(0.8f))
+            .background(MainColor)
+            .padding(start = itemWeight / 10, end = itemWeight / 10)
+    ) {
+        AsyncImage(
+            model = item,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.FillWidth
+        )
+    }
+}
+
+@Composable
+fun PhotoItem(item: Int, itemWeight: Dp, itemHeight: Dp) {
+    Box(
+        modifier = Modifier
+            .height(itemHeight / 3)
+            .width(itemWeight.times(0.8f))
+            .background(MainColor)
+            .padding(start = itemWeight / 10, end = itemWeight / 10)
+    ) {
+        AsyncImage(
+            model = item,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Fit
+        )
     }
 }
 
@@ -58,9 +88,7 @@ fun PhotoSelector(maxSelectionCount: Int = 5) {
     var selectedImages by remember {
         mutableStateOf<List<Uri?>>(emptyList())
     }
-
     val buttonText = "사진 선택"
-
     val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(
             maxItems = maxSelectionCount
