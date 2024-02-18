@@ -8,14 +8,14 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "diaries")
 data class Diary(
-    @ColumnInfo(name = "diary_title") var title: String,
+    @ColumnInfo(name = "diary_title") var title: String = "",
     @ColumnInfo(name = "diary_date") var date: LocalDateTime = LocalDateTime.now(),
-    @ColumnInfo(name = "diary_message") var message: String,
+    @ColumnInfo(name = "diary_message") var message: String = "",
     @ColumnInfo(name = "diary_shared") var isShared: Boolean = false,
-    @ColumnInfo(name = "diary_location") var location: SeoulLocation,
-    @ColumnInfo(name = "diary_photo_urls") val photoURLs: List<String>,
-    @ColumnInfo(name = "diary_thumbnail") var thumbnail: Int,
-    @ColumnInfo(name = "diary_uid") val uid: String
+    @ColumnInfo(name = "diary_location") var location: SeoulLocation = SeoulLocation.CENTRAL,
+    @ColumnInfo(name = "diary_photo_urls") val photoURLs: List<String> = emptyList(),
+    @ColumnInfo(name = "diary_thumbnail") var thumbnail: Int = 0,
+    @ColumnInfo(name = "diary_uid") val uid: String = ""
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

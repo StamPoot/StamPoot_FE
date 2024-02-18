@@ -21,8 +21,7 @@ import com.example.footstamp.ui.theme.BackColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextInput(maxLines: Int = 1) {
-    val itemHeight = LocalConfiguration.current.screenHeightDp.dp
+fun TextInput(maxLines: Int = 1, hint: String = "") {
     val textState = remember {
         mutableStateOf("")
     }
@@ -32,8 +31,6 @@ fun TextInput(maxLines: Int = 1) {
         shape = CircleShape,
         modifier = Modifier
             .fillMaxWidth()
-            .height(itemHeight / 45 * (maxLines + 1))
-            .verticalScroll(rememberScrollState())
             .background(BackColor),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color.Transparent,
@@ -43,5 +40,6 @@ fun TextInput(maxLines: Int = 1) {
         maxLines = maxLines,
         singleLine = maxLines == 1,
         textStyle = MaterialTheme.typography.bodyLarge,
-        onValueChange = { textValue -> textState.value = textValue })
+        onValueChange = { textValue -> textState.value = textValue },
+        placeholder = { BodyLargeText(text = hint) })
 }

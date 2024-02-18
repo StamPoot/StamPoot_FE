@@ -96,6 +96,7 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
         if (declarationDialogState) {
             FullDialog(
+                title = "일기 작성",
                 screen = { GalleryWriteScreen() },
                 onChangeState = { declarationDialogState = false })
         }

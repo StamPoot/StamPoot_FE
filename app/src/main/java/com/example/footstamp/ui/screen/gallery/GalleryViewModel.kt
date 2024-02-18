@@ -25,6 +25,9 @@ class GalleryViewModel @Inject constructor(
     private val _diaries = MutableStateFlow<List<Diary>>(emptyList())
     val diaries = _diaries.asStateFlow()
 
+    private val _writingDiary = MutableStateFlow(Diary())
+    val writingDiary = _writingDiary.asStateFlow()
+
     private val tempDiaries = listOf(
         Diary(
             title = "",
