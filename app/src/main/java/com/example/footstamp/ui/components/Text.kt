@@ -10,49 +10,79 @@ import com.example.footstamp.ui.theme.SubColor
 
 
 @Composable
-fun TitleLargeText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+fun TitleLargeText(
+    text: String,
+    color: Color = SubColor,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
     Text(
         text = text,
         color = color,
         style = MaterialTheme.typography.titleLarge,
-        modifier = modifier
+        modifier = modifier,
+        textAlign = textAlign
     )
 }
 
 @Composable
-fun TitleText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+fun TitleText(
+    text: String,
+    color: Color = SubColor,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
     Text(
         text = text,
         color = color,
         style = MaterialTheme.typography.titleMedium,
-        modifier = modifier
+        modifier = modifier,
+        textAlign = textAlign
     )
 }
 
 @Composable
-fun BodyLargeText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+fun BodyLargeText(
+    text: String,
+    color: Color = SubColor,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
     Text(
         text = text, color = color,
         style = MaterialTheme.typography.bodyLarge,
-        modifier = modifier
+        modifier = modifier,
+        textAlign = textAlign
     )
 }
 
 @Composable
-fun BodyText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+fun BodyText(
+    text: String,
+    color: Color = SubColor,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
     Text(
         text = text, color = color,
         style = MaterialTheme.typography.bodyMedium,
-        modifier = modifier
+        modifier = modifier,
+        textAlign = textAlign
     )
 }
 
 @Composable
-fun LabelText(text: String, color: Color = SubColor, modifier: Modifier = Modifier) {
+fun LabelText(
+    text: String,
+    color: Color = SubColor,
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start
+) {
     Text(
         text = text,
         color = color,
         style = MaterialTheme.typography.labelMedium,
-        modifier = modifier
+        modifier = modifier,
+        textAlign = textAlign
     )
 }

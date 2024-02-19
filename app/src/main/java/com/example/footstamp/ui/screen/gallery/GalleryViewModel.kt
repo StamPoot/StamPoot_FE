@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.Instant
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -27,6 +26,12 @@ class GalleryViewModel @Inject constructor(
 
     private val _writingDiary = MutableStateFlow(Diary())
     val writingDiary = _writingDiary.asStateFlow()
+
+    private val _isShowWriteDialog = MutableStateFlow(false)
+    val isShowWriteDialog = _isShowWriteDialog.asStateFlow()
+
+    private val _isShowHalfDialog = MutableStateFlow(false)
+    val isShowHalfDialog = _isShowHalfDialog.asStateFlow()
 
     private val tempDiaries = listOf(
         Diary(
@@ -86,7 +91,47 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
+    fun updateWriteDiary(
+        title: String = writingDiary.value.title,
+        date: LocalDateTime = writingDiary.value.date,
+        message: String = writingDiary.value.message,
+        isShared: Boolean = writingDiary.value.isShared,
+        location: SeoulLocation = writingDiary.value.location,
+        photoURLs: List<String> = writingDiary.value.photoURLs,
+        thumbnail: Int = writingDiary.value.thumbnail,
+        uid: String = writingDiary.value.uid
+    ) {
+        _writingDiary.value =
+            Diary(
+                title = title,
+                date = date,
+                message = message,
+                isShared = isShared,
+                location = location,
+                photoURLs = photoURLs,
+                thumbnail = thumbnail,
+                uid = uid
+            )
+
+    }
+
     fun getAllDiaries(): List<Diary> {
         return diaries.value
+    }
+
+    fun showWriteScreen() {
+        _isShowWriteDialog.value = true
+    }
+
+    fun hideWriteScreen() {
+        _isShowWriteDialog.value = false
+    }
+
+    fun showHalfDialog() {
+        _isShowHalfDialog.value = true
+    }
+
+    fun hideHalfDialog() {
+        _isShowHalfDialog.value = false
     }
 }

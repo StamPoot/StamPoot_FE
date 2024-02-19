@@ -49,13 +49,11 @@ import java.time.LocalDateTime
 @Composable
 fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
-    var declarationDialogState by remember {
-        mutableStateOf(false)
-    }
+    val isShowWriteScreen by galleryViewModel.isShowWriteDialog.collectAsState()
 
     BaseScreen(
         floatingButton = {
-            GalleryFloatingButton { declarationDialogState = true }
+            GalleryFloatingButton { galleryViewModel.showWriteScreen() }
         }) { paddingValue ->
         val currentDiary by galleryViewModel.diaries.collectAsState()
 
@@ -94,11 +92,11 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
         GalleryGridLayout(diaries = diaryList, paddingValues = paddingValue)
 
-        if (declarationDialogState) {
+        if (isShowWriteScreen) {
             FullDialog(
                 title = "일기 작성",
                 screen = { GalleryWriteScreen() },
-                onChangeState = { declarationDialogState = false })
+                onChangeState = { galleryViewModel.hideWriteScreen() })
         }
     }
 }

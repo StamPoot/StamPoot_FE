@@ -45,3 +45,22 @@ fun FullDialog(
         }
     }
 }
+
+@Composable
+fun HalfDialog(
+    screen: @Composable () -> Unit,
+    onChangeState: () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onChangeState,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
+    ) {
+        Card {
+            screen()
+        }
+    }
+}
