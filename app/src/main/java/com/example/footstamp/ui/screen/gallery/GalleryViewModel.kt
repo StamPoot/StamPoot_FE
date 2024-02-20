@@ -33,6 +33,9 @@ class GalleryViewModel @Inject constructor(
     private val _isShowHalfDialog = MutableStateFlow(false)
     val isShowHalfDialog = _isShowHalfDialog.asStateFlow()
 
+    private val _dateOrLocation = MutableStateFlow(DateAndLocation.DATE)
+    val dateOrLocation = _dateOrLocation
+
     private val tempDiaries = listOf(
         Diary(
             title = "",
@@ -133,5 +136,17 @@ class GalleryViewModel @Inject constructor(
 
     fun hideHalfDialog() {
         _isShowHalfDialog.value = false
+    }
+
+    fun changeDateAndLocationState() {
+        dateOrLocation.value = when (dateOrLocation.value) {
+            DateAndLocation.DATE -> DateAndLocation.LOCATION
+            DateAndLocation.LOCATION -> DateAndLocation.DATE
+        }
+    }
+
+    enum class DateAndLocation {
+        DATE,
+        LOCATION
     }
 }

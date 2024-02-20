@@ -8,10 +8,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
@@ -34,6 +40,36 @@ fun FullDialog(
             dismissOnClickOutside = true
         ),
         onDismissRequest = onChangeState,
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BackColor)
+        ) {
+            TopBackBar(title, icon, onClick = onChangeState)
+            screen()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BottomSheetDefaults(
+    screen: @Composable () -> Unit,
+    onChangeState: () -> Unit,
+    title: String = "",
+    icon: ImageVector = Icons.Default.ArrowBackIosNew
+) {
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet = remember {
+        mutableStateOf(false)
+    }
+
+    ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = {
+            showBottomSheet.value = false
+        },
     ) {
         Card(
             modifier = Modifier

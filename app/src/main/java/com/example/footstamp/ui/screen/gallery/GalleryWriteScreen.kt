@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,6 +26,7 @@ import com.example.footstamp.ui.components.AddButton
 import com.example.footstamp.ui.components.ChangeButton
 import com.example.footstamp.ui.components.DatePickerView
 import com.example.footstamp.ui.components.HalfDialog
+import com.example.footstamp.ui.components.LocationPicker
 import com.example.footstamp.ui.components.PhotoSelector
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TextInput
@@ -37,6 +39,7 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
     val itemHeight = LocalConfiguration.current.screenHeightDp.dp
     val isShowHalfDialog by galleryViewModel.isShowHalfDialog.collectAsState()
     val writingDiary by galleryViewModel.writingDiary.collectAsState()
+    val dateOrLocation by galleryViewModel.dateOrLocation.collectAsState()
 
     BaseScreen {
         val scrollState = rememberScrollState()
@@ -49,7 +52,10 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.SpaceAround,
         ) {
             CalendarChangeButton(writingDiary.date) { galleryViewModel.showHalfDialog() }
-            Text(text = "Location") // Todo Location Selector
+            LocationChangeButton(writingDiary.location) {
+                galleryViewModel.changeDateAndLocationState()
+                galleryViewModel.showHalfDialog()
+            }
             TextInput(hint = "제목")
             SpaceMaker(itemHeight / 40)
 
@@ -74,9 +80,13 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
         }
         if (isShowHalfDialog) HalfDialog(
             screen = {
-                DatePickerView(time = writingDiary.date) { time ->
-                    galleryViewModel.updateWriteDiary(date = time)
-                    galleryViewModel.hideHalfDialog()
+                if (dateOrLocation == GalleryViewModel.DateAndLocation.DATE) {
+                    DatePickerView(time = writingDiary.date) { time ->
+                        galleryViewModel.updateWriteDiary(date = time)
+                        galleryViewModel.hideHalfDialog()
+                    }
+                } else {
+                    LocationPicker()
                 }
             },
             onChangeState = {}
@@ -89,6 +99,15 @@ fun CalendarChangeButton(time: LocalDateTime, onClick: () -> Unit) {
     ChangeButton(
         icon = Icons.Default.CalendarMonth,
         text = Formatter.dateToString(time),
+        onClick = onClick
+    )
+}
+
+@Composable
+fun LocationChangeButton(location: SeoulLocation, onClick: () -> Unit) {
+    ChangeButton(
+        icon = Icons.Default.LocationOn,
+        text = location.location,
         onClick = onClick
     )
 }
