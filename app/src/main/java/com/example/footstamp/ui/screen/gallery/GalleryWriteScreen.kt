@@ -9,7 +9,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,7 +25,7 @@ import com.example.footstamp.ui.components.AddButton
 import com.example.footstamp.ui.components.ChangeButton
 import com.example.footstamp.ui.components.DatePickerView
 import com.example.footstamp.ui.components.HalfDialog
-import com.example.footstamp.ui.components.LocationPicker
+import com.example.footstamp.ui.components.LocationPickerView
 import com.example.footstamp.ui.components.PhotoSelector
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TextInput
@@ -51,9 +50,12 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround,
         ) {
-            CalendarChangeButton(writingDiary.date) { galleryViewModel.showHalfDialog() }
+            CalendarChangeButton(writingDiary.date) {
+                galleryViewModel.changeToDate()
+                galleryViewModel.showHalfDialog()
+            }
             LocationChangeButton(writingDiary.location) {
-                galleryViewModel.changeDateAndLocationState()
+                galleryViewModel.changeToLocation()
                 galleryViewModel.showHalfDialog()
             }
             TextInput(hint = "제목")
@@ -86,7 +88,10 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                         galleryViewModel.hideHalfDialog()
                     }
                 } else {
-                    LocationPicker()
+                    LocationPickerView { location ->
+                        galleryViewModel.updateWriteDiary(location = location)
+                        galleryViewModel.hideHalfDialog()
+                    }
                 }
             },
             onChangeState = {}

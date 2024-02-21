@@ -138,12 +138,14 @@ class GalleryViewModel @Inject constructor(
         _isShowHalfDialog.value = false
     }
 
-    fun changeDateAndLocationState() {
-        dateOrLocation.value = when (dateOrLocation.value) {
-            DateAndLocation.DATE -> DateAndLocation.LOCATION
-            DateAndLocation.LOCATION -> DateAndLocation.DATE
-        }
+    fun changeToDate() {
+        _dateOrLocation.value = DateAndLocation.DATE
     }
+
+    fun changeToLocation() {
+        _dateOrLocation.value = DateAndLocation.LOCATION
+    }
+
 
     enum class DateAndLocation {
         DATE,
