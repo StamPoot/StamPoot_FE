@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import com.example.footstamp.ui.theme.SubColor
 
 
@@ -14,14 +16,16 @@ fun TitleLargeText(
     text: String,
     color: Color = SubColor,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign = TextAlign.Start
+    textAlign: TextAlign = TextAlign.Start,
+    fontSize: TextUnit = 24.sp
 ) {
     Text(
         text = text,
         color = color,
         style = MaterialTheme.typography.titleLarge,
         modifier = modifier,
-        textAlign = textAlign
+        textAlign = textAlign,
+        fontSize = fontSize
     )
 }
 
@@ -37,7 +41,8 @@ fun TitleText(
         color = color,
         style = MaterialTheme.typography.titleMedium,
         modifier = modifier,
-        textAlign = textAlign
+        textAlign = textAlign,
+        fontSize = 20.sp
     )
 }
 
@@ -52,7 +57,8 @@ fun BodyLargeText(
         text = text, color = color,
         style = MaterialTheme.typography.bodyLarge,
         modifier = modifier,
-        textAlign = textAlign
+        textAlign = textAlign,
+        fontSize = 18.sp
     )
 }
 
@@ -67,7 +73,8 @@ fun BodyText(
         text = text, color = color,
         style = MaterialTheme.typography.bodyMedium,
         modifier = modifier,
-        textAlign = textAlign
+        textAlign = textAlign,
+        fontSize = 14.sp
     )
 }
 
@@ -83,6 +90,7 @@ fun LabelText(
         color = color,
         style = MaterialTheme.typography.labelMedium,
         modifier = modifier,
-        textAlign = textAlign
+        textAlign = textAlign,
+        fontSize = 10.sp
     )
 }

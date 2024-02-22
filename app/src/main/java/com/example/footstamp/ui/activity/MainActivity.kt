@@ -1,4 +1,4 @@
-package com.example.footstamp
+package com.example.footstamp.ui.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -22,17 +22,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.footstamp.MainActivity.Companion.screens
+import com.example.footstamp.R
+import com.example.footstamp.ui.activity.MainActivity.Companion.screens
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.screen.board.BoardScreen
 import com.example.footstamp.ui.screen.gallery.GalleryScreen
+import com.example.footstamp.ui.screen.login.LoginScreen
 import com.example.footstamp.ui.screen.map.MapScreen
 import com.example.footstamp.ui.screen.profile.ProfileScreen
 import com.example.footstamp.ui.theme.FootStampTheme
