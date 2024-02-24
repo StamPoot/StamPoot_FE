@@ -27,14 +27,20 @@ class GalleryViewModel @Inject constructor(
     private val _writingDiary = MutableStateFlow(Diary())
     val writingDiary = _writingDiary.asStateFlow()
 
-    private val _isShowWriteDialog = MutableStateFlow(false)
-    val isShowWriteDialog = _isShowWriteDialog.asStateFlow()
+    private val _readingDiary = MutableStateFlow(Diary())
+    val readingDiary = _readingDiary.asStateFlow()
+
+    private val _isShowFullDialog = MutableStateFlow(false)
+    val isShowFullDialog = _isShowFullDialog.asStateFlow()
 
     private val _isShowHalfDialog = MutableStateFlow(false)
     val isShowHalfDialog = _isShowHalfDialog.asStateFlow()
 
+    private val _writeOrRead = MutableStateFlow(WriteAndRead.READ)
+    val writeOrRead = _writeOrRead.asStateFlow()
+
     private val _dateOrLocation = MutableStateFlow(DateAndLocation.DATE)
-    val dateOrLocation = _dateOrLocation
+    val dateOrLocation = _dateOrLocation.asStateFlow()
 
     private val tempDiaries = listOf(
         Diary(
@@ -94,6 +100,10 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
+    fun updateReadDiary(diary: Diary) {
+        _readingDiary.value = diary
+    }
+
     fun updateWriteDiary(
         title: String = writingDiary.value.title,
         date: LocalDateTime = writingDiary.value.date,
@@ -122,12 +132,12 @@ class GalleryViewModel @Inject constructor(
         return diaries.value
     }
 
-    fun showWriteScreen() {
-        _isShowWriteDialog.value = true
+    fun showWriteOrReadScreen() {
+        _isShowFullDialog.value = true
     }
 
     fun hideWriteScreen() {
-        _isShowWriteDialog.value = false
+        _isShowFullDialog.value = false
     }
 
     fun showHalfDialog() {
@@ -138,6 +148,14 @@ class GalleryViewModel @Inject constructor(
         _isShowHalfDialog.value = false
     }
 
+    fun changeToWrite() {
+        _writeOrRead.value = WriteAndRead.WRITE
+    }
+
+    fun changeToRead() {
+        _writeOrRead.value = WriteAndRead.READ
+    }
+
     fun changeToDate() {
         _dateOrLocation.value = DateAndLocation.DATE
     }
@@ -146,6 +164,10 @@ class GalleryViewModel @Inject constructor(
         _dateOrLocation.value = DateAndLocation.LOCATION
     }
 
+    enum class WriteAndRead {
+        WRITE,
+        READ
+    }
 
     enum class DateAndLocation {
         DATE,

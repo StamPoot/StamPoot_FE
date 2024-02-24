@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,10 +35,10 @@ import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
-import com.example.footstamp.ui.components.BottomSheetDefaults
 import com.example.footstamp.ui.components.FullDialog
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
+import com.example.footstamp.ui.components.TransparentButton
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import java.time.LocalDateTime
@@ -47,11 +47,15 @@ import java.time.LocalDateTime
 @Composable
 fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
-    val isShowWriteScreen by galleryViewModel.isShowWriteDialog.collectAsState()
+    val isShowWriteScreen by galleryViewModel.isShowFullDialog.collectAsState()
+    val writeOrRead by galleryViewModel.writeOrRead.collectAsState()
 
     BaseScreen(
         floatingButton = {
-            GalleryFloatingButton { galleryViewModel.showWriteScreen() }
+            GalleryFloatingButton {
+                galleryViewModel.showWriteOrReadScreen()
+                galleryViewModel.changeToWrite()
+            }
         }) { paddingValue ->
         val currentDiary by galleryViewModel.diaries.collectAsState()
 
@@ -88,20 +92,42 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             ),
         )
 
-        GalleryGridLayout(diaries = diaryList, paddingValues = paddingValue)
+        GalleryGridLayout(
+            diaries = diaryList,
+            paddingValues = paddingValue,
+            onClick = {
+                galleryViewModel.changeToRead()
+                galleryViewModel.updateReadDiary(it)
+                galleryViewModel.showWriteOrReadScreen()
+            }
+        )
 
         if (isShowWriteScreen) {
             FullDialog(
                 title = "일기 작성",
-                screen = { GalleryWriteScreen() },
+                screen = {
+                    when (writeOrRead) {
+                        GalleryViewModel.WriteAndRead.WRITE -> {
+                            GalleryWriteScreen()
+                        }
+
+                        GalleryViewModel.WriteAndRead.READ -> {
+                            GalleryReadScreen()
+                        }
+                    }
+                },
+
                 onChangeState = { galleryViewModel.hideWriteScreen() })
         }
     }
 }
 
-
 @Composable
-fun GalleryGridLayout(diaries: List<Diary>, paddingValues: PaddingValues) {
+fun GalleryGridLayout(
+    diaries: List<Diary>,
+    paddingValues: PaddingValues,
+    onClick: (Diary) -> Unit
+) {
     val scrollState = rememberScrollState()
     val itemHeight = LocalConfiguration.current.screenHeightDp.dp / 4
 
@@ -112,13 +138,13 @@ fun GalleryGridLayout(diaries: List<Diary>, paddingValues: PaddingValues) {
             .padding(paddingValues = paddingValues)
     ) {
         diaries.sortedBy { it.date }.forEach { diary ->
-            GalleryItemView(diary = diary, itemHeight = itemHeight)
+            GalleryItemView(diary = diary, itemHeight = itemHeight, onClick = onClick)
         }
     }
 }
 
 @Composable
-fun GalleryItemView(diary: Diary, itemHeight: Dp) {
+fun GalleryItemView(diary: Diary, itemHeight: Dp, onClick: (Diary) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -141,8 +167,11 @@ fun GalleryItemView(diary: Diary, itemHeight: Dp) {
             TitleText(Formatter.dateToString(diary.date), Color.White)
             TitleLargeText(diary.title, Color.White)
         }
+        TransparentButton {
+            onClick(diary)
+        }
     }
-    Divider(
+    HorizontalDivider(
         modifier = Modifier
             .height(1.dp)
             .background(SubColor)

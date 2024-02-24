@@ -121,6 +121,6 @@ dependencies {
 
     // Google Login
     implementation("com.google.android.gms:play-services-auth:21.0.0")
-    implementation("androidx.credentials:credentials:1.2.0")
+    implementation("androidx.credentials:credentials:1.3.0-alpha01")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
 }
