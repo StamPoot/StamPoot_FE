@@ -66,7 +66,11 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 message = "햄스터를 키웠던 날이에요",
                 isShared = false,
                 location = SeoulLocation.CENTRAL,
-                photoURLs = listOf("https://i.namu.wiki/i/QQZ3wT3XWJ9FveqmsNKBXQz3O5S-AX3HxTs4ncjzTbUwmnJJlKQyMrQRlOlitttbylEWLViDSzIeRepZTfFj7dh_ZBJeh0Z0Rcr4G6EaeFDySQwUHoB5sPkp6PqOP9sA83-_4P1UyEwfW1s8TLcTQA.webp"),
+                photoURLs = listOf(
+                    "https://i.namu.wiki/i/QQZ3wT3XWJ9FveqmsNKBXQz3O5S-AX3HxTs4ncjzTbUwmnJJlKQyMrQRlOlitttbylEWLViDSzIeRepZTfFj7dh_ZBJeh0Z0Rcr4G6EaeFDySQwUHoB5sPkp6PqOP9sA83-_4P1UyEwfW1s8TLcTQA.webp",
+                    "https://i.namu.wiki/i/QQZ3wT3XWJ9FveqmsNKBXQz3O5S-AX3HxTs4ncjzTbUwmnJJlKQyMrQRlOlitttbylEWLViDSzIeRepZTfFj7dh_ZBJeh0Z0Rcr4G6EaeFDySQwUHoB5sPkp6PqOP9sA83-_4P1UyEwfW1s8TLcTQA.webp",
+                    "https://i.namu.wiki/i/QQZ3wT3XWJ9FveqmsNKBXQz3O5S-AX3HxTs4ncjzTbUwmnJJlKQyMrQRlOlitttbylEWLViDSzIeRepZTfFj7dh_ZBJeh0Z0Rcr4G6EaeFDySQwUHoB5sPkp6PqOP9sA83-_4P1UyEwfW1s8TLcTQA.webp"
+                ),
                 thumbnail = 0,
                 uid = "a1234"
             ),
@@ -104,7 +108,15 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
         if (isShowWriteScreen) {
             FullDialog(
-                title = "일기 작성",
+                title = when (writeOrRead) {
+                    GalleryViewModel.WriteAndRead.WRITE -> {
+                        GalleryViewModel.WriteAndRead.WRITE.text
+                    }
+
+                    GalleryViewModel.WriteAndRead.READ -> {
+                        GalleryViewModel.WriteAndRead.READ.text
+                    }
+                },
                 screen = {
                     when (writeOrRead) {
                         GalleryViewModel.WriteAndRead.WRITE -> {

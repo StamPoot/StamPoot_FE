@@ -76,10 +76,10 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun addDiary(diary: Diary) {
+    fun addDiary() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repository.insertDiary(diary)
+                repository.insertDiary(_writingDiary.value)
             }
         }
     }
@@ -164,9 +164,9 @@ class GalleryViewModel @Inject constructor(
         _dateOrLocation.value = DateAndLocation.LOCATION
     }
 
-    enum class WriteAndRead {
-        WRITE,
-        READ
+    enum class WriteAndRead(val text: String) {
+        WRITE("일기 쓰기"),
+        READ("일기 읽기")
     }
 
     enum class DateAndLocation {

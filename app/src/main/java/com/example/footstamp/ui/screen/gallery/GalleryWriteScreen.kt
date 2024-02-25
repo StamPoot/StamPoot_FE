@@ -64,19 +64,7 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             PhotoSelector(maxSelectionCount = 5)
             TextInput(hint = "내용을 입력해주세요.", maxLines = 10)
             AddButton(text = "글쓰기", onClick = {
-                // Todo: 임시 글쓰기 수정
-                galleryViewModel.addDiary(
-                    Diary(
-                        title = "제목",
-                        date = LocalDateTime.now(),
-                        message = "메시지",
-                        isShared = false,
-                        photoURLs = listOf(),
-                        thumbnail = 0,
-                        location = SeoulLocation.CENTRAL,
-                        uid = ""
-                    )
-                )
+                galleryViewModel.addDiary()
                 galleryViewModel.hideWriteScreen()
             })
         }
