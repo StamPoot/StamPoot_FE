@@ -17,7 +17,8 @@ fun TitleLargeText(
     color: Color = SubColor,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Start,
-    fontSize: TextUnit = 24.sp
+    fontSize: TextUnit = 24.sp,
+    minLines: Int = 1
 ) {
     Text(
         text = text,
@@ -25,7 +26,8 @@ fun TitleLargeText(
         style = MaterialTheme.typography.titleLarge,
         modifier = modifier,
         textAlign = textAlign,
-        fontSize = fontSize
+        fontSize = fontSize,
+        minLines = minLines
     )
 }
 
@@ -34,7 +36,8 @@ fun TitleText(
     text: String,
     color: Color = SubColor,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign = TextAlign.Start
+    textAlign: TextAlign = TextAlign.Start,
+    minLines: Int = 1
 ) {
     Text(
         text = text,
@@ -42,7 +45,8 @@ fun TitleText(
         style = MaterialTheme.typography.titleMedium,
         modifier = modifier,
         textAlign = textAlign,
-        fontSize = 20.sp
+        fontSize = 20.sp,
+        minLines = minLines
     )
 }
 
@@ -51,14 +55,16 @@ fun BodyLargeText(
     text: String,
     color: Color = SubColor,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign = TextAlign.Start
+    textAlign: TextAlign = TextAlign.Start,
+    minLines: Int = 1
 ) {
     Text(
         text = text, color = color,
         style = MaterialTheme.typography.bodyLarge,
         modifier = modifier,
         textAlign = textAlign,
-        fontSize = 18.sp
+        fontSize = 18.sp,
+        minLines = minLines
     )
 }
 
@@ -67,14 +73,16 @@ fun BodyText(
     text: String,
     color: Color = SubColor,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign = TextAlign.Start
+    textAlign: TextAlign = TextAlign.Start,
+    minLines: Int = 1
 ) {
     Text(
         text = text, color = color,
         style = MaterialTheme.typography.bodyMedium,
         modifier = modifier,
         textAlign = textAlign,
-        fontSize = 14.sp
+        fontSize = 16.sp,
+        minLines = minLines
     )
 }
 

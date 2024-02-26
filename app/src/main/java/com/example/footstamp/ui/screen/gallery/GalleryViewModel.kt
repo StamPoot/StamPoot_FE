@@ -1,5 +1,6 @@
 package com.example.footstamp.ui.screen.gallery
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
@@ -29,6 +30,9 @@ class GalleryViewModel @Inject constructor(
 
     private val _readingDiary = MutableStateFlow(Diary())
     val readingDiary = _readingDiary.asStateFlow()
+
+    private val _openingImage = MutableStateFlow<Uri?>(null)
+    val openingImage = _openingImage.asStateFlow()
 
     private val _isShowFullDialog = MutableStateFlow(false)
     val isShowFullDialog = _isShowFullDialog.asStateFlow()
@@ -126,6 +130,14 @@ class GalleryViewModel @Inject constructor(
                 uid = uid
             )
 
+    }
+
+    fun openImageDetail(image: Uri) {
+        _openingImage.value = image
+    }
+
+    fun closeImage() {
+        _openingImage.value = null
     }
 
     fun getAllDiaries(): List<Diary> {
