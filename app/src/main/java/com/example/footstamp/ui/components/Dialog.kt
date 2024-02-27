@@ -1,30 +1,29 @@
 package com.example.footstamp.ui.components
 
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
@@ -48,9 +47,15 @@ fun FullDialog(
         Card(
             modifier = Modifier
                 .fillMaxSize()
-                .background(BackColor)
+                .background(BackColor),
+            shape = RectangleShape
         ) {
-            TopBackBar(title, icon, onClick = onChangeState)
+            TopBackBar(
+                text = title,
+                icon = icon,
+                onClick = onChangeState,
+                backgroundColor = Color.White
+            )
             screen()
         }
     }
@@ -106,11 +111,19 @@ fun HalfDialog(
 }
 
 @Composable
-fun ImageDialog(image: Uri) {
-    Box(modifier = Modifier
-        .background(Color.Black)
-        .fillMaxSize()
+fun ImageDialog(image: Uri, onClick: () -> Unit = {}) {
+    Box(
+        modifier = Modifier
+            .background(Color.Black)
+            .fillMaxSize()
     ) {
-        AsyncImage(model = image, contentDescription = null)
+        TopBackBar(
+            text = "",
+            icon = Icons.Default.Close,
+            backgroundColor = Color.Black,
+            iconColor = Color.White,
+            onClick = onClick
+        )
+        ZoomableImage(image = image)
     }
 }

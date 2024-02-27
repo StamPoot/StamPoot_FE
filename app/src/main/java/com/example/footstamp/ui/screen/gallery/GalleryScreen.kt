@@ -36,6 +36,7 @@ import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.FullDialog
+import com.example.footstamp.ui.components.ImageDialog
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.components.TransparentButton
@@ -47,16 +48,13 @@ import java.time.LocalDateTime
 @Composable
 fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
-    val isShowWriteScreen by galleryViewModel.isShowFullDialog.collectAsState()
-    val writeOrRead by galleryViewModel.writeOrRead.collectAsState()
+    val writeOrReadScreenState by galleryViewModel.writeOrRead.collectAsState()
 
-    BaseScreen(
-        floatingButton = {
-            GalleryFloatingButton {
-                galleryViewModel.showWriteOrReadScreen()
-                galleryViewModel.changeToWrite()
-            }
-        }) { paddingValue ->
+    BaseScreen(floatingButton = {
+        GalleryFloatingButton {
+            galleryViewModel.showWriteScreen()
+        }
+    }) { paddingValue ->
         val currentDiary by galleryViewModel.diaries.collectAsState()
 
         val diaryList = listOf(
@@ -96,49 +94,32 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             ),
         )
 
-        GalleryGridLayout(
-            diaries = diaryList,
+        GalleryGridLayout(diaries = diaryList,
             paddingValues = paddingValue,
-            onClick = {
-                galleryViewModel.changeToRead()
-                galleryViewModel.updateReadDiary(it)
-                galleryViewModel.showWriteOrReadScreen()
+            onClick = { galleryViewModel.showReadScreen(it) })
+
+        // 일기 읽기 / 쓰기 화면 호출
+        when (writeOrReadScreenState) {
+            GalleryViewModel.WriteAndRead.WRITE -> {
+                FullDialog(title = GalleryViewModel.WriteAndRead.WRITE.text,
+                    screen = { GalleryWriteScreen() },
+                    onChangeState = { galleryViewModel.hideWriteOrReadScreen() })
             }
-        )
 
-        if (isShowWriteScreen) {
-            FullDialog(
-                title = when (writeOrRead) {
-                    GalleryViewModel.WriteAndRead.WRITE -> {
-                        GalleryViewModel.WriteAndRead.WRITE.text
-                    }
+            GalleryViewModel.WriteAndRead.READ -> {
+                FullDialog(title = GalleryViewModel.WriteAndRead.READ.text,
+                    screen = { GalleryReadScreen() },
+                    onChangeState = { galleryViewModel.hideWriteOrReadScreen() })
+            }
 
-                    GalleryViewModel.WriteAndRead.READ -> {
-                        GalleryViewModel.WriteAndRead.READ.text
-                    }
-                },
-                screen = {
-                    when (writeOrRead) {
-                        GalleryViewModel.WriteAndRead.WRITE -> {
-                            GalleryWriteScreen()
-                        }
-
-                        GalleryViewModel.WriteAndRead.READ -> {
-                            GalleryReadScreen()
-                        }
-                    }
-                },
-
-                onChangeState = { galleryViewModel.hideWriteScreen() })
+            GalleryViewModel.WriteAndRead.NULL -> {}
         }
     }
 }
 
 @Composable
 fun GalleryGridLayout(
-    diaries: List<Diary>,
-    paddingValues: PaddingValues,
-    onClick: (Diary) -> Unit
+    diaries: List<Diary>, paddingValues: PaddingValues, onClick: (Diary) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val itemHeight = LocalConfiguration.current.screenHeightDp.dp / 4
@@ -179,9 +160,7 @@ fun GalleryItemView(diary: Diary, itemHeight: Dp, onClick: (Diary) -> Unit) {
             TitleText(Formatter.dateToString(diary.date), Color.White)
             TitleLargeText(diary.title, Color.White)
         }
-        TransparentButton {
-            onClick(diary)
-        }
+        TransparentButton(onClick = { onClick(diary) })
     }
     HorizontalDivider(
         modifier = Modifier
@@ -193,10 +172,7 @@ fun GalleryItemView(diary: Diary, itemHeight: Dp, onClick: (Diary) -> Unit) {
 @Composable
 fun GalleryFloatingButton(action: () -> Unit) {
     FloatingActionButton(
-        modifier = Modifier,
-        containerColor = MainColor,
-        shape = CircleShape,
-        onClick = action
+        modifier = Modifier, containerColor = MainColor, shape = CircleShape, onClick = action
     ) {
         Icon(
             painter = painterResource(R.drawable.icon_pen),

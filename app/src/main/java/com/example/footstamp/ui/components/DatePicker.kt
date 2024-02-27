@@ -22,7 +22,11 @@ import java.util.Formatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerView(time: LocalDateTime, onChangeState: (LocalDateTime) -> Unit) {
+fun DatePickerView(
+    time: LocalDateTime,
+    onChangeState: (LocalDateTime) -> Unit,
+    onDismiss: () -> Unit = {}
+) {
     val datePickerState = rememberDatePickerState(selectableDates = object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
             return utcTimeMillis <= System.currentTimeMillis()
@@ -42,7 +46,12 @@ fun DatePickerView(time: LocalDateTime, onChangeState: (LocalDateTime) -> Unit) 
                 )
             })
         SpaceMaker(32.dp)
-        Button(onClick = { onChangeState(longToLocalDateTime(datePickerState.selectedDateMillis!!)) }) {
+        Button(onClick = {
+            datePickerState.selectedDateMillis?.let {
+                onChangeState(longToLocalDateTime(it))
+            }
+            onDismiss()
+        }) {
             BodyLargeText(text = "확인", color = Color.White)
         }
         SpaceMaker(height = 32.dp)

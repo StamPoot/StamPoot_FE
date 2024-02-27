@@ -92,6 +92,6 @@ fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 horizontalArrangement = Arrangement.Center
             ) { AddButton("수정하기") }
         }
-        openingImage?.let { ImageDialog(it) }
+        openingImage?.let { ImageDialog(image = it, onClick = { galleryViewModel.closeImage() }) }
     }
 }

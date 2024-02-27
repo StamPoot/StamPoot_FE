@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
@@ -25,6 +24,7 @@ import com.example.footstamp.ui.components.AddButton
 import com.example.footstamp.ui.components.ChangeButton
 import com.example.footstamp.ui.components.DatePickerView
 import com.example.footstamp.ui.components.HalfDialog
+import com.example.footstamp.ui.components.ImageDialog
 import com.example.footstamp.ui.components.LocationPickerView
 import com.example.footstamp.ui.components.PhotoSelector
 import com.example.footstamp.ui.components.SpaceMaker
@@ -36,9 +36,9 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
     val itemWidth = LocalConfiguration.current.screenWidthDp.dp
     val itemHeight = LocalConfiguration.current.screenHeightDp.dp
-    val isShowHalfDialog by galleryViewModel.isShowHalfDialog.collectAsState()
     val writingDiary by galleryViewModel.writingDiary.collectAsState()
-    val dateOrLocation by galleryViewModel.dateOrLocation.collectAsState()
+    val openingImage by galleryViewModel.openingImage.collectAsState()
+    val dateOrLocationState by galleryViewModel.dateOrLocation.collectAsState()
 
     BaseScreen {
         val scrollState = rememberScrollState()
@@ -51,39 +51,44 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.SpaceAround,
         ) {
             CalendarChangeButton(writingDiary.date) {
-                galleryViewModel.changeToDate()
-                galleryViewModel.showHalfDialog()
+                galleryViewModel.showDateDialog()
             }
             LocationChangeButton(writingDiary.location) {
-                galleryViewModel.changeToLocation()
-                galleryViewModel.showHalfDialog()
+                galleryViewModel.showLocationDialog()
             }
             TextInput(hint = "제목")
             SpaceMaker(itemHeight / 40)
 
-            PhotoSelector(maxSelectionCount = 5)
+            PhotoSelector(maxSelectionCount = 5, onClick = { galleryViewModel.openImageDetail(it) })
             TextInput(hint = "내용을 입력해주세요.", maxLines = 10)
             AddButton(text = "글쓰기", onClick = {
                 galleryViewModel.addDiary()
-                galleryViewModel.hideWriteScreen()
+                galleryViewModel.hideWriteOrReadScreen()
             })
         }
-        if (isShowHalfDialog) HalfDialog(
-            screen = {
-                if (dateOrLocation == GalleryViewModel.DateAndLocation.DATE) {
-                    DatePickerView(time = writingDiary.date) { time ->
-                        galleryViewModel.updateWriteDiary(date = time)
-                        galleryViewModel.hideHalfDialog()
-                    }
-                } else {
+        when (dateOrLocationState) {
+            GalleryViewModel.DateAndLocation.DATE -> {
+                HalfDialog(screen = {
+                    DatePickerView(time = writingDiary.date,
+                        onChangeState = { time ->
+                            galleryViewModel.updateWriteDiary(date = time)
+                        }, onDismiss = { galleryViewModel.hideHalfDialog() }
+                    )
+                }) {}
+            }
+
+            GalleryViewModel.DateAndLocation.LOCATION -> {
+                HalfDialog(screen = {
                     LocationPickerView { location ->
                         galleryViewModel.updateWriteDiary(location = location)
                         galleryViewModel.hideHalfDialog()
                     }
-                }
-            },
-            onChangeState = {}
-        )
+                }) {}
+            }
+
+            GalleryViewModel.DateAndLocation.NULL -> {}
+        }
+        openingImage?.let { ImageDialog(image = it, onClick = { galleryViewModel.closeImage() }) }
     }
 }
 

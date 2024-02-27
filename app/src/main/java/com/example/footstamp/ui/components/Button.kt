@@ -71,7 +71,8 @@ fun ChangeButton(
 
 @Composable
 fun TransparentButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    content: @Composable () -> Unit = {},
 ) {
     Button(
         modifier = Modifier.fillMaxSize(),

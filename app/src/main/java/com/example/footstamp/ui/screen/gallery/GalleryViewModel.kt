@@ -34,16 +34,10 @@ class GalleryViewModel @Inject constructor(
     private val _openingImage = MutableStateFlow<Uri?>(null)
     val openingImage = _openingImage.asStateFlow()
 
-    private val _isShowFullDialog = MutableStateFlow(false)
-    val isShowFullDialog = _isShowFullDialog.asStateFlow()
-
-    private val _isShowHalfDialog = MutableStateFlow(false)
-    val isShowHalfDialog = _isShowHalfDialog.asStateFlow()
-
-    private val _writeOrRead = MutableStateFlow(WriteAndRead.READ)
+    private val _writeOrRead = MutableStateFlow(WriteAndRead.NULL)
     val writeOrRead = _writeOrRead.asStateFlow()
 
-    private val _dateOrLocation = MutableStateFlow(DateAndLocation.DATE)
+    private val _dateOrLocation = MutableStateFlow(DateAndLocation.NULL)
     val dateOrLocation = _dateOrLocation.asStateFlow()
 
     private val tempDiaries = listOf(
@@ -104,10 +98,6 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun updateReadDiary(diary: Diary) {
-        _readingDiary.value = diary
-    }
-
     fun updateWriteDiary(
         title: String = writingDiary.value.title,
         date: LocalDateTime = writingDiary.value.date,
@@ -144,45 +134,42 @@ class GalleryViewModel @Inject constructor(
         return diaries.value
     }
 
-    fun showWriteOrReadScreen() {
-        _isShowFullDialog.value = true
+    fun hideWriteOrReadScreen() {
+        _writeOrRead.value = WriteAndRead.NULL
+        _dateOrLocation.value = DateAndLocation.NULL
+        _openingImage.value = null
     }
 
-    fun hideWriteScreen() {
-        _isShowFullDialog.value = false
-    }
-
-    fun showHalfDialog() {
-        _isShowHalfDialog.value = true
-    }
-
-    fun hideHalfDialog() {
-        _isShowHalfDialog.value = false
-    }
-
-    fun changeToWrite() {
+    fun showWriteScreen() {
         _writeOrRead.value = WriteAndRead.WRITE
     }
 
-    fun changeToRead() {
+    fun showReadScreen(diary: Diary) {
+        _readingDiary.value = diary
         _writeOrRead.value = WriteAndRead.READ
     }
 
-    fun changeToDate() {
+    fun hideHalfDialog() {
+        _dateOrLocation.value = DateAndLocation.NULL
+    }
+
+    fun showDateDialog() {
         _dateOrLocation.value = DateAndLocation.DATE
     }
 
-    fun changeToLocation() {
+    fun showLocationDialog() {
         _dateOrLocation.value = DateAndLocation.LOCATION
     }
 
     enum class WriteAndRead(val text: String) {
         WRITE("일기 쓰기"),
-        READ("일기 읽기")
+        READ("일기 읽기"),
+        NULL("")
     }
 
     enum class DateAndLocation {
         DATE,
-        LOCATION
+        LOCATION,
+        NULL
     }
 }
