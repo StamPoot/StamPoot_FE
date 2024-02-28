@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,7 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel(), onClick: () -> Unit) {
     var signIn = remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -51,7 +52,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = hiltViewModel()) {
                 TitleLargeText(text = "로그인", color = Color.White)
             }
             Column {
-                AddButton("google")
+                AddButton(text = "google", onClick = onClick)
                 AddButton("kakao")
             }
             SpaceMaker(height = 0.dp)
