@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -117,13 +118,15 @@ fun ImageDialog(image: Uri, onClick: () -> Unit = {}) {
             .background(Color.Black)
             .fillMaxSize()
     ) {
-        TopBackBar(
-            text = "",
-            icon = Icons.Default.Close,
-            backgroundColor = Color.Black,
-            iconColor = Color.White,
-            onClick = onClick
-        )
-        ZoomableImage(image = image)
+        Column(modifier = Modifier.fillMaxSize()) {
+            TopBackBar(
+                text = "",
+                icon = Icons.Default.Close,
+                backgroundColor = Color.Black,
+                iconColor = Color.White,
+                onClick = onClick
+            )
+            ZoomableImage(image = image)
+        }
     }
 }

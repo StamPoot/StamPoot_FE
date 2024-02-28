@@ -54,5 +54,4 @@ fun TopBackBar(
         },
         title = { TitleLargeText(text = text, MainColor, modifier = Modifier) },
     )
-    Divider(color = SubColor)
 }

@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -138,7 +139,7 @@ fun ZoomableImage(image: Uri) {
         modifier = Modifier
             .clip(RectangleShape)
             .fillMaxSize()
-            .background(SubColor)
+            .background(Color.Black)
             .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
