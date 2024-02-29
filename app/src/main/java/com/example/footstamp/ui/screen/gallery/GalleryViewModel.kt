@@ -25,6 +25,9 @@ class GalleryViewModel @Inject constructor(
     private val _diaries = MutableStateFlow<List<Diary>>(emptyList())
     val diaries = _diaries.asStateFlow()
 
+    private val _sortType = MutableStateFlow(SortByDateOrLocation.DATE)
+    val sortType = _sortType.asStateFlow()
+
     private val _writingDiary = MutableStateFlow(Diary())
     val writingDiary = _writingDiary.asStateFlow()
 
@@ -49,8 +52,7 @@ class GalleryViewModel @Inject constructor(
             photoURLs = listOf(),
             thumbnail = 0,
             uid = ""
-        ),
-        Diary(
+        ), Diary(
             title = "",
             date = LocalDateTime.now(),
             location = SeoulLocation.CENTRAL,
@@ -108,18 +110,24 @@ class GalleryViewModel @Inject constructor(
         thumbnail: Int = writingDiary.value.thumbnail,
         uid: String = writingDiary.value.uid
     ) {
-        _writingDiary.value =
-            Diary(
-                title = title,
-                date = date,
-                message = message,
-                isShared = isShared,
-                location = location,
-                photoURLs = photoURLs,
-                thumbnail = thumbnail,
-                uid = uid
-            )
+        _writingDiary.value = Diary(
+            title = title,
+            date = date,
+            message = message,
+            isShared = isShared,
+            location = location,
+            photoURLs = photoURLs,
+            thumbnail = thumbnail,
+            uid = uid
+        )
 
+    }
+
+    fun changeSortSwitch() {
+        _sortType.value = when (_sortType.value) {
+            SortByDateOrLocation.DATE -> SortByDateOrLocation.LOCATION
+            SortByDateOrLocation.LOCATION -> SortByDateOrLocation.DATE
+        }
     }
 
     fun openImageDetail(image: Uri) {
@@ -161,15 +169,15 @@ class GalleryViewModel @Inject constructor(
         _dateOrLocation.value = DateAndLocation.LOCATION
     }
 
+    enum class SortByDateOrLocation(val text: String) {
+        DATE("날짜 별 보기"), LOCATION("위치 별 보기")
+    }
+
     enum class WriteAndRead(val text: String) {
-        WRITE("일기 쓰기"),
-        READ("일기 읽기"),
-        NULL("")
+        WRITE("일기 쓰기"), READ("일기 읽기"), NULL("")
     }
 
     enum class DateAndLocation {
-        DATE,
-        LOCATION,
-        NULL
+        DATE, LOCATION, NULL
     }
 }
