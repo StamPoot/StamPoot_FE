@@ -12,7 +12,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.example.footstamp.R
 import com.example.footstamp.ui.base.BaseScreen
+import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.screen.map.MapViewModel
 
 @Composable
@@ -20,16 +24,8 @@ fun ProfileScreen() {
     BaseScreen { paddingValue ->
         Column(
             Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-            var count by remember {
-                mutableStateOf(0)
-            }
-            Button(onClick = { count++ }) {
-
-            }
-            Text(text = "Profile $count")
+            TopBar(text = stringResource(R.string.screen_profile), backgroundColor = Color.White)
         }
     }
 }

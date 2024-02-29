@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +43,7 @@ import com.example.footstamp.ui.components.FullDialog
 import com.example.footstamp.ui.components.ImageDialog
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
+import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.components.TransparentButton
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
@@ -119,6 +121,7 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
         )
 
         Column {
+            TopBar(text = stringResource(R.string.screen_gallery), backgroundColor = Color.White)
             GallerySortLayout(
                 sortType = sortType,
                 onChangeSortState = { galleryViewModel.changeSortSwitch() })
