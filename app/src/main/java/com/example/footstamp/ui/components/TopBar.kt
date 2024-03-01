@@ -1,6 +1,9 @@
 package com.example.footstamp.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Divider
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -9,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,7 +34,11 @@ fun TopBar(
             Color.White
         ),
         title = {
-            TitleLargeText(text = text, MainColor, modifier = Modifier)
+            TitleLargeText(
+                text = text,
+                MainColor,
+                modifier = Modifier,
+            )
         },
     )
     Divider(color = SubColor)
@@ -40,12 +48,15 @@ fun TopBar(
 @Composable
 fun TopBackBar(
     text: String,
-    icon: ImageVector,
-    backgroundColor: Color = Color.Transparent,
+    leftIcon: ImageVector,
+    rightIcon: ImageVector? = null,
+    backgroundColor: Color = Color.LightGray,
     iconColor: Color = MainColor,
-    onClick: () -> Unit = {}
+    onBackPressed: () -> Unit = {},
+    onClickPressed: () -> Unit = {}
 ) {
     TopAppBar(
+        modifier = Modifier,
         colors = TopAppBarColors(
             backgroundColor,
             Color.White,
@@ -55,7 +66,7 @@ fun TopBackBar(
         ),
         navigationIcon = {
             Button(
-                onClick = onClick,
+                onClick = onBackPressed,
                 modifier = Modifier
                     .background(backgroundColor),
                 colors = ButtonColors(
@@ -65,9 +76,32 @@ fun TopBackBar(
                     disabledContentColor = Color.Transparent
                 )
             ) {
-                Icon(icon, null)
+                Icon(leftIcon, null)
             }
         },
-        title = { TitleLargeText(text = text, MainColor, modifier = Modifier) },
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TitleLargeText(text = text, MainColor, modifier = Modifier)
+                if (rightIcon != null) {
+                    Button(
+                        onClick = onClickPressed,
+                        modifier = Modifier
+                            .background(backgroundColor),
+                        colors = ButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = iconColor,
+                            disabledContainerColor = Color.Transparent,
+                            disabledContentColor = Color.Transparent
+                        )
+                    ) {
+                        Icon(rightIcon, null)
+                    }
+                }
+            }
+        },
     )
 }

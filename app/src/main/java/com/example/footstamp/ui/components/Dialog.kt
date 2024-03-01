@@ -1,16 +1,14 @@
 package com.example.footstamp.ui.components
 
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -18,24 +16,23 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil.compose.AsyncImage
 import com.example.footstamp.ui.theme.BackColor
+import com.example.footstamp.ui.theme.SubColor
 
 @Composable
 fun FullDialog(
-    screen: @Composable () -> Unit,
-    onChangeState: () -> Unit,
     title: String = "",
-    icon: ImageVector = Icons.Default.ArrowBackIosNew
+    leftIcon: ImageVector = Icons.Default.ArrowBackIosNew,
+    rightIcon: ImageVector? = null,
+    onBackIconPressed: () -> Unit,
+    onClickPressed: () -> Unit = {},
+    screen: @Composable () -> Unit,
 ) {
     Dialog(
         properties = DialogProperties(
@@ -43,7 +40,7 @@ fun FullDialog(
             dismissOnBackPress = true,
             dismissOnClickOutside = true
         ),
-        onDismissRequest = onChangeState,
+        onDismissRequest = onBackIconPressed,
     ) {
         Card(
             modifier = Modifier
@@ -53,9 +50,11 @@ fun FullDialog(
         ) {
             TopBackBar(
                 text = title,
-                icon = icon,
-                onClick = onChangeState,
-                backgroundColor = Color.White
+                leftIcon = leftIcon,
+                backgroundColor = Color.White,
+                rightIcon = rightIcon,
+                onBackPressed = onBackIconPressed,
+                onClickPressed = onClickPressed
             )
             screen()
         }
@@ -86,7 +85,7 @@ fun BottomSheetDefaults(
                 .fillMaxSize()
                 .background(BackColor)
         ) {
-            TopBackBar(title, icon, onClick = onChangeState)
+            TopBackBar(title, icon, onBackPressed = onChangeState)
             screen()
         }
     }
@@ -121,10 +120,10 @@ fun ImageDialog(image: Uri, onClick: () -> Unit = {}) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopBackBar(
                 text = "",
-                icon = Icons.Default.Close,
+                leftIcon = Icons.Default.Close,
                 backgroundColor = Color.Black,
                 iconColor = Color.White,
-                onClick = onClick
+                onBackPressed = onClick
             )
             ZoomableImage(image = image)
         }

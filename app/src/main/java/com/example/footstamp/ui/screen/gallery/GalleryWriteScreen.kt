@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -104,7 +105,7 @@ fun CalendarChangeButton(time: LocalDateTime, onClick: () -> Unit) {
 @Composable
 fun LocationChangeButton(location: SeoulLocation, onClick: () -> Unit) {
     ChangeButton(
-        icon = Icons.Default.LocationOn,
+        icon = Icons.Default.PinDrop,
         text = location.location,
         onClick = onClick
     )

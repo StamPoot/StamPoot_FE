@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
+import androidx.compose.material.icons.filled.ArrowRightAlt
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -40,7 +43,6 @@ import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyLargeText
 import com.example.footstamp.ui.components.FullDialog
-import com.example.footstamp.ui.components.ImageDialog
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.components.TopBar
@@ -230,7 +232,7 @@ fun GalleryReadOrWriteScreen(
             FullDialog(
                 title = GalleryViewModel.WriteAndRead.WRITE.text,
                 screen = { GalleryWriteScreen() },
-                onChangeState = onChangeState
+                onBackIconPressed = onChangeState
             )
         }
 
@@ -238,7 +240,9 @@ fun GalleryReadOrWriteScreen(
             FullDialog(
                 title = GalleryViewModel.WriteAndRead.READ.text,
                 screen = { GalleryReadScreen() },
-                onChangeState = onChangeState
+                rightIcon = Icons.AutoMirrored.Filled.ArrowRightAlt,
+                onBackIconPressed = onChangeState,
+                onClickPressed = {}
             )
         }
 
