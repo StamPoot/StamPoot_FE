@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.example.footstamp.ui.theme.SubColor
@@ -56,7 +57,8 @@ fun BodyLargeText(
     color: Color = SubColor,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Start,
-    minLines: Int = 1
+    minLines: Int = 1,
+    textDecoration: TextDecoration = TextDecoration.None
 ) {
     Text(
         text = text, color = color,
@@ -64,7 +66,8 @@ fun BodyLargeText(
         modifier = modifier,
         textAlign = textAlign,
         fontSize = 18.sp,
-        minLines = minLines
+        minLines = minLines,
+        textDecoration = textDecoration
     )
 }
 

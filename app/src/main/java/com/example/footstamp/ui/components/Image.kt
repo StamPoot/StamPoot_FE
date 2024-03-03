@@ -4,18 +4,29 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -36,50 +47,93 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.footstamp.R
-import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import kotlin.math.roundToInt
 
 @Composable
-fun ImagesLayout(selectedImages: List<Uri>, onClick: (image: Uri) -> Unit = {}) {
+fun ImagesLayout(
+    selectedImages: List<Uri>,
+    onClick: (image: Uri) -> Unit = {},
+    thumbnailIndex: Int? = null
+) {
     val scrollState = rememberScrollState()
     val itemWeight = LocalConfiguration.current.screenWidthDp.dp
     val itemHeight = LocalConfiguration.current.screenHeightDp.dp
 
-    if (selectedImages.isEmpty()) PhotoItem(
-        item = R.drawable.icon_circle_big,
-        itemWeight = itemWeight,
-        itemHeight = itemHeight
-    ) else
-        Row(
-            modifier = Modifier.horizontalScroll(scrollState)
-        ) {
-            selectedImages.forEach { item ->
-                PhotoItem(
-                    item = item,
-                    itemWeight = itemWeight,
-                    itemHeight = itemHeight,
-                    onClick = onClick
-                )
+    if (selectedImages.isEmpty()) Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        PhotoItem(
+            item = R.drawable.icon_circle_big,
+            itemWeight = itemWeight,
+            itemHeight = itemHeight
+        )
+    } else {
+        Column {
+            Row(
+                modifier = Modifier.horizontalScroll(scrollState)
+            ) {
+                selectedImages.forEachIndexed { index, item ->
+                    PhotoItem(
+                        item = item,
+                        itemWeight = itemWeight,
+                        itemHeight = itemHeight,
+                        isThumbnail = index == thumbnailIndex,
+                        onClick = onClick
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                selectedImages.forEach {
+                    Icon(
+                        imageVector = Icons.Default.Circle,
+                        contentDescription = null,
+                        tint = SubColor,
+                        modifier = Modifier
+                            .padding(7.dp)
+                            .size(10.dp)
+                    )
+                }
             }
         }
+    }
 }
 
 @Composable
-fun PhotoItem(item: Uri, itemWeight: Dp, itemHeight: Dp, onClick: (image: Uri) -> Unit = {}) {
+fun PhotoItem(
+    item: Uri,
+    itemWeight: Dp,
+    itemHeight: Dp,
+    onClick: (image: Uri) -> Unit = {},
+    isThumbnail: Boolean = false
+) {
     Box(
         modifier = Modifier
             .height(itemHeight / 3)
-            .width(itemWeight * 0.8f)
-            .background(BackColor)
+            .width(itemHeight / 3)
+            .background(Color.Transparent)
+            .padding(15.dp)
+            .border(3.dp, if (isThumbnail) MainColor else Color.Transparent),
     ) {
         AsyncImage(
             model = item,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Crop
         )
+        if (isThumbnail) Box(
+            modifier = Modifier
+                .background(MainColor)
+                .padding(5.dp)
+        ) {
+            Icon(imageVector = Icons.Default.Star, contentDescription = null, tint = Color.White)
+        }
         TransparentButton(onClick = { onClick(item) })
     }
 }
@@ -103,7 +157,12 @@ fun PhotoItem(item: Int, itemWeight: Dp, itemHeight: Dp, onClick: (image: Int) -
 }
 
 @Composable
-fun PhotoSelector(maxSelectionCount: Int = 5, onClick: (image: Uri) -> Unit) {
+fun PhotoSelector(
+    maxSelectionCount: Int = 5,
+    onClickPhoto: (image: Uri) -> Unit,
+    thumbnailIndex: Int?,
+    onResetIndex: () -> Unit
+) {
     var selectedImages by remember {
         mutableStateOf<List<Uri>>(emptyList())
     }
@@ -112,7 +171,10 @@ fun PhotoSelector(maxSelectionCount: Int = 5, onClick: (image: Uri) -> Unit) {
         contract = ActivityResultContracts.PickMultipleVisualMedia(
             maxItems = maxSelectionCount
         ),
-        onResult = { uris -> selectedImages = uris }
+        onResult = { uris ->
+            selectedImages = uris
+            onResetIndex()
+        }
     )
 
     fun launchPhotoPicker() {
@@ -125,7 +187,11 @@ fun PhotoSelector(maxSelectionCount: Int = 5, onClick: (image: Uri) -> Unit) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ImagesLayout(selectedImages = selectedImages, onClick = onClick)
+        ImagesLayout(
+            selectedImages = selectedImages,
+            onClick = onClickPhoto,
+            thumbnailIndex = thumbnailIndex
+        )
         AddButton(buttonText) { launchPhotoPicker() }
     }
 }

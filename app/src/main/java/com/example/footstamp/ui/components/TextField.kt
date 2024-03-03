@@ -21,7 +21,7 @@ import com.example.footstamp.ui.theme.BackColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextInput(maxLines: Int = 1, hint: String = "") {
+fun TextInput(maxLines: Int = 1, minLines: Int = 1, hint: String = "") {
     val textState = remember {
         mutableStateOf("")
     }
@@ -38,6 +38,7 @@ fun TextInput(maxLines: Int = 1, hint: String = "") {
             unfocusedBorderColor = Color.Transparent,
         ),
         maxLines = maxLines,
+        minLines = minLines,
         singleLine = maxLines == 1,
         textStyle = MaterialTheme.typography.bodyLarge,
         onValueChange = { textValue -> textState.value = textValue },

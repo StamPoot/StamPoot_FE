@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.MainColor
@@ -52,19 +53,25 @@ fun ChangeButton(
     text: String = "",
     color: Color = SubColor,
     icon: ImageVector? = null,
+    underLine: Boolean = false,
+    tint: Color,
     onClick: () -> Unit = {}
 ) {
     Button(
         modifier = Modifier
             .background(Color.Transparent),
         colors = ButtonDefaults.outlinedButtonColors(color),
+        shape = RectangleShape,
         onClick = onClick,
     ) {
         if (icon != null) {
-            Icon(icon, contentDescription = null, tint = Color.White)
+            Icon(icon, contentDescription = null, tint = tint)
         }
+        SpaceMaker(height = 2.dp)
         BodyLargeText(
-            text, Color.White, Modifier.padding(horizontal = 10.dp)
+            text = text,
+            color = tint,
+            textDecoration = if (underLine) TextDecoration.Underline else TextDecoration.None
         )
     }
 }

@@ -136,7 +136,10 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
         GalleryReadOrWriteScreen(
             writeOrReadScreenState = writeOrReadScreenState,
-            onChangeState = { galleryViewModel.hideWriteOrReadScreen() }
+            onChangeState = { galleryViewModel.hideWriteOrReadScreen() },
+            onClickWrite = {
+                galleryViewModel.addDiary()
+                galleryViewModel.hideWriteOrReadScreen()}
         )
     }
 }
@@ -225,14 +228,17 @@ fun GalleryItemView(diary: Diary, itemHeight: Dp, onClick: (Diary) -> Unit) {
 @Composable
 fun GalleryReadOrWriteScreen(
     writeOrReadScreenState: GalleryViewModel.WriteAndRead,
-    onChangeState: () -> Unit
+    onChangeState: () -> Unit,
+    onClickWrite: () -> Unit
 ) {
     when (writeOrReadScreenState) {
         GalleryViewModel.WriteAndRead.WRITE -> {
             FullDialog(
                 title = GalleryViewModel.WriteAndRead.WRITE.text,
                 screen = { GalleryWriteScreen() },
-                onBackIconPressed = onChangeState
+                rightIcon = Icons.AutoMirrored.Filled.ArrowRightAlt,
+                onBackIconPressed = onChangeState,
+                onClickPressed = onClickWrite
             )
         }
 
