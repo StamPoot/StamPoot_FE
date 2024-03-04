@@ -103,7 +103,7 @@ fun DiaryMainReadLayout(readingDiary: Diary, itemHeight: Dp, onClick: (Uri) -> U
     SpaceMaker(itemHeight / 40)
     ImagesLayout(
         selectedImages = readingDiary.photoURLs.map { Uri.parse(it) },
-        onClick = onClick
+        onClickPhoto = onClick
     )
     SpaceMaker(itemHeight / 40)
     Box(

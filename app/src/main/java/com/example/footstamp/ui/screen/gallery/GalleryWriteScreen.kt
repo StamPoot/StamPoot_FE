@@ -63,30 +63,23 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             DiaryMainWriteLayout(
                 writingDiary = writingDiary,
                 itemHeight = itemHeight,
-                onPhotoSelect = { galleryViewModel.openImageDetail(it) },
+                onPhotoIndexSelect = { galleryViewModel.updateWriteDiary(thumbnail = it) },
                 onResetIndex = { galleryViewModel.updateWriteDiary(thumbnail = 0) }
             )
         }
-        when (dateOrLocationState) {
-            GalleryViewModel.DateAndLocation.DATE -> {
-                HalfDialog(screen = {
-                    DatePickerView(time = writingDiary.date, onChangeState = { time ->
-                        galleryViewModel.updateWriteDiary(date = time)
-                    }, onDismiss = { galleryViewModel.hideHalfDialog() })
-                }) {}
-            }
+        DateAndLocationDialogLayout(
+            dateOrLocationState = dateOrLocationState,
+            writingDiary = writingDiary,
+            onClickDate = { time ->
+                galleryViewModel.updateWriteDiary(date = time)
+            },
+            onClickLocation = { location ->
+                galleryViewModel.updateWriteDiary(location = location)
+                galleryViewModel.hideHalfDialog()
+            },
+            onDismiss = { galleryViewModel.hideHalfDialog() }
+        )
 
-            GalleryViewModel.DateAndLocation.LOCATION -> {
-                HalfDialog(screen = {
-                    LocationPickerView { location ->
-                        galleryViewModel.updateWriteDiary(location = location)
-                        galleryViewModel.hideHalfDialog()
-                    }
-                }) {}
-            }
-
-            GalleryViewModel.DateAndLocation.NULL -> {}
-        }
         openingImage?.let { ImageDialog(image = it, onClick = { galleryViewModel.closeImage() }) }
     }
 }
@@ -111,7 +104,8 @@ fun DateAndLocationWriteLayout(
 fun DiaryMainWriteLayout(
     writingDiary: Diary,
     itemHeight: Dp,
-    onPhotoSelect: (Uri) -> Unit,
+    onPhotoSelect: (Uri) -> Unit = {},
+    onPhotoIndexSelect: (Int) -> Unit = {},
     onResetIndex: () -> Unit
 ) {
     SpaceMaker(itemHeight / 20)
@@ -120,6 +114,7 @@ fun DiaryMainWriteLayout(
     PhotoSelector(
         maxSelectionCount = 5,
         onClickPhoto = onPhotoSelect,
+        onClickPhotoIndex = onPhotoIndexSelect,
         thumbnailIndex = writingDiary.thumbnail,
         onResetIndex = {
             onResetIndex()
@@ -127,7 +122,36 @@ fun DiaryMainWriteLayout(
 
     )
     SpaceMaker(itemHeight / 40)
-    TextInput(hint = "내용을 입력해주세요.", minLines = 5, maxLines = 10)
+    TextInput(hint = "내용을 입력하세요", minLines = 5, maxLines = 10)
+}
+
+@Composable
+fun DateAndLocationDialogLayout(
+    dateOrLocationState: GalleryViewModel.DateAndLocation,
+    writingDiary: Diary,
+    onClickDate: (LocalDateTime) -> Unit,
+    onClickLocation: (SeoulLocation) -> Unit,
+    onDismiss: () -> Unit
+) {
+    when (dateOrLocationState) {
+        GalleryViewModel.DateAndLocation.DATE -> {
+            HalfDialog(screen = {
+                DatePickerView(
+                    time = writingDiary.date,
+                    onChangeState = onClickDate,
+                    onDismiss = onDismiss
+                )
+            }) {}
+        }
+
+        GalleryViewModel.DateAndLocation.LOCATION -> {
+            HalfDialog(screen = {
+                LocationPickerView(onClickLocation)
+            }) {}
+        }
+
+        GalleryViewModel.DateAndLocation.NULL -> {}
+    }
 }
 
 @Composable

@@ -54,7 +54,8 @@ import kotlin.math.roundToInt
 @Composable
 fun ImagesLayout(
     selectedImages: List<Uri>,
-    onClick: (image: Uri) -> Unit = {},
+    onClickPhoto: (image: Uri) -> Unit = {},
+    onClickIndex: (imageIndex: Int) -> Unit = {},
     thumbnailIndex: Int? = null
 ) {
     val scrollState = rememberScrollState()
@@ -81,7 +82,10 @@ fun ImagesLayout(
                         itemWeight = itemWeight,
                         itemHeight = itemHeight,
                         isThumbnail = index == thumbnailIndex,
-                        onClick = onClick
+                        onClick = {
+                            onClickPhoto(item)
+                            onClickIndex(index)
+                        }
                     )
                 }
             }
@@ -160,6 +164,7 @@ fun PhotoItem(item: Int, itemWeight: Dp, itemHeight: Dp, onClick: (image: Int) -
 fun PhotoSelector(
     maxSelectionCount: Int = 5,
     onClickPhoto: (image: Uri) -> Unit,
+    onClickPhotoIndex: (imageIndex: Int) -> Unit,
     thumbnailIndex: Int?,
     onResetIndex: () -> Unit
 ) {
@@ -189,7 +194,8 @@ fun PhotoSelector(
     ) {
         ImagesLayout(
             selectedImages = selectedImages,
-            onClick = onClickPhoto,
+            onClickPhoto = onClickPhoto,
+            onClickIndex = onClickPhotoIndex,
             thumbnailIndex = thumbnailIndex
         )
         AddButton(buttonText) { launchPhotoPicker() }
