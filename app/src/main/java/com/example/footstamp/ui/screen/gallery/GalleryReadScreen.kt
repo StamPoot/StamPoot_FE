@@ -86,7 +86,7 @@ fun DateAndLocationReadLayout(itemHeight: Dp, readingDiary: Diary) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(imageVector = Icons.Default.PinDrop, contentDescription = null, tint = MainColor)
             TitleText(
-                text = "서울 ${readingDiary.location.location}에서",
+                text = readingDiary.location.location,
                 color = MainColor,
                 textAlign = TextAlign.Start
             )

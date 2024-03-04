@@ -139,7 +139,8 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             onChangeState = { galleryViewModel.hideWriteOrReadScreen() },
             onClickWrite = {
                 galleryViewModel.addDiary()
-                galleryViewModel.hideWriteOrReadScreen()}
+                galleryViewModel.hideWriteOrReadScreen()
+            }
         )
     }
 }
@@ -170,7 +171,7 @@ fun GalleryGridLayout(
     onClick: (Diary) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val itemHeight = LocalConfiguration.current.screenHeightDp.dp / 4
+    val itemHeight = LocalConfiguration.current.screenHeightDp.dp
 
     Column(
         modifier = Modifier
@@ -187,7 +188,7 @@ fun GalleryGridLayout(
                 diaries.sortedBy { it.location }
             }
         }.forEach { diary ->
-            GalleryItemView(diary = diary, itemHeight = itemHeight, onClick = onClick)
+            GalleryItemView(diary = diary, itemHeight = itemHeight / 4, onClick = onClick)
         }
     }
 }
