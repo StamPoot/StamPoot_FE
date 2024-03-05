@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
-import androidx.compose.material.icons.filled.ArrowRightAlt
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -39,7 +38,6 @@ import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
-import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyLargeText
 import com.example.footstamp.ui.components.FullDialog
@@ -49,7 +47,6 @@ import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.components.TransparentButton
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
-import java.time.LocalDateTime
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -65,70 +62,13 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
     }) { paddingValue ->
         val currentDiary by galleryViewModel.diaries.collectAsState()
 
-        val diaryList = listOf(
-            Diary(
-                title = "햄스터의 날",
-                date = LocalDateTime.now().minusDays(10),
-                message = "햄스터를 키웠던 날이에요",
-                isShared = false,
-                location = SeoulLocation.EAST,
-                photoURLs = listOf(
-                    "https://i.namu.wiki/i/QQZ3wT3XWJ9FveqmsNKBXQz3O5S-AX3HxTs4ncjzTbUwmnJJlKQyMrQRlOlitttbylEWLViDSzIeRepZTfFj7dh_ZBJeh0Z0Rcr4G6EaeFDySQwUHoB5sPkp6PqOP9sA83-_4P1UyEwfW1s8TLcTQA.webp",
-                    "https://i.namu.wiki/i/QQZ3wT3XWJ9FveqmsNKBXQz3O5S-AX3HxTs4ncjzTbUwmnJJlKQyMrQRlOlitttbylEWLViDSzIeRepZTfFj7dh_ZBJeh0Z0Rcr4G6EaeFDySQwUHoB5sPkp6PqOP9sA83-_4P1UyEwfW1s8TLcTQA.webp",
-                    "https://i.namu.wiki/i/QQZ3wT3XWJ9FveqmsNKBXQz3O5S-AX3HxTs4ncjzTbUwmnJJlKQyMrQRlOlitttbylEWLViDSzIeRepZTfFj7dh_ZBJeh0Z0Rcr4G6EaeFDySQwUHoB5sPkp6PqOP9sA83-_4P1UyEwfW1s8TLcTQA.webp"
-                ),
-                thumbnail = 0,
-                uid = "a1234"
-            ),
-            Diary(
-                title = "햄스터의 성장",
-                date = LocalDateTime.now().minusDays(3),
-                message = "햄스터가 성장한 날이에요",
-                isShared = false,
-                location = SeoulLocation.CENTRAL,
-                photoURLs = listOf("https://i.namu.wiki/i/hLKYGp1WjQtZHr8ToxGT5uArhm_PIofVFdhytyMIAg_86n-Xxu-w0JzOpHYmw7abCxCqAdOP_NkTvTKUYE-Vb0edjhahGLCQ6tx0hsfg3LG3meX8t0_dDSkBGinhdctoZRaFIR2TE1rXHO6BIVu2Xw.webp"),
-                thumbnail = 0,
-                uid = "a1234"
-            ),
-            Diary(
-                title = "햄스터의 햄스터",
-                date = LocalDateTime.now().minusDays(7),
-                message = "햄스터가 햄스터한 날이에요",
-                isShared = false,
-                location = SeoulLocation.WEST,
-                photoURLs = listOf("https://i.namu.wiki/i/OkhQuyObzv60hx9Mur4W_hQvvKrgf_mlBFYiSs_WVNjfV7-2LnLKSz_yf99XKQB1FxpzXbzymxqTEgr2JjO7jn6jHGn1U_FEcECV9ZE9Yyx-R65U_59o99aU-ozL2nuRsnJ8x6OyzoeaL6E473vd0w.webp"),
-                thumbnail = 0,
-                uid = "a1234"
-            ),
-            Diary(
-                title = "햄스터의 분노",
-                date = LocalDateTime.now().minusDays(14),
-                message = "햄스터가 햄스터한 날이에요",
-                isShared = false,
-                location = SeoulLocation.NORTH,
-                photoURLs = listOf("https://i.namu.wiki/i/OkhQuyObzv60hx9Mur4W_hQvvKrgf_mlBFYiSs_WVNjfV7-2LnLKSz_yf99XKQB1FxpzXbzymxqTEgr2JjO7jn6jHGn1U_FEcECV9ZE9Yyx-R65U_59o99aU-ozL2nuRsnJ8x6OyzoeaL6E473vd0w.webp"),
-                thumbnail = 0,
-                uid = "a1234"
-            ),
-            Diary(
-                title = "햄스터의 진노",
-                date = LocalDateTime.now().minusDays(21),
-                message = "햄스터가 햄스터한 날이에요",
-                isShared = false,
-                location = SeoulLocation.SOUTH,
-                photoURLs = listOf("https://i.namu.wiki/i/OkhQuyObzv60hx9Mur4W_hQvvKrgf_mlBFYiSs_WVNjfV7-2LnLKSz_yf99XKQB1FxpzXbzymxqTEgr2JjO7jn6jHGn1U_FEcECV9ZE9Yyx-R65U_59o99aU-ozL2nuRsnJ8x6OyzoeaL6E473vd0w.webp"),
-                thumbnail = 0,
-                uid = "a1234"
-            ),
-        )
-
         Column {
             TopBar(text = stringResource(R.string.screen_gallery), backgroundColor = Color.White)
             GallerySortLayout(
                 sortType = sortType,
                 onChangeSortState = { galleryViewModel.changeSortSwitch() })
 
-            GalleryGridLayout(diaries = diaryList,
+            GalleryGridLayout(diaries = currentDiary,
                 paddingValues = paddingValue,
                 sortType = sortType,
                 onClick = { galleryViewModel.showReadScreen(it) })
@@ -138,8 +78,9 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             writeOrReadScreenState = writeOrReadScreenState,
             onChangeState = { galleryViewModel.hideWriteOrReadScreen() },
             onClickWrite = {
-                galleryViewModel.addDiary()
-                galleryViewModel.hideWriteOrReadScreen()
+                galleryViewModel.addDiary().also {
+                    if (it) galleryViewModel.hideWriteOrReadScreen()
+                }
             }
         )
     }
@@ -202,7 +143,7 @@ fun GalleryItemView(diary: Diary, itemHeight: Dp, onClick: (Diary) -> Unit) {
             .background(SubColor)
     ) {
         AsyncImage(
-            model = diary.photoURLs[diary.thumbnail],
+            model = diary.photoURIs[diary.thumbnail],
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()

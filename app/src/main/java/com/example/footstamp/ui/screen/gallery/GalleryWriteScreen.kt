@@ -64,7 +64,9 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 writingDiary = writingDiary,
                 itemHeight = itemHeight,
                 onPhotoIndexSelect = { galleryViewModel.updateWriteDiary(thumbnail = it) },
-                onResetIndex = { galleryViewModel.updateWriteDiary(thumbnail = 0) }
+                onSetPhoto = { galleryViewModel.updateWriteDiary(photoURLs = it, thumbnail = 0) },
+                onTitleFieldChange = { galleryViewModel.updateWriteDiary(title = it) },
+                onMessageFieldChange = { galleryViewModel.updateWriteDiary(message = it) }
             )
         }
         DateAndLocationDialogLayout(
@@ -106,23 +108,23 @@ fun DiaryMainWriteLayout(
     itemHeight: Dp,
     onPhotoSelect: (Uri) -> Unit = {},
     onPhotoIndexSelect: (Int) -> Unit = {},
-    onResetIndex: () -> Unit
+    onSetPhoto: (List<String>) -> Unit,
+    onTitleFieldChange: (text: String) -> Unit,
+    onMessageFieldChange: (text: String) -> Unit,
 ) {
     SpaceMaker(itemHeight / 20)
-    TextInput(hint = "제목")
+    TextInput(hint = "제목", onValueChange = onTitleFieldChange)
     SpaceMaker(itemHeight / 40)
     PhotoSelector(
         maxSelectionCount = 5,
         onClickPhoto = onPhotoSelect,
         onClickPhotoIndex = onPhotoIndexSelect,
         thumbnailIndex = writingDiary.thumbnail,
-        onResetIndex = {
-            onResetIndex()
-        }
+        onSetPhoto = onSetPhoto
 
     )
     SpaceMaker(itemHeight / 40)
-    TextInput(hint = "내용을 입력하세요", minLines = 5, maxLines = 10)
+    TextInput(hint = "내용을 입력하세요", minLines = 5, maxLines = 10, onValueChange = onMessageFieldChange)
 }
 
 @Composable

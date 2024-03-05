@@ -49,7 +49,7 @@ class GalleryViewModel @Inject constructor(
             date = LocalDateTime.now(),
             location = SeoulLocation.CENTRAL,
             message = "",
-            photoURLs = listOf(),
+            photoURIs = listOf(),
             thumbnail = 0,
             uid = ""
         ), Diary(
@@ -57,7 +57,7 @@ class GalleryViewModel @Inject constructor(
             date = LocalDateTime.now(),
             location = SeoulLocation.CENTRAL,
             message = "",
-            photoURLs = listOf(),
+            photoURIs = listOf(),
             thumbnail = 0,
             uid = ""
         )
@@ -76,12 +76,15 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun addDiary() {
+    fun addDiary(): Boolean {
+        if (!_writingDiary.value.checkDiary()) return false
+
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.insertDiary(_writingDiary.value)
             }
         }
+        return true
     }
 
     fun addDiaries(diaries: List<Diary>) {
@@ -106,7 +109,7 @@ class GalleryViewModel @Inject constructor(
         message: String = writingDiary.value.message,
         isShared: Boolean = writingDiary.value.isShared,
         location: SeoulLocation = writingDiary.value.location,
-        photoURLs: List<String> = writingDiary.value.photoURLs,
+        photoURLs: List<String> = writingDiary.value.photoURIs,
         thumbnail: Int = writingDiary.value.thumbnail,
         uid: String = writingDiary.value.uid
     ) {
@@ -116,7 +119,7 @@ class GalleryViewModel @Inject constructor(
             message = message,
             isShared = isShared,
             location = location,
-            photoURLs = photoURLs,
+            photoURIs = photoURLs,
             thumbnail = thumbnail,
             uid = uid
         )

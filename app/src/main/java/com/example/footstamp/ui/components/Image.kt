@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -25,7 +24,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -166,7 +164,7 @@ fun PhotoSelector(
     onClickPhoto: (image: Uri) -> Unit,
     onClickPhotoIndex: (imageIndex: Int) -> Unit,
     thumbnailIndex: Int?,
-    onResetIndex: () -> Unit
+    onSetPhoto: (List<String>) -> Unit
 ) {
     var selectedImages by remember {
         mutableStateOf<List<Uri>>(emptyList())
@@ -178,7 +176,7 @@ fun PhotoSelector(
         ),
         onResult = { uris ->
             selectedImages = uris
-            onResetIndex()
+            onSetPhoto(uris.map { it.toString() })
         }
     )
 
