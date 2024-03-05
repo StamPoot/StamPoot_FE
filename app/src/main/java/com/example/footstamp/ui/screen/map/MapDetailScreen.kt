@@ -12,11 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.footstamp.R
+import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.theme.MainColor
 
 @Composable
-fun MapDetailScreen(mapViewModel: MapViewModel = hiltViewModel()) {
+fun MapDetailScreen(seoulLocation: SeoulLocation, mapViewModel: MapViewModel = hiltViewModel()) {
     BaseScreen { paddingValue ->
         val mapState by mapViewModel.screenMapState.collectAsState()
 
@@ -27,12 +29,9 @@ fun MapDetailScreen(mapViewModel: MapViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            mapState?.let { painterResource(id = it.map) }?.let {
-                Image(
-                    painter = it,
-                    contentDescription = null
-                )
-            }
+            Image(
+                painter = painterResource(id = seoulLocation.map), contentDescription = null
+            )
         }
     }
 }

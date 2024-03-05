@@ -118,7 +118,7 @@ fun MapDetailScreenLayout(
 ) {
     FullDialog(
         title = mapScreenState.location,
-        screen = { MapDetailScreen() },
+        screen = { MapDetailScreen(mapScreenState) },
         onBackIconPressed = onDismiss,
     )
 }
