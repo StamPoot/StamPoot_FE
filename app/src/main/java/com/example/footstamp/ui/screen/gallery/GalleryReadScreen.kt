@@ -1,6 +1,6 @@
 package com.example.footstamp.ui.screen.gallery
 
-import android.net.Uri
+import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -95,14 +95,14 @@ fun DateAndLocationReadLayout(itemHeight: Dp, readingDiary: Diary) {
 }
 
 @Composable
-fun DiaryMainReadLayout(readingDiary: Diary, itemHeight: Dp, onClick: (Uri) -> Unit) {
+fun DiaryMainReadLayout(readingDiary: Diary, itemHeight: Dp, onClick: (Bitmap) -> Unit) {
     SpaceMaker(itemHeight / 20)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
         TitleLargeText(text = readingDiary.title, color = Color.Black)
     }
     SpaceMaker(itemHeight / 40)
     ImagesLayout(
-        selectedImages = readingDiary.photoURIs.map { Uri.parse(it) },
+        selectedImages = readingDiary.photoBitmapStrings.map { Formatter.convertStringToBitmap(it) },
         onClickPhoto = onClick
     )
     SpaceMaker(itemHeight / 40)

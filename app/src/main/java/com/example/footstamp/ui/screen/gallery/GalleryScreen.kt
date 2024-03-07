@@ -143,7 +143,7 @@ fun GalleryItemView(diary: Diary, itemHeight: Dp, onClick: (Diary) -> Unit) {
             .background(SubColor)
     ) {
         AsyncImage(
-            model = diary.photoURIs[diary.thumbnail],
+            model = Formatter.convertStringToBitmap(diary.photoBitmapStrings[diary.thumbnail]),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()

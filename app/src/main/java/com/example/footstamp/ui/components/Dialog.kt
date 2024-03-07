@@ -1,5 +1,6 @@
 package com.example.footstamp.ui.components
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -111,7 +112,7 @@ fun HalfDialog(
 }
 
 @Composable
-fun ImageDialog(image: Uri, onClick: () -> Unit = {}) {
+fun ImageDialog(image: Bitmap, onClick: () -> Unit = {}) {
     Box(
         modifier = Modifier
             .background(Color.Black)

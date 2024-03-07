@@ -1,6 +1,6 @@
 package com.example.footstamp.ui.screen.gallery
 
-import android.net.Uri
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
@@ -34,7 +34,7 @@ class GalleryViewModel @Inject constructor(
     private val _readingDiary = MutableStateFlow(Diary())
     val readingDiary = _readingDiary.asStateFlow()
 
-    private val _openingImage = MutableStateFlow<Uri?>(null)
+    private val _openingImage = MutableStateFlow<Bitmap?>(null)
     val openingImage = _openingImage.asStateFlow()
 
     private val _writeOrRead = MutableStateFlow(WriteAndRead.NULL)
@@ -43,29 +43,8 @@ class GalleryViewModel @Inject constructor(
     private val _dateOrLocation = MutableStateFlow(DateAndLocation.NULL)
     val dateOrLocation = _dateOrLocation.asStateFlow()
 
-    private val tempDiaries = listOf(
-        Diary(
-            title = "",
-            date = LocalDateTime.now(),
-            location = SeoulLocation.CENTRAL,
-            message = "",
-            photoURIs = listOf(),
-            thumbnail = 0,
-            uid = ""
-        ), Diary(
-            title = "",
-            date = LocalDateTime.now(),
-            location = SeoulLocation.CENTRAL,
-            message = "",
-            photoURIs = listOf(),
-            thumbnail = 0,
-            uid = ""
-        )
-    )
-
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteAll()
             repository.getAll().distinctUntilChanged().collect { diaryList ->
                 if (diaryList.isEmpty()) {
                     Log.d("TAG", "EMPTY")
@@ -77,7 +56,10 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun addDiary(): Boolean {
-        if (!_writingDiary.value.checkDiary()) return false
+        if (_writingDiary.value.checkDiary() != null) {
+
+            return false
+        }
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -109,7 +91,7 @@ class GalleryViewModel @Inject constructor(
         message: String = writingDiary.value.message,
         isShared: Boolean = writingDiary.value.isShared,
         location: SeoulLocation = writingDiary.value.location,
-        photoURLs: List<String> = writingDiary.value.photoURIs,
+        photoURLs: List<String> = writingDiary.value.photoBitmapStrings,
         thumbnail: Int = writingDiary.value.thumbnail,
         uid: String = writingDiary.value.uid
     ) {
@@ -119,7 +101,7 @@ class GalleryViewModel @Inject constructor(
             message = message,
             isShared = isShared,
             location = location,
-            photoURIs = photoURLs,
+            photoBitmapStrings = photoURLs,
             thumbnail = thumbnail,
             uid = uid
         )
@@ -133,7 +115,7 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun openImageDetail(image: Uri) {
+    fun openImageDetail(image: Bitmap) {
         _openingImage.value = image
     }
 

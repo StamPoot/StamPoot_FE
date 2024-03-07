@@ -42,7 +42,7 @@ interface DiaryDao {
     @Query("UPDATE diaries SET diary_location = :location WHERE id = :id")
     fun updateLocation(id: Long, location: SeoulLocation)
 
-    @Query("UPDATE diaries SET diary_photo_urls = :photoURLs WHERE id = :id")
+    @Query("UPDATE diaries SET diary_photo_bitmaps = :photoURLs WHERE id = :id")
     fun updatePhotoUrl(id: Long, photoURLs: List<String>)
 
     @Query("UPDATE diaries SET diary_thumbnail= :thumbNail WHERE id = :id")

@@ -1,6 +1,5 @@
 package com.example.footstamp.data.model
 
-import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -14,7 +13,7 @@ data class Diary(
     @ColumnInfo(name = "diary_message") var message: String = "",
     @ColumnInfo(name = "diary_shared") var isShared: Boolean = false,
     @ColumnInfo(name = "diary_location") var location: SeoulLocation = SeoulLocation.CENTRAL,
-    @ColumnInfo(name = "diary_photo_urls") val photoURIs: List<String> = emptyList(),
+    @ColumnInfo(name = "diary_photo_bitmaps") val photoBitmapStrings: List<String> = emptyList(),
     @ColumnInfo(name = "diary_thumbnail") var thumbnail: Int = 0,
     @ColumnInfo(name = "diary_uid") val uid: String = ""
 ) {
@@ -25,18 +24,12 @@ data class Diary(
         return "id = $id, name = $title, message = $message, location = $location"
     }
 
-    fun checkDiary(): Boolean {
-        Log.d("TAG",title.length.toString())
-        if (title.length < 3 || title.length > 10) return false
-        Log.d("TAG",date.toString())
-        if (date > LocalDateTime.now()) return false
-        Log.d("TAG",message.length.toString())
-        if (message.length < 5 || message.length > 100) return false
-        Log.d("TAG","3")
-        if (photoURIs.isEmpty()) return false
-        Log.d("TAG","4")
-        if (thumbnail > photoURIs.size - 1) return false
-        Log.d("TAG","5")
-        return true
+    fun checkDiary(): String? {
+        if (title.length <= 3 || title.length > 10) return "제목은 3자에서 10자로 지어주세요"
+        if (date > LocalDateTime.now()) return "미래의 일기는 작성할 수 없어요"
+        if (message.length <= 5 || message.length > 100) return "내용은 5~100자로 작성해주세요"
+        if (photoBitmapStrings.isEmpty()) return "사진을 넣어주세요"
+        if (thumbnail > photoBitmapStrings.size - 1) return "썸네일을 지정해주세요"
+        return null
     }
 }

@@ -1,5 +1,9 @@
 package com.example.footstamp.ui.components
 
+import android.content.ContentResolver
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -45,14 +49,15 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.footstamp.R
+import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import kotlin.math.roundToInt
 
 @Composable
 fun ImagesLayout(
-    selectedImages: List<Uri>,
-    onClickPhoto: (image: Uri) -> Unit = {},
+    selectedImages: List<Bitmap>,
+    onClickPhoto: (image: Bitmap) -> Unit = {},
     onClickIndex: (imageIndex: Int) -> Unit = {},
     thumbnailIndex: Int? = null
 ) {
@@ -109,10 +114,10 @@ fun ImagesLayout(
 
 @Composable
 fun PhotoItem(
-    item: Uri,
+    item: Bitmap,
     itemWeight: Dp,
     itemHeight: Dp,
-    onClick: (image: Uri) -> Unit = {},
+    onClick: (image: Bitmap) -> Unit = {},
     isThumbnail: Boolean = false
 ) {
     Box(
@@ -161,13 +166,14 @@ fun PhotoItem(item: Int, itemWeight: Dp, itemHeight: Dp, onClick: (image: Int) -
 @Composable
 fun PhotoSelector(
     maxSelectionCount: Int = 5,
-    onClickPhoto: (image: Uri) -> Unit,
+    onClickPhoto: (image: Bitmap) -> Unit,
     onClickPhotoIndex: (imageIndex: Int) -> Unit,
     thumbnailIndex: Int?,
+    contentResolver: ContentResolver,
     onSetPhoto: (List<String>) -> Unit
 ) {
     var selectedImages by remember {
-        mutableStateOf<List<Uri>>(emptyList())
+        mutableStateOf<List<Bitmap>>(emptyList())
     }
     val buttonText = "사진 선택"
     val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
@@ -175,8 +181,10 @@ fun PhotoSelector(
             maxItems = maxSelectionCount
         ),
         onResult = { uris ->
-            selectedImages = uris
-            onSetPhoto(uris.map { it.toString() })
+            uris.map { uriToBitmap(it, contentResolver) }.also { bitmapList ->
+                selectedImages = bitmapList
+                onSetPhoto(bitmapList.map { Formatter.convertBitmapToString(it) })
+            }
         }
     )
 
@@ -201,7 +209,7 @@ fun PhotoSelector(
 }
 
 @Composable
-fun ZoomableImage(image: Uri) {
+fun ZoomableImage(image: Bitmap) {
     val scale = remember { mutableFloatStateOf(1f) }
     val offsetX = remember { mutableFloatStateOf(0f) }
     val offsetY = remember { mutableFloatStateOf(0f) }
@@ -234,4 +242,8 @@ fun ZoomableImage(image: Uri) {
             contentDescription = null
         )
     }
+}
+
+fun uriToBitmap(uri: Uri, contentResolver: ContentResolver): Bitmap {
+    return ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
 }

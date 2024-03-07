@@ -1,5 +1,7 @@
 package com.example.footstamp.ui.screen.gallery
 
+import android.content.ContentResolver
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,6 +51,7 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
     BaseScreen {
         val scrollState = rememberScrollState()
+        val context = LocalContext.current
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -66,6 +70,7 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 onPhotoIndexSelect = { galleryViewModel.updateWriteDiary(thumbnail = it) },
                 onSetPhoto = { galleryViewModel.updateWriteDiary(photoURLs = it, thumbnail = 0) },
                 onTitleFieldChange = { galleryViewModel.updateWriteDiary(title = it) },
+                contentResolver = context.contentResolver,
                 onMessageFieldChange = { galleryViewModel.updateWriteDiary(message = it) }
             )
         }
@@ -106,7 +111,8 @@ fun DateAndLocationWriteLayout(
 fun DiaryMainWriteLayout(
     writingDiary: Diary,
     itemHeight: Dp,
-    onPhotoSelect: (Uri) -> Unit = {},
+    contentResolver: ContentResolver,
+    onPhotoSelect: (Bitmap) -> Unit = {},
     onPhotoIndexSelect: (Int) -> Unit = {},
     onSetPhoto: (List<String>) -> Unit,
     onTitleFieldChange: (text: String) -> Unit,
@@ -120,8 +126,8 @@ fun DiaryMainWriteLayout(
         onClickPhoto = onPhotoSelect,
         onClickPhotoIndex = onPhotoIndexSelect,
         thumbnailIndex = writingDiary.thumbnail,
-        onSetPhoto = onSetPhoto
-
+        contentResolver = contentResolver,
+        onSetPhoto = onSetPhoto,
     )
     SpaceMaker(itemHeight / 40)
     TextInput(hint = "내용을 입력하세요", minLines = 5, maxLines = 10, onValueChange = onMessageFieldChange)
