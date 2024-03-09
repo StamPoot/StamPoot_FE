@@ -1,12 +1,16 @@
 package com.example.footstamp.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.footstamp.data.login.GoogleLogin
 import com.example.footstamp.ui.screen.login.LoginScreen
 import com.example.footstamp.ui.theme.FootStampTheme
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.CommonStatusCodes
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,8 +30,6 @@ class LoginActivity : ComponentActivity() {
                     onKakaoLogin = { kakaoLoginEvent() })
             }
         }
-
-
     }
 
     private fun googleLoginEvent() {
@@ -37,5 +39,52 @@ class LoginActivity : ComponentActivity() {
 
     private fun kakaoLoginEvent() {
 
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            2 -> {
+                try {
+                    val credential = googleLogin.oneTapClient.getSignInCredentialFromIntent(data)
+                    val idToken = credential.googleIdToken
+                    when {
+                        idToken != null -> {
+                            // Got an ID token from Google. Use it to authenticate
+                            // with your backend.
+                            Log.d("TAG", "Got ID token.")
+                            Log.d("TAG", idToken)
+                        }
+
+                        else -> {
+                            // Shouldn't happen.
+                            Log.d("TAG", "No ID token!")
+                        }
+                    }
+                } catch (e: ApiException) {
+                    when (e.statusCode) {
+                        CommonStatusCodes.CANCELED -> {
+                            Log.d("TAG", "One-tap dialog was closed.")
+                            // Don't re-prompt the user.
+//                            showOneTapUI = false
+                        }
+
+                        CommonStatusCodes.NETWORK_ERROR -> {
+                            Log.d("TAG", "One-tap encountered a network error.")
+                            // Try again or just ignore.
+                        }
+
+                        else -> {
+                            Log.d(
+                                "TAG", "Couldn't get credential from result." +
+                                        " (${e.localizedMessage})"
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }

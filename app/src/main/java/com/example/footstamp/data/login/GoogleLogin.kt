@@ -14,7 +14,7 @@ import com.google.android.gms.auth.api.identity.SignInClient
 
 class GoogleLogin {
 
-    private lateinit var oneTapClient: SignInClient
+    lateinit var oneTapClient: SignInClient
     private lateinit var signInRequest: BeginSignInRequest
 
     fun googleLogin(context: Context) {
@@ -55,7 +55,7 @@ class GoogleLogin {
             .addOnFailureListener(activity) { e ->
                 // No saved credentials found. Launch the One Tap sign-up flow, or
                 // do nothing and continue presenting the signed-out UI.
-                Log.d(ContentValues.TAG, e.localizedMessage)
+                Log.d(ContentValues.TAG, "0.3")
             }
     }
 }
