@@ -45,7 +45,7 @@ fun DatePickerView(
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
             })
-        SpaceMaker(32.dp)
+        SpaceMaker(height = 32.dp)
         Button(onClick = {
             datePickerState.selectedDateMillis?.let {
                 onChangeState(longToLocalDateTime(it))
