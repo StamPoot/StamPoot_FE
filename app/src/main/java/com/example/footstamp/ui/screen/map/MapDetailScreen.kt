@@ -19,7 +19,7 @@ import com.example.footstamp.ui.theme.MainColor
 
 @Composable
 fun MapDetailScreen(seoulLocation: SeoulLocation, mapViewModel: MapViewModel = hiltViewModel()) {
-    BaseScreen { paddingValue ->
+    BaseScreen { paddingValue, screenWidth, screenHeight ->
         val mapState by mapViewModel.screenMapState.collectAsState()
 
         Column(

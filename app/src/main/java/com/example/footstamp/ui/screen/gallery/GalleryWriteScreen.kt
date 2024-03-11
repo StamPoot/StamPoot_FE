@@ -2,7 +2,6 @@ package com.example.footstamp.ui.screen.gallery
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,10 +19,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
@@ -42,21 +39,18 @@ import java.time.LocalDateTime
 
 @Composable
 fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
-
-    val itemWidth = LocalConfiguration.current.screenWidthDp.dp
-    val itemHeight = LocalConfiguration.current.screenHeightDp.dp
     val writingDiary by galleryViewModel.writingDiary.collectAsState()
     val openingImage by galleryViewModel.openingImage.collectAsState()
     val dateOrLocationState by galleryViewModel.dateOrLocation.collectAsState()
 
-    BaseScreen {
+    BaseScreen { paddingValue, screenWidth, screenHeight ->
         val scrollState = rememberScrollState()
         val context = LocalContext.current
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(horizontal = itemWidth / 12),
+                .padding(horizontal = screenWidth / 12),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             DateAndLocationWriteLayout(
@@ -66,7 +60,8 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
             DiaryMainWriteLayout(
                 writingDiary = writingDiary,
-                itemHeight = itemHeight,
+                screenWidth = screenWidth,
+                screenHeight = screenHeight,
                 onPhotoIndexSelect = { galleryViewModel.updateWriteDiary(thumbnail = it) },
                 onSetPhoto = { galleryViewModel.updateWriteDiary(photoURLs = it, thumbnail = 0) },
                 onTitleFieldChange = { galleryViewModel.updateWriteDiary(title = it) },
@@ -110,7 +105,8 @@ fun DateAndLocationWriteLayout(
 @Composable
 fun DiaryMainWriteLayout(
     writingDiary: Diary,
-    itemHeight: Dp,
+    screenWidth: Dp,
+    screenHeight: Dp,
     contentResolver: ContentResolver,
     onPhotoSelect: (Bitmap) -> Unit = {},
     onPhotoIndexSelect: (Int) -> Unit = {},
@@ -118,18 +114,20 @@ fun DiaryMainWriteLayout(
     onTitleFieldChange: (text: String) -> Unit,
     onMessageFieldChange: (text: String) -> Unit,
 ) {
-    SpaceMaker(itemHeight / 20)
+    SpaceMaker(screenHeight / 20)
     TextInput(hint = "제목", onValueChange = onTitleFieldChange)
-    SpaceMaker(itemHeight / 40)
+    SpaceMaker(screenHeight / 40)
     PhotoSelector(
         maxSelectionCount = 5,
+        screenWidth = screenWidth,
+        screenHeight = screenHeight,
         onClickPhoto = onPhotoSelect,
         onClickPhotoIndex = onPhotoIndexSelect,
         thumbnailIndex = writingDiary.thumbnail,
         contentResolver = contentResolver,
         onSetPhoto = onSetPhoto,
     )
-    SpaceMaker(itemHeight / 40)
+    SpaceMaker(screenHeight / 40)
     TextInput(hint = "내용을 입력하세요", minLines = 5, maxLines = 10, onValueChange = onMessageFieldChange)
 }
 

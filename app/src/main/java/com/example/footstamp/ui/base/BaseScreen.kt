@@ -13,6 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.footstamp.ui.theme.BackColor
 
@@ -22,7 +25,7 @@ fun BaseScreen(
     modifier: Modifier = Modifier,
     floatingButton: @Composable () -> Unit = {},
     containerColor: Color = Color.White,
-    content: @Composable (paddingValue: PaddingValues) -> Unit,
+    content: @Composable (paddingValue: PaddingValues, screenWidth: Dp, screenHeight: Dp) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -30,7 +33,9 @@ fun BaseScreen(
         floatingActionButton = floatingButton,
         containerColor = containerColor
     ) { paddingValue ->
-        content(paddingValue)
+        val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+        val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+        content(paddingValue, screenWidth, screenHeight)
     }
 }
 

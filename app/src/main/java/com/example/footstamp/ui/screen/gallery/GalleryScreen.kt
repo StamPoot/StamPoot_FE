@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -59,7 +58,7 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
         GalleryFloatingButton {
             galleryViewModel.showWriteScreen()
         }
-    }) { paddingValue ->
+    }) { paddingValue, screenWidth, screenHeight ->
         val currentDiary by galleryViewModel.diaries.collectAsState()
 
         Column {
@@ -71,6 +70,7 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             GalleryGridLayout(diaries = currentDiary,
                 paddingValues = paddingValue,
                 sortType = sortType,
+                screenHeight = screenHeight,
                 onClick = { galleryViewModel.showReadScreen(it) })
         }
 
@@ -107,12 +107,12 @@ fun GallerySortLayout(
 @Composable
 fun GalleryGridLayout(
     diaries: List<Diary>,
+    screenHeight: Dp,
     paddingValues: PaddingValues,
     sortType: GalleryViewModel.SortByDateOrLocation,
     onClick: (Diary) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val itemHeight = LocalConfiguration.current.screenHeightDp.dp
 
     Column(
         modifier = Modifier
@@ -129,17 +129,17 @@ fun GalleryGridLayout(
                 diaries.sortedBy { it.location }
             }
         }.forEach { diary ->
-            GalleryItemView(diary = diary, itemHeight = itemHeight / 4, onClick = onClick)
+            GalleryItemView(diary = diary, screenHeight = screenHeight / 4, onClick = onClick)
         }
     }
 }
 
 @Composable
-fun GalleryItemView(diary: Diary, itemHeight: Dp, onClick: (Diary) -> Unit) {
+fun GalleryItemView(diary: Diary, screenHeight: Dp, onClick: (Diary) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(itemHeight)
+            .height(screenHeight)
             .background(SubColor)
     ) {
         AsyncImage(

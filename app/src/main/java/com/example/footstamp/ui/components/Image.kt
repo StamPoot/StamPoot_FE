@@ -2,7 +2,6 @@ package com.example.footstamp.ui.components
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -43,7 +42,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -59,11 +57,11 @@ fun ImagesLayout(
     selectedImages: List<Bitmap>,
     onClickPhoto: (image: Bitmap) -> Unit = {},
     onClickIndex: (imageIndex: Int) -> Unit = {},
+    screenWidth: Dp,
+    screenHeight: Dp,
     thumbnailIndex: Int? = null
 ) {
     val scrollState = rememberScrollState()
-    val itemWeight = LocalConfiguration.current.screenWidthDp.dp
-    val itemHeight = LocalConfiguration.current.screenHeightDp.dp
 
     if (selectedImages.isEmpty()) Row(
         modifier = Modifier.fillMaxWidth(),
@@ -71,8 +69,8 @@ fun ImagesLayout(
     ) {
         PhotoItem(
             item = R.drawable.icon_circle_big,
-            itemWeight = itemWeight,
-            itemHeight = itemHeight
+            screenWidth = screenWidth,
+            screenHeight = screenHeight
         )
     } else {
         Column {
@@ -82,8 +80,8 @@ fun ImagesLayout(
                 selectedImages.forEachIndexed { index, item ->
                     PhotoItem(
                         item = item,
-                        itemWeight = itemWeight,
-                        itemHeight = itemHeight,
+                        screenWidth = screenWidth,
+                        screenHeight = screenHeight,
                         isThumbnail = index == thumbnailIndex,
                         onClick = {
                             onClickPhoto(item)
@@ -115,15 +113,15 @@ fun ImagesLayout(
 @Composable
 fun PhotoItem(
     item: Bitmap,
-    itemWeight: Dp,
-    itemHeight: Dp,
+    screenWidth: Dp,
+    screenHeight: Dp,
     onClick: (image: Bitmap) -> Unit = {},
     isThumbnail: Boolean = false
 ) {
     Box(
         modifier = Modifier
-            .height(itemHeight / 3)
-            .width(itemHeight / 3)
+            .height(screenHeight / 3)
+            .width(screenHeight / 3)
             .background(Color.Transparent)
             .padding(15.dp)
             .border(3.dp, if (isThumbnail) MainColor else Color.Transparent),
@@ -146,11 +144,11 @@ fun PhotoItem(
 }
 
 @Composable
-fun PhotoItem(item: Int, itemWeight: Dp, itemHeight: Dp, onClick: (image: Int) -> Unit = {}) {
+fun PhotoItem(item: Int, screenWidth: Dp, screenHeight: Dp, onClick: (image: Int) -> Unit = {}) {
     Box(
         modifier = Modifier
-            .height(itemHeight / 3)
-            .width(itemWeight * 0.8f)
+            .height(screenHeight / 3)
+            .width(screenWidth * 0.8f)
             .background(MainColor)
     ) {
         AsyncImage(
@@ -166,6 +164,8 @@ fun PhotoItem(item: Int, itemWeight: Dp, itemHeight: Dp, onClick: (image: Int) -
 @Composable
 fun PhotoSelector(
     maxSelectionCount: Int = 5,
+    screenWidth: Dp,
+    screenHeight: Dp,
     onClickPhoto: (image: Bitmap) -> Unit,
     onClickPhotoIndex: (imageIndex: Int) -> Unit,
     thumbnailIndex: Int?,
@@ -202,7 +202,9 @@ fun PhotoSelector(
             selectedImages = selectedImages,
             onClickPhoto = onClickPhoto,
             onClickIndex = onClickPhotoIndex,
-            thumbnailIndex = thumbnailIndex
+            thumbnailIndex = thumbnailIndex,
+            screenWidth = screenWidth,
+            screenHeight = screenHeight
         )
         AddButton(buttonText) { launchPhotoPicker() }
     }

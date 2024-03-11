@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -40,23 +39,22 @@ import com.example.footstamp.ui.theme.MainColor
 fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
     val readingDiary by galleryViewModel.readingDiary.collectAsState()
     val openingImage by galleryViewModel.openingImage.collectAsState()
-    val itemWidth = LocalConfiguration.current.screenWidthDp.dp
-    val itemHeight = LocalConfiguration.current.screenHeightDp.dp
 
-    BaseScreen { paddingValue ->
+    BaseScreen { paddingValue, screenWidth, screenHeight ->
         val scrollState = rememberScrollState()
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(horizontal = itemWidth / 12),
+                .padding(horizontal = screenWidth / 12),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            DateAndLocationReadLayout(itemHeight = itemHeight, readingDiary = readingDiary)
+            DateAndLocationReadLayout(screenHeight = screenHeight, readingDiary = readingDiary)
             DiaryMainReadLayout(
-                itemHeight = itemHeight,
                 readingDiary = readingDiary,
+                screenWidth = screenWidth,
+                screenHeight = screenHeight,
                 onClick = { galleryViewModel.openImageDetail(it) }
             )
         }
@@ -66,8 +64,8 @@ fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun DateAndLocationReadLayout(itemHeight: Dp, readingDiary: Diary) {
-    SpaceMaker(itemHeight / 40)
+fun DateAndLocationReadLayout(screenHeight: Dp, readingDiary: Diary) {
+    SpaceMaker(screenHeight / 40)
     Row(
         horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
     ) {
@@ -95,17 +93,24 @@ fun DateAndLocationReadLayout(itemHeight: Dp, readingDiary: Diary) {
 }
 
 @Composable
-fun DiaryMainReadLayout(readingDiary: Diary, itemHeight: Dp, onClick: (Bitmap) -> Unit) {
-    SpaceMaker(itemHeight / 20)
+fun DiaryMainReadLayout(
+    readingDiary: Diary,
+    screenWidth: Dp,
+    screenHeight: Dp,
+    onClick: (Bitmap) -> Unit
+) {
+    SpaceMaker(screenHeight / 20)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
         TitleLargeText(text = readingDiary.title, color = Color.Black)
     }
-    SpaceMaker(itemHeight / 40)
+    SpaceMaker(screenHeight / 40)
     ImagesLayout(
         selectedImages = readingDiary.photoBitmapStrings.map { Formatter.convertStringToBitmap(it) },
+        screenWidth = screenWidth,
+        screenHeight = screenHeight,
         onClickPhoto = onClick
     )
-    SpaceMaker(itemHeight / 40)
+    SpaceMaker(screenHeight / 40)
     Box(
         modifier = Modifier
             .fillMaxWidth()

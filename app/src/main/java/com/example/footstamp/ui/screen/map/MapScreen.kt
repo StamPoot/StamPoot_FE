@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -16,11 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.example.footstamp.R
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
@@ -34,8 +31,7 @@ import com.example.footstamp.ui.theme.MainColor
 fun MapScreen(
     mapViewModel: MapViewModel = MapViewModel()
 ) {
-    BaseScreen(containerColor = MainColor) { paddingValue ->
-        val itemWidth = LocalConfiguration.current.screenWidthDp.dp
+    BaseScreen(containerColor = MainColor) {  paddingValue, screenWidth, screenHeight ->
         val locationList = SeoulLocation.entries
         val mapScreenState by mapViewModel.screenMapState.collectAsState()
 
@@ -48,7 +44,7 @@ fun MapScreen(
             TopBar(text = stringResource(R.string.screen_map), backgroundColor = Color.White)
             Box(
                 modifier = Modifier
-                    .width(itemWidth)
+                    .width(screenWidth)
                     .fillMaxHeight(),
                 contentAlignment = Alignment.Center
             ) {
@@ -56,7 +52,7 @@ fun MapScreen(
                 locationList.forEach { location ->
                     MapButton(
                         location = location,
-                        itemWidth = itemWidth,
+                        screenWidth = screenWidth,
                         onClick = { mapViewModel.updateMapState(location) }
                     )
                 }
@@ -72,40 +68,40 @@ fun MapScreen(
 }
 
 @Composable
-fun MapButton(location: SeoulLocation, itemWidth: Dp, onClick: () -> Unit) {
+fun MapButton(location: SeoulLocation, screenWidth: Dp, onClick: () -> Unit) {
     when (location) {
         SeoulLocation.CENTRAL -> {
-            Box(modifier = Modifier.offset(itemWidth * -0.06f, itemWidth * 0.01f)) {
+            Box(modifier = Modifier.offset(screenWidth * -0.06f, screenWidth * 0.01f)) {
                 TitleLargeText(text = location.location)
-                TransparentButton(modifier = Modifier.size(itemWidth * 0.15f), onClick = onClick)
+                TransparentButton(modifier = Modifier.size(screenWidth * 0.15f), onClick = onClick)
             }
         }
 
         SeoulLocation.EAST -> {
-            Box(modifier = Modifier.offset(itemWidth * 0.23f, itemWidth * 0.03f)) {
+            Box(modifier = Modifier.offset(screenWidth * 0.23f, screenWidth * 0.03f)) {
                 TitleLargeText(text = location.location)
-                TransparentButton(modifier = Modifier.size(itemWidth * 0.15f), onClick = onClick)
+                TransparentButton(modifier = Modifier.size(screenWidth * 0.15f), onClick = onClick)
             }
         }
 
         SeoulLocation.WEST -> {
-            Box(modifier = Modifier.offset(itemWidth * -0.23f, itemWidth * 0.18f)) {
+            Box(modifier = Modifier.offset(screenWidth * -0.23f, screenWidth * 0.18f)) {
                 TitleLargeText(text = location.location)
-                TransparentButton(modifier = Modifier.size(itemWidth * 0.15f), onClick = onClick)
+                TransparentButton(modifier = Modifier.size(screenWidth * 0.15f), onClick = onClick)
             }
         }
 
         SeoulLocation.SOUTH -> {
-            Box(modifier = Modifier.offset(itemWidth * 0.16f, itemWidth * 0.26f)) {
+            Box(modifier = Modifier.offset(screenWidth * 0.16f, screenWidth * 0.26f)) {
                 TitleLargeText(text = location.location)
-                TransparentButton(modifier = Modifier.size(itemWidth * 0.15f), onClick = onClick)
+                TransparentButton(modifier = Modifier.size(screenWidth * 0.15f), onClick = onClick)
             }
         }
 
         SeoulLocation.NORTH -> {
-            Box(modifier = Modifier.offset(itemWidth * 0.16f, itemWidth * -0.18f)) {
+            Box(modifier = Modifier.offset(screenWidth * 0.16f, screenWidth * -0.18f)) {
                 TitleLargeText(text = location.location)
-                TransparentButton(modifier = Modifier.size(itemWidth * 0.15f), onClick = onClick)
+                TransparentButton(modifier = Modifier.size(screenWidth * 0.15f), onClick = onClick)
             }
         }
     }

@@ -26,7 +26,7 @@ fun LoginScreen(
     onGoogleLogin: () -> Unit,
     onKakaoLogin: () -> Unit
 ) {
-    BaseScreen { paddingValue ->
+    BaseScreen {  paddingValue, screenWidth, screenHeight ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

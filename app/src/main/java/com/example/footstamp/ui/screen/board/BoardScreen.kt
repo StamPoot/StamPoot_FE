@@ -13,7 +13,7 @@ import com.example.footstamp.ui.components.TopBar
 
 @Composable
 fun BoardScreen() {
-    BaseScreen { paddingValue ->
+    BaseScreen { paddingValue, screenWidth, screenHeight ->
         Column(modifier = Modifier.fillMaxSize()) {
             TopBar(text = stringResource(R.string.screen_board), backgroundColor = Color.White)
         }
