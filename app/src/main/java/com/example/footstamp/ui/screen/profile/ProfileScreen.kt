@@ -12,12 +12,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.ui.base.BaseScreen
@@ -32,7 +35,10 @@ import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
+
+    val profileState by profileViewModel.profileState.collectAsState()
+
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         Column(
             Modifier.fillMaxSize(),

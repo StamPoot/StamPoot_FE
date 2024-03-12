@@ -54,5 +54,4 @@ interface DiaryDao {
 
     @Query("SELECT * FROM diaries where id = :id")
     fun getDiary(id: Long): Diary
-
 }

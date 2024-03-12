@@ -3,7 +3,9 @@ package com.example.footstamp.data.util
 import android.content.Context
 import androidx.room.Room
 import com.example.footstamp.data.dao.DiaryDao
+import com.example.footstamp.data.dao.ProfileDao
 import com.example.footstamp.data.database.DiaryDatabase
+import com.example.footstamp.data.database.ProfileDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,12 +23,26 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideProfileDao(profileDatabase: ProfileDatabase): ProfileDao =
+        profileDatabase.profileDao()
+
+    @Singleton
+    @Provides
     fun provideDiaryDatabase(@ApplicationContext context: Context): DiaryDatabase {
         return Room.databaseBuilder(
             context,
             DiaryDatabase::class.java,
             "diary_database"
-        ).fallbackToDestructiveMigration()
-            .build()
+        ).fallbackToDestructiveMigration().build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideProfileDatabase(@ApplicationContext context: Context): ProfileDatabase {
+        return Room.databaseBuilder(
+            context,
+            ProfileDatabase::class.java,
+            "profile_database"
+        ).fallbackToDestructiveMigration().build()
     }
 }
