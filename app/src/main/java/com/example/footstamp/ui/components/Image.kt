@@ -24,9 +24,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -106,6 +108,27 @@ fun ImagesLayout(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ProfileImageLayout(image: Bitmap?, screenWidth: Dp, screenHeight: Dp) {
+    Card(shape = CircleShape) {
+        if (image != null) {
+            AsyncImage(
+                model = image,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
+        } else {
+            AsyncImage(
+                model = R.drawable.icon_circle_small,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
         }
     }
 }
@@ -208,6 +231,48 @@ fun PhotoSelector(
         )
         AddButton(buttonText) { launchPhotoPicker() }
     }
+}
+
+@Composable
+fun ProfilePhotoSelector(
+    screenWidth: Dp,
+    screenHeight: Dp,
+    contentResolver: ContentResolver,
+    onSetPhoto: (String) -> Unit
+) {
+    var profileImage by remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            if (uri != null) {
+                uriToBitmap(uri, contentResolver).also {
+                    profileImage = it
+                    onSetPhoto(Formatter.convertBitmapToString(it))
+                }
+            }
+        }
+    )
+
+    fun launchPhotoPicker() {
+        singlePhotoPickerLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
+    }
+
+    Column(
+        modifier = Modifier.size(screenWidth / 3, screenWidth / 3),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ProfileImageLayout(
+            image = profileImage,
+            screenWidth = screenWidth,
+            screenHeight = screenHeight
+        )
+        AddButton("이미지 변경") { launchPhotoPicker() }
+    }
+
 }
 
 @Composable

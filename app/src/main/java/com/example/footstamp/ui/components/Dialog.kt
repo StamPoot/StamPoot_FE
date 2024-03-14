@@ -94,8 +94,8 @@ fun BottomSheetDefaults(
 
 @Composable
 fun HalfDialog(
-    screen: @Composable () -> Unit,
     onChangeState: () -> Unit,
+    screen: @Composable () -> Unit,
 ) {
     Dialog(
         onDismissRequest = onChangeState,

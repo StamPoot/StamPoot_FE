@@ -19,6 +19,7 @@ import com.example.footstamp.ui.theme.BackColor
 fun TextInput(
     maxLines: Int = 1,
     minLines: Int = 1,
+    modifier: Modifier = Modifier.fillMaxWidth().background(BackColor),
     hint: String = "",
     onValueChange: (text: String) -> Unit
 ) {
@@ -29,9 +30,7 @@ fun TextInput(
     TextField(
         value = textState.value,
         shape = CircleShape,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(BackColor),
+        modifier = modifier,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color.Transparent,
             disabledBorderColor = Color.Transparent,

@@ -141,19 +141,19 @@ fun DateAndLocationDialogLayout(
 ) {
     when (dateOrLocationState) {
         GalleryViewModel.DateAndLocation.DATE -> {
-            HalfDialog(screen = {
+            HalfDialog(onChangeState = {}) {
                 DatePickerView(
                     time = writingDiary.date,
                     onChangeState = onClickDate,
                     onDismiss = onDismiss
                 )
-            }) {}
+            }
         }
 
         GalleryViewModel.DateAndLocation.LOCATION -> {
-            HalfDialog(screen = {
+            HalfDialog(onChangeState = {}) {
                 LocationPickerView(onClickLocation)
-            }) {}
+            }
         }
 
         GalleryViewModel.DateAndLocation.NULL -> {}

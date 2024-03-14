@@ -21,11 +21,22 @@ class ProfileViewModel @Inject constructor(
     private val _profileState = MutableStateFlow(Profile())
     val profileState = _profileState.asStateFlow()
 
+    private val _editProfile = MutableStateFlow<Profile?>(null)
+    val editProfile = _editProfile.asStateFlow()
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.profile.distinctUntilChanged().collect { profile ->
                 _profileState.value = profile
             }
         }
+    }
+
+    fun showEditProfileDialog() {
+        _editProfile.value = Profile()
+    }
+
+    fun hideEditProfileDialog() {
+        _editProfile.value = null
     }
 }
