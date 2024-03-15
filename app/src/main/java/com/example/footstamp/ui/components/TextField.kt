@@ -19,12 +19,15 @@ import com.example.footstamp.ui.theme.BackColor
 fun TextInput(
     maxLines: Int = 1,
     minLines: Int = 1,
-    modifier: Modifier = Modifier.fillMaxWidth().background(BackColor),
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .background(BackColor),
     hint: String = "",
+    baseText: String = "",
     onValueChange: (text: String) -> Unit
 ) {
     val textState = remember {
-        mutableStateOf("")
+        mutableStateOf(baseText)
     }
 
     TextField(

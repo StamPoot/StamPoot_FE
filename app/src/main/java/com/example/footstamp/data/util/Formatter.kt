@@ -1,9 +1,14 @@
 package com.example.footstamp.data.util
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
+import com.example.footstamp.R
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -42,6 +47,10 @@ object Formatter {
     fun convertStringToBitmap(encodedString: String): Bitmap {
         val encodeByte = Base64.decode(encodedString, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
+    }
+
+    fun drawableToBitmap(context: Context, drawable: Int): Bitmap {
+        return ContextCompat.getDrawable(context, drawable)?.toBitmap()!!
     }
 
 }

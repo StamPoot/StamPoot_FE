@@ -20,7 +20,7 @@ interface ProfileDao {
     fun updateNickname(nickname: String)
 
     @Query("UPDATE profile SET profile_image = :image")
-    fun updateImage(image: String)
+    fun updateImage(image: String?)
 
     @Query("UPDATE profile SET profile_about_me = :aboutMe")
     fun updateAboutMe(aboutMe: String)

@@ -113,21 +113,26 @@ fun ImagesLayout(
 }
 
 @Composable
-fun ProfileImageLayout(image: Bitmap?, screenWidth: Dp, screenHeight: Dp) {
-    Card(shape = CircleShape) {
+fun ProfileImageLayout(
+    image: Bitmap?,
+    screenWidth: Dp,
+    screenHeight: Dp,
+    onClickPhoto: () -> Unit
+) {
+    Card(shape = CircleShape, onClick = onClickPhoto) {
         if (image != null) {
             AsyncImage(
                 model = image,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Crop
             )
         } else {
             AsyncImage(
                 model = R.drawable.icon_circle_small,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Crop
             )
         }
     }
@@ -237,12 +242,11 @@ fun PhotoSelector(
 fun ProfilePhotoSelector(
     screenWidth: Dp,
     screenHeight: Dp,
+    image: Bitmap?,
     contentResolver: ContentResolver,
     onSetPhoto: (String) -> Unit
 ) {
-    var profileImage by remember {
-        mutableStateOf<Bitmap?>(null)
-    }
+    var profileImage by remember { mutableStateOf(image) }
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
@@ -268,9 +272,9 @@ fun ProfilePhotoSelector(
         ProfileImageLayout(
             image = profileImage,
             screenWidth = screenWidth,
-            screenHeight = screenHeight
+            screenHeight = screenHeight,
+            onClickPhoto = { launchPhotoPicker() }
         )
-        AddButton("이미지 변경") { launchPhotoPicker() }
     }
 
 }

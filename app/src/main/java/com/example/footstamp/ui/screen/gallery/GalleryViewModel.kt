@@ -57,7 +57,6 @@ class GalleryViewModel @Inject constructor(
 
     fun addDiary(): Boolean {
         if (_writingDiary.value.checkDiary() != null) {
-
             return false
         }
 
