@@ -25,11 +25,19 @@ data class Diary(
     }
 
     fun checkDiary(): String? {
-        if (title.length <= 3 || title.length > 10) return "제목은 3자에서 10자로 지어주세요"
-        if (date > LocalDateTime.now()) return "미래의 일기는 작성할 수 없어요"
-        if (message.length <= 5 || message.length > 100) return "내용은 5~100자로 작성해주세요"
-        if (photoBitmapStrings.isEmpty()) return "사진을 넣어주세요"
-        if (thumbnail > photoBitmapStrings.size - 1) return "썸네일을 지정해주세요"
+        if (title.length <= 3 || title.length > 10) return DIARY_ERROR_TITLE
+        if (date > LocalDateTime.now()) return DIARY_ERROR_DATE
+        if (message.length <= 5 || message.length > 100) return DIARY_ERROR_MESSAGE
+        if (photoBitmapStrings.isEmpty()) return DIARY_ERROR_PHOTO
+        if (thumbnail > photoBitmapStrings.size - 1) return DIARY_ERROR_THUMBNAIL
         return null
+    }
+
+    companion object {
+        const val DIARY_ERROR_TITLE = "제목은 3자에서 10자로 지어주세요"
+        const val DIARY_ERROR_DATE = "미래의 일기는 작성할 수 없어요"
+        const val DIARY_ERROR_MESSAGE = "내용은 5~100자로 작성해주세요"
+        const val DIARY_ERROR_PHOTO = "사진을 넣어주세요"
+        const val DIARY_ERROR_THUMBNAIL = "썸네일을 지정해주세요"
     }
 }
