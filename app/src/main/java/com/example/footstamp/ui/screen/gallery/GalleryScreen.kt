@@ -39,7 +39,9 @@ import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyLargeText
+import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
+import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.components.TopBar
@@ -53,19 +55,16 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
     val writeOrReadScreenState by galleryViewModel.writeOrRead.collectAsState()
     val sortType by galleryViewModel.sortType.collectAsState()
+    val currentDiary by galleryViewModel.diaries.collectAsState()
 
     BaseScreen(floatingButton = {
         GalleryFloatingButton {
             galleryViewModel.showWriteScreen()
         }
     }) { paddingValue, screenWidth, screenHeight ->
-        val currentDiary by galleryViewModel.diaries.collectAsState()
 
         Column {
             TopBar(text = stringResource(R.string.screen_gallery), backgroundColor = Color.White)
-            GallerySortLayout(
-                sortType = sortType,
-                onChangeSortState = { galleryViewModel.changeSortSwitch() })
 
             GalleryGridLayout(diaries = currentDiary,
                 paddingValues = paddingValue,
@@ -83,24 +82,6 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 }
             }
         )
-    }
-}
-
-@Composable
-fun GallerySortLayout(
-    sortType: GalleryViewModel.SortByDateOrLocation,
-    onChangeSortState: () -> Unit,
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        BodyLargeText(text = sortType.text, color = MainColor)
-        Switch(
-            modifier = Modifier.padding(vertical = 10.dp),
-            checked = sortType == GalleryViewModel.SortByDateOrLocation.DATE,
-            onCheckedChange = { onChangeSortState() })
     }
 }
 
@@ -156,7 +137,10 @@ fun GalleryItemView(diary: Diary, screenHeight: Dp, onClick: (Diary) -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TitleText(Formatter.dateToString(diary.date), Color.White)
+            SpaceMaker(height = 10.dp)
             TitleLargeText(diary.title, Color.White)
+            SpaceMaker(height = 10.dp)
+            BodyText(diary.location.location, Color.White)
         }
         TransparentButton(onClick = { onClick(diary) })
     }

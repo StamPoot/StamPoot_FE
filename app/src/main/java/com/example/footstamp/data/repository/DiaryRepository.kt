@@ -55,4 +55,6 @@ class DiaryRepository @Inject constructor(private val diaryDao: DiaryDao) {
     suspend fun getDiary(id: Long): Diary =
         diaryDao.getDiary(id)
 
+    suspend fun getDiaryByLocation(location: SeoulLocation): List<Diary> =
+        diaryDao.getDiaryByLocation(location)
 }

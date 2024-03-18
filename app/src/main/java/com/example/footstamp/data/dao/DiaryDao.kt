@@ -54,4 +54,7 @@ interface DiaryDao {
 
     @Query("SELECT * FROM diaries where id = :id")
     fun getDiary(id: Long): Diary
+
+    @Query("SELECT * FROM diaries where diary_location = :location")
+    fun getDiaryByLocation(location: SeoulLocation): List<Diary>
 }

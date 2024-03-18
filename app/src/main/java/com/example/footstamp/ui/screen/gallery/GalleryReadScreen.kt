@@ -49,6 +49,7 @@ fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 .verticalScroll(scrollState)
                 .padding(horizontal = screenWidth / 12),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
         ) {
             DateAndLocationReadLayout(screenHeight = screenHeight, readingDiary = readingDiary)
             DiaryMainReadLayout(
