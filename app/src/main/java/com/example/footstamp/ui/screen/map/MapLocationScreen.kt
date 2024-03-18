@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,14 +33,17 @@ import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
+import com.example.footstamp.ui.components.BodyLargeText
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
 import com.example.footstamp.ui.components.ImagesLayout
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
+import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.screen.gallery.GalleryReadScreen
 import com.example.footstamp.ui.screen.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.BackColor
+import com.example.footstamp.ui.theme.SubColor
 
 @Composable
 fun MapLocationScreen(mapScreenState: SeoulLocation, mapViewModel: MapViewModel = hiltViewModel()) {
@@ -91,42 +95,34 @@ fun StaggeredViewItem(diary: Diary, onClickBox: (diary: Diary) -> Unit) {
     Box(modifier = Modifier
         .padding(5.dp)
         .clickable { onClickBox(diary) }) {
-        Card(border = BorderStroke(5.dp, Color.White)) {
+        Card(
+            modifier = Modifier,
+            border = BorderStroke(5.dp, Color.White),
+            colors = CardColors(
+                Color.White,
+                Color.Transparent,
+                Color.Transparent,
+                Color.Transparent
+            )
+        ) {
             AsyncImage(
                 model = Formatter.convertStringToBitmap(diary.photoBitmapStrings[diary.thumbnail]),
                 contentDescription = null
             )
+            SpaceMaker(height = 5.dp)
+            TitleText(
+                text = diary.title,
+                color = Color.Black,
+                modifier = Modifier.padding(horizontal = 10.dp)
+            )
+            SpaceMaker(height = 5.dp)
+            BodyText(
+                text = Formatter.dateToString(diary.date),
+                color = SubColor,
+                modifier = Modifier.padding(horizontal = 10.dp)
+            )
+            SpaceMaker(height = 5.dp)
         }
-    }
-}
-
-@Composable
-fun MapReadLayout(
-    readingDiary: Diary,
-    screenWidth: Dp,
-    screenHeight: Dp,
-    onClick: (Bitmap) -> Unit
-) {
-    SpaceMaker(screenHeight / 20)
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-        TitleLargeText(text = readingDiary.title, color = Color.Black)
-    }
-    SpaceMaker(screenHeight / 40)
-    ImagesLayout(
-        selectedImages = readingDiary.photoBitmapStrings.map { Formatter.convertStringToBitmap(it) },
-        screenWidth = screenWidth,
-        screenHeight = screenHeight,
-        onClickPhoto = onClick
-    )
-    SpaceMaker(screenHeight / 40)
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-    ) {
-        BodyText(
-            text = readingDiary.message, color = Color.Black, minLines = 8
-        )
     }
 }
 
