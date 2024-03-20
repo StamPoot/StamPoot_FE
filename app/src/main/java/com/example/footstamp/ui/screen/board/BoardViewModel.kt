@@ -1,5 +1,6 @@
 package com.example.footstamp.ui.screen.board
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
@@ -21,6 +22,12 @@ class BoardViewModel @Inject constructor(
     private val _diaries = MutableStateFlow<List<Diary>>(emptyList())
     val diaries = _diaries.asStateFlow()
 
+    private val _readingDiary = MutableStateFlow<Diary?>(null)
+    val readingDiary = _readingDiary.asStateFlow()
+
+    private val _openingImage = MutableStateFlow<Bitmap?>(null)
+    val openingImage = _openingImage.asStateFlow()
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAll().distinctUntilChanged().collect { diaryList ->
@@ -31,5 +38,21 @@ class BoardViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun showReadScreen(diary: Diary) {
+        _readingDiary.value = diary
+    }
+
+    fun hideReadScreen() {
+        _readingDiary.value = null
+    }
+
+    fun openImageDetail(image: Bitmap) {
+        _openingImage.value = image
+    }
+
+    fun closeImage() {
+        _openingImage.value = null
     }
 }
