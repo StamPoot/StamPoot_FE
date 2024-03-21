@@ -114,9 +114,9 @@ fun DiaryMainWriteLayout(
     onTitleFieldChange: (text: String) -> Unit,
     onMessageFieldChange: (text: String) -> Unit,
 ) {
-    SpaceMaker(screenHeight / 20)
+    SpaceMaker(height = screenHeight / 20)
     TextInput(hint = "제목", onValueChange = onTitleFieldChange)
-    SpaceMaker(screenHeight / 40)
+    SpaceMaker(height = screenHeight / 40)
     PhotoSelector(
         maxSelectionCount = 5,
         screenWidth = screenWidth,
@@ -127,7 +127,7 @@ fun DiaryMainWriteLayout(
         contentResolver = contentResolver,
         onSetPhoto = onSetPhoto,
     )
-    SpaceMaker(screenHeight / 40)
+    SpaceMaker(height = screenHeight / 40)
     TextInput(hint = "내용을 입력하세요", minLines = 5, maxLines = 10, onValueChange = onMessageFieldChange)
 }
 

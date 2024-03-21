@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -66,8 +67,7 @@ fun ImagesLayout(
     val scrollState = rememberScrollState()
 
     if (selectedImages.isEmpty()) Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
     ) {
         PhotoItem(
             item = R.drawable.icon_circle_big,
@@ -80,28 +80,26 @@ fun ImagesLayout(
                 modifier = Modifier.horizontalScroll(scrollState)
             ) {
                 selectedImages.forEachIndexed { index, item ->
-                    PhotoItem(
-                        item = item,
+                    PhotoItem(item = item,
                         screenWidth = screenWidth,
                         screenHeight = screenHeight,
                         isThumbnail = index == thumbnailIndex,
                         onClick = {
                             onClickPhoto(item)
                             onClickIndex(index)
-                        }
-                    )
+                            Log.d("TAG", "${scrollState.maxValue}")
+                        })
                 }
             }
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
             ) {
-                selectedImages.forEach {
+                val scope = (scrollState.maxValue + 10) / selectedImages.size
+                repeat(selectedImages.size) { index ->
                     Icon(
                         imageVector = Icons.Default.Circle,
                         contentDescription = null,
-                        tint = SubColor,
+                        tint = if (scrollState.value / scope == index) MainColor else SubColor,
                         modifier = Modifier
                             .padding(7.dp)
                             .size(10.dp)
@@ -114,10 +112,7 @@ fun ImagesLayout(
 
 @Composable
 fun ProfileImageLayout(
-    image: Bitmap?,
-    screenWidth: Dp,
-    screenHeight: Dp,
-    onClickPhoto: () -> Unit
+    image: Bitmap?, screenWidth: Dp, screenHeight: Dp, onClickPhoto: () -> Unit
 ) {
     Card(shape = CircleShape, onClick = onClickPhoto) {
         if (image != null) {
@@ -204,17 +199,15 @@ fun PhotoSelector(
         mutableStateOf<List<Bitmap>>(emptyList())
     }
     val buttonText = "사진 선택"
-    val multiplePhotoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(
+    val multiplePhotoPickerLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickMultipleVisualMedia(
             maxItems = maxSelectionCount
-        ),
-        onResult = { uris ->
+        ), onResult = { uris ->
             uris.map { uriToBitmap(it, contentResolver) }.also { bitmapList ->
                 selectedImages = bitmapList
                 onSetPhoto(bitmapList.map { Formatter.convertBitmapToString(it) })
             }
-        }
-    )
+        })
 
     fun launchPhotoPicker() {
         multiplePhotoPickerLauncher.launch(
@@ -223,8 +216,7 @@ fun PhotoSelector(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ImagesLayout(
             selectedImages = selectedImages,
@@ -247,17 +239,16 @@ fun ProfilePhotoSelector(
     onSetPhoto: (String) -> Unit
 ) {
     var profileImage by remember { mutableStateOf(image) }
-    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            if (uri != null) {
-                uriToBitmap(uri, contentResolver).also {
-                    profileImage = it
-                    onSetPhoto(Formatter.convertBitmapToString(it))
+    val singlePhotoPickerLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = { uri ->
+                if (uri != null) {
+                    uriToBitmap(uri, contentResolver).also {
+                        profileImage = it
+                        onSetPhoto(Formatter.convertBitmapToString(it))
+                    }
                 }
-            }
-        }
-    )
+            })
 
     fun launchPhotoPicker() {
         singlePhotoPickerLauncher.launch(
@@ -269,12 +260,10 @@ fun ProfilePhotoSelector(
         modifier = Modifier.size(screenWidth / 3, screenWidth / 3),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ProfileImageLayout(
-            image = profileImage,
+        ProfileImageLayout(image = profileImage,
             screenWidth = screenWidth,
             screenHeight = screenHeight,
-            onClickPhoto = { launchPhotoPicker() }
-        )
+            onClickPhoto = { launchPhotoPicker() })
     }
 
 }
@@ -284,22 +273,19 @@ fun ZoomableImage(image: Bitmap) {
     val scale = remember { mutableFloatStateOf(1f) }
     val offsetX = remember { mutableFloatStateOf(0f) }
     val offsetY = remember { mutableFloatStateOf(0f) }
-    Box(
-        modifier = Modifier
-            .clip(RectangleShape)
-            .fillMaxSize()
-            .background(Color.Black)
-            .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
-            .pointerInput(Unit) {
-                detectDragGestures { change, dragAmount ->
-                    offsetX.value += dragAmount.x
-                    offsetY.value += dragAmount.y
-                }
+    Box(modifier = Modifier
+        .clip(RectangleShape)
+        .fillMaxSize()
+        .background(Color.Black)
+        .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
+        .pointerInput(Unit) {
+            detectDragGestures { change, dragAmount ->
+                offsetX.value += dragAmount.x
+                offsetY.value += dragAmount.y
             }
-    ) {
+        }) {
         AsyncImage(
-            model = image,
-            modifier = Modifier
+            model = image, modifier = Modifier
                 .align(Alignment.Center)
                 .graphicsLayer(
                     scaleX = maxOf(.5f, minOf(3f, scale.value)),
@@ -309,8 +295,7 @@ fun ZoomableImage(image: Bitmap) {
                     detectTransformGestures { centroid, pan, zoom, rotation ->
                         scale.floatValue *= zoom
                     }
-                },
-            contentDescription = null
+                }, contentDescription = null
         )
     }
 }

@@ -66,7 +66,7 @@ fun MapDetailScreen(mapViewModel: MapViewModel = hiltViewModel()) {
 
 @Composable
 fun MapDateAndLocationLayout(screenHeight: Dp, readingDiary: Diary) {
-    SpaceMaker(screenHeight / 40)
+    SpaceMaker(height = screenHeight / 40)
     Row(
         horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
     ) {
@@ -100,18 +100,18 @@ fun MapDetailReadLayout(
     screenHeight: Dp,
     onClick: (Bitmap) -> Unit
 ) {
-    SpaceMaker(screenHeight / 20)
+    SpaceMaker(height = screenHeight / 20)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
         TitleLargeText(text = readingDiary.title, color = Color.Black)
     }
-    SpaceMaker(screenHeight / 40)
+    SpaceMaker(height = screenHeight / 40)
     ImagesLayout(
         selectedImages = readingDiary.photoBitmapStrings.map { Formatter.convertStringToBitmap(it) },
         screenWidth = screenWidth,
         screenHeight = screenHeight,
         onClickPhoto = onClick
     )
-    SpaceMaker(screenHeight / 40)
+    SpaceMaker(height = screenHeight / 40)
     Box(
         modifier = Modifier
             .fillMaxWidth()
