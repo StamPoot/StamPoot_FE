@@ -66,6 +66,7 @@ fun ImagesLayout(
 ) {
     val scrollState = rememberScrollState()
 
+    // 이미지가 없을 때
     if (selectedImages.isEmpty()) Row(
         modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
     ) {
@@ -74,10 +75,23 @@ fun ImagesLayout(
             screenWidth = screenWidth,
             screenHeight = screenHeight
         )
-    } else {
-        Column {
+    } else if (selectedImages.size == 1) {
+        PhotoItem(item = selectedImages[0],
+            screenWidth = screenWidth,
+            screenHeight = screenHeight,
+            isThumbnail = false,
+            onClick = {
+                onClickPhoto(selectedImages[0])
+                onClickIndex(0)
+            })
+    }
+    // 이미지가 있을 때
+    else {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Row(
-                modifier = Modifier.horizontalScroll(scrollState)
+                modifier = Modifier
+                    .horizontalScroll(scrollState)
+                    .fillMaxWidth(),
             ) {
                 selectedImages.forEachIndexed { index, item ->
                     PhotoItem(item = item,
@@ -87,7 +101,6 @@ fun ImagesLayout(
                         onClick = {
                             onClickPhoto(item)
                             onClickIndex(index)
-                            Log.d("TAG", "${scrollState.maxValue}")
                         })
                 }
             }
