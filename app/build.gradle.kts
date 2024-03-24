@@ -119,6 +119,11 @@ dependencies {
     // Splash
     implementation("androidx.core:core-splashscreen:1.0.1")
 
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:3.11.0")
+
     // Google Login
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("androidx.credentials:credentials:1.3.0-alpha01")

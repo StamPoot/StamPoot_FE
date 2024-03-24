@@ -5,17 +5,23 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.footstamp.data.login.GoogleLogin
 import com.example.footstamp.ui.screen.login.LoginScreen
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
 
+    private val loginViewModel by viewModels<LoginViewModel>()
     private val googleLogin = GoogleLogin()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,9 +36,17 @@ class LoginActivity : ComponentActivity() {
                     onKakaoLogin = { kakaoLoginEvent() })
             }
         }
+
+        lifecycleScope.launch {
+            loginViewModel.googleToken.collect {
+                if (it != null) loginViewModel.loadData()
+            }
+        }
+
     }
 
     private fun googleLoginEvent() {
+
         googleLogin.googleLogin(this)
         googleLogin.loginEvent(this)
     }
@@ -56,6 +70,7 @@ class LoginActivity : ComponentActivity() {
                             // with your backend.
                             Log.d("TAG", "Got ID token.")
                             Log.d("TAG", idToken)
+                            loginViewModel.updateGoogleToken(idToken)
                         }
 
                         else -> {

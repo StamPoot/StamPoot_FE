@@ -1,7 +1,9 @@
 package com.example.footstamp.data.util
 
 import android.content.Context
+import androidx.compose.ui.res.stringResource
 import androidx.room.Room
+import com.example.footstamp.R
 import com.example.footstamp.data.dao.DiaryDao
 import com.example.footstamp.data.dao.ProfileDao
 import com.example.footstamp.data.database.DiaryDatabase
