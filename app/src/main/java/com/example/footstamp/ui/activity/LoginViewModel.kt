@@ -1,13 +1,28 @@
 package com.example.footstamp.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.credentials.GetCredentialException
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.PasswordCredential
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.data_source.LoginAPI
 import com.example.footstamp.data.repository.LoginRepository
 import com.example.footstamp.ui.base.BaseViewModel
+import com.google.android.gms.fido.fido2.api.common.PublicKeyCredential
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.credentials.GetCredentialResponse
+import com.example.footstamp.data.login.GoogleLogin
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,23 +40,25 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
         _googleToken.value = googleToken
     }
 
-    @SuppressLint("SuspiciousIndentation")
-    fun loadData() {
+    fun updateLoginToken(loginToken: String) {
+        _loginToken.value = loginToken
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    fun googleLogin(context: Context) {
+        val googleLoginManager = GoogleLogin(context)
+
         viewModelScope.launch {
-            val data = repository.login(LoginAPI.Provider.GOOGLE, _googleToken.value!!)
-                    Log.d("TAG", "CHEESE")
-
-            when (data.isSuccessful) {
-                true -> {
-                    _loginToken.value = data.body().toString()
-                    Log.d("TAG", "SUCCESS")
-                }
-
-                else -> {
-                    Log.d("TAG", "FAIL")
-                    Log.d("TAG", data.body().toString())
-                }
+            try {
+                val result = googleLoginManager.credentialManager.getCredential(
+                    context = context,
+                    request = googleLoginManager.request
+                )
+                googleLoginManager.handleSignIn(result)
+            } catch (e: GetCredentialException) {
+                googleLoginManager.handleFailure(e)
             }
         }
     }
+
 }

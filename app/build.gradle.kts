@@ -125,7 +125,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:3.11.0")
 
     // Google Login
+    implementation("androidx.credentials:credentials:1.2.1")
+    implementation("androidx.credentials:credentials-play-services-auth:1.2.1")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
-    implementation("androidx.credentials:credentials:1.3.0-alpha01")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
 }

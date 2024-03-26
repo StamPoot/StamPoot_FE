@@ -3,59 +3,72 @@ package com.example.footstamp.data.login
 import android.content.ContentValues
 import android.content.Context
 import android.content.IntentSender
+import android.credentials.GetCredentialException
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat.startIntentSenderForResult
 import androidx.core.content.ContextCompat.getString
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetCredentialResponse
+import androidx.credentials.PasswordCredential
+import androidx.lifecycle.viewModelScope
 import com.example.footstamp.R
 import com.example.footstamp.ui.activity.LoginActivity
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.fido.fido2.api.common.PublicKeyCredential
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+import kotlinx.coroutines.launch
 
-class GoogleLogin {
+class GoogleLogin(context: Context) {
+    private val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
+        .setFilterByAuthorizedAccounts(true)
+        .setServerClientId(getString(context, R.string.web_client_id))
+        .build()
+    val request: GetCredentialRequest = GetCredentialRequest.Builder()
+        .addCredentialOption(googleIdOption)
+        .build()
+    val credentialManager = CredentialManager.create(context)
 
-    lateinit var oneTapClient: SignInClient
-    private lateinit var signInRequest: BeginSignInRequest
+    fun handleSignIn(result: GetCredentialResponse) {
 
-    fun googleLogin(context: Context) {
-        oneTapClient = Identity.getSignInClient(context)
-        signInRequest = BeginSignInRequest.builder()
-            .setPasswordRequestOptions(
-                BeginSignInRequest.PasswordRequestOptions.builder()
-                    .setSupported(true)
-                    .build()
-            )
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    // Your server's client ID, not your Android client ID.
-                    .setServerClientId(getString(context, R.string.web_client_id))
-                    // Only show accounts previously used to sign in.
-                    .setFilterByAuthorizedAccounts(true)
-                    .build()
-            )
-            // Automatically sign in when exactly one credential is retrieved.
-            .setAutoSelectEnabled(true)
-            .build()
-    }
+        when (val credential = result.credential) {
+            is PublicKeyCredential -> {
+                // responseJson = credential.authenticationResponseJson
+            }
 
-    fun loginEvent(activity: LoginActivity) {
-        oneTapClient.beginSignIn(signInRequest)
-            .addOnSuccessListener(activity) { result ->
-                try {
-                    startIntentSenderForResult(
-                        activity,
-                        result.pendingIntent.intentSender, 2,
-                        null, 0, 0, 0, null
-                    )
-                } catch (e: IntentSender.SendIntentException) {
-                    Log.e(ContentValues.TAG, "Couldn't start One Tap UI: ${e.localizedMessage}")
+            is PasswordCredential -> {
+
+                val username = credential.id
+                val password = credential.password
+                Log.d(ContentValues.TAG, "id: $username password: $password")
+            }
+
+            is CustomCredential -> {
+                if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                    try {
+                        val googleIdTokenCredential =
+                            GoogleIdTokenCredential.createFrom(credential.data)
+                        Log.d(ContentValues.TAG, "credential ${googleIdTokenCredential.id}")
+                    } catch (e: GoogleIdTokenParsingException) {
+                        Log.e(ContentValues.TAG, "Invalid Value Token", e)
+                    }
+                } else {
+                    Log.e(ContentValues.TAG, "Unexpected type of credential")
                 }
             }
-            .addOnFailureListener(activity) { e ->
-                // No saved credentials found. Launch the One Tap sign-up flow, or
-                // do nothing and continue presenting the signed-out UI.
-                Log.d(ContentValues.TAG, "0.3")
-            }
+        }
     }
+
+    fun handleFailure(e: GetCredentialException) {
+        Log.d(ContentValues.TAG, "fail")
+    }
+
+
 }
