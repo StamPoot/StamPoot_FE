@@ -1,4 +1,4 @@
-package com.example.footstamp.data.dto
+package com.example.footstamp.data.dto.login
 
 import com.google.gson.annotations.SerializedName
 

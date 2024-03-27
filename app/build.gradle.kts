@@ -130,4 +130,5 @@ dependencies {
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 }
