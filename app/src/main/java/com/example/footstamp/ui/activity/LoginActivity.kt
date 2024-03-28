@@ -40,18 +40,10 @@ class LoginActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             loginViewModel.googleToken.collect {
-                GoogleLogin(this@LoginActivity).signIn(this@LoginActivity)
+                if (it != null) loginViewModel.fetchGoogleAuthInfo(it)
             }
         }
 
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 1000) {
-            val result = Auth.GoogleSignInApi
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)

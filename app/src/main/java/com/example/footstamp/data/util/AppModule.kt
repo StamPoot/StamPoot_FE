@@ -2,17 +2,25 @@ package com.example.footstamp.data.util
 
 import android.content.Context
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat.getString
 import androidx.room.Room
 import com.example.footstamp.R
 import com.example.footstamp.data.dao.DiaryDao
 import com.example.footstamp.data.dao.ProfileDao
+import com.example.footstamp.data.data_source.LoginService
 import com.example.footstamp.data.database.DiaryDatabase
 import com.example.footstamp.data.database.ProfileDatabase
+import com.google.firebase.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module

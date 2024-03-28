@@ -1,19 +1,22 @@
 package com.example.footstamp.ui.activity
 
-import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.credentials.GetCredentialException
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
+import com.example.footstamp.data.dto.login.LoginGoogleResponseModel
+import com.example.footstamp.data.dto.login.Result
+import com.example.footstamp.data.login.GoogleLogin
 import com.example.footstamp.data.repository.LoginRepository
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import com.example.footstamp.data.login.GoogleLogin
-import com.google.android.gms.common.api.ApiException
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,16 +53,21 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
         }
     }
 
-    fun googleAccessLogin(accessToken: String, activity: Activity) {
-        val googleLoginManager = GoogleLogin(activity)
+    suspend fun fetchGoogleAuthInfo(authCode: String) =
+        withContext(viewModelScope.coroutineContext) {
+            repository.fetchGoogleAuthInfo(authCode = authCode).let { result ->
+                when (result) {
+                    is Result.Success<LoginGoogleResponseModel> -> {
+                        Log.d(TAG, "accessToken ${result.data.access_token}")
+                    }
 
-        viewModelScope.launch {
-            try {
-                val result = googleLoginManager.signIn(activity)
-            } catch (e: Exception) {
+                    is Result.Error -> {
+                        Log.d(TAG, "FAIL to ACCESS")
+                    }
 
+                    else -> {}
+                }
             }
         }
-    }
 
 }
