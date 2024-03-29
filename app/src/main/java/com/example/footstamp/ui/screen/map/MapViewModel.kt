@@ -1,5 +1,6 @@
 package com.example.footstamp.ui.screen.map
 
+import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.viewModelScope
@@ -36,7 +37,7 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAll().distinctUntilChanged().collect { diaryList ->
                 if (diaryList.isEmpty()) {
-                    Log.d("TAG", "EMPTY")
+                    Log.d(TAG, "EMPTY")
                 } else {
                     _diaries.value = diaryList
                 }
@@ -62,7 +63,7 @@ class MapViewModel @Inject constructor(
     }
 
     fun getLocationDiariesCount(location: SeoulLocation): Int {
-        return _diaries.value.count { it.location == location }.also { Log.d("TAG", it.toString()) }
+        return _diaries.value.count { it.location == location }.also { Log.d(TAG, it.toString()) }
     }
 
     fun openImageDetail(image: Bitmap) {

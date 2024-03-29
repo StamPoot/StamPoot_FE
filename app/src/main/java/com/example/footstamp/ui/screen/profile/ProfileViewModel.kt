@@ -1,5 +1,6 @@
 package com.example.footstamp.ui.screen.profile
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Profile
@@ -55,7 +56,7 @@ class ProfileViewModel @Inject constructor(
         aboutMe: String = _editProfile.value!!.aboutMe,
     ) {
         _editProfile.value = Profile(uid, nickname, image, aboutMe)
-        Log.d("TAG", _editProfile.value.toString())
+        Log.d(TAG, _editProfile.value.toString())
     }
 
     fun updateProfile(): Boolean {

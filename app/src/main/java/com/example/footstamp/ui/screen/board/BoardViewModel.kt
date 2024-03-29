@@ -1,5 +1,6 @@
 package com.example.footstamp.ui.screen.board
 
+import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.viewModelScope
@@ -32,7 +33,7 @@ class BoardViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAll().distinctUntilChanged().collect { diaryList ->
                 if (diaryList.isEmpty()) {
-                    Log.d("TAG", "EMPTY")
+                    Log.d(TAG, "EMPTY")
                 } else {
                     _diaries.value = diaryList
                 }
