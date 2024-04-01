@@ -52,22 +52,4 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
             }
         }
     }
-
-    suspend fun fetchGoogleAuthInfo(authCode: String) =
-        withContext(viewModelScope.coroutineContext) {
-            repository.fetchGoogleAuthInfo(authCode = authCode).let { result ->
-                when (result) {
-                    is Result.Success<LoginGoogleResponseModel> -> {
-                        Log.d(TAG, "accessToken ${result.data.access_token}")
-                    }
-
-                    is Result.Error -> {
-                        Log.d(TAG, "FAIL to ACCESS")
-                    }
-
-                    else -> {}
-                }
-            }
-        }
-
 }

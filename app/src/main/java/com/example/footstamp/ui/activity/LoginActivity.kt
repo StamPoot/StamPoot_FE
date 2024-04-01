@@ -40,7 +40,7 @@ class LoginActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             loginViewModel.googleToken.collect {
-                if (it != null) loginViewModel.fetchGoogleAuthInfo(it)
+//                if (it != null) loginViewModel.fetchGoogleAuthInfo(it)
             }
         }
 

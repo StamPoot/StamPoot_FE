@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -15,6 +17,18 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField(
+            "String",
+            "GOOGLE_BASE_URL",
+            "\"https://impine.shop/login/oauth2/code/google\""
+        )
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_ID",
+            "\"59599924227-masr58k95rljkkfa6oglphbiufnadatc.apps.googleusercontent.com\""
+        )
+        buildConfigField("String", "GOOGLE_CLIENT_SECRET", "\"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\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -55,6 +69,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
@@ -133,5 +148,5 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 
     // Chucker
-    
+
 }
