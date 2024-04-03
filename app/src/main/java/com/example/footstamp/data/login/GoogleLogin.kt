@@ -14,6 +14,7 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import androidx.credentials.PasswordCredential
+import com.example.footstamp.BuildConfig
 import com.example.footstamp.R
 import com.example.footstamp.data.repository.LoginRepository
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -26,85 +27,23 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 
-class GoogleLogin(context: Context) {
-    private val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-        .setFilterByAuthorizedAccounts(true)
-        .setServerClientId(getString(context, R.string.web_client_id))
-        .build()
-    val request: GetCredentialRequest = GetCredentialRequest.Builder()
-        .addCredentialOption(googleIdOption)
-        .build()
-    val credentialManager = CredentialManager.create(context)
-    private val googleSignInOption =
+class GoogleLogin(activity: Activity) {
+    private val googleSignInOptions =
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(context, R.string.web_client_id))
-            .requestServerAuthCode(getString(context, R.string.web_client_id))
+            .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+            .requestServerAuthCode(BuildConfig.GOOGLE_CLIENT_ID)
             .requestEmail()
             .build()
-    private val googleSignInClient = GoogleSignIn.getClient(context, googleSignInOption)
 
+    val signInIntent = GoogleSignIn.getClient(activity, googleSignInOptions).signInIntent
 
-    // google idToken
-    fun handleSignIn(result: GetCredentialResponse): String? {
-
-        when (val credential = result.credential) {
-            is PublicKeyCredential -> {
-                // responseJson = credential.authenticationResponseJson
-            }
-
-            is PasswordCredential -> {
-
-                val username = credential.id
-                val password = credential.password
-                Log.d(ContentValues.TAG, "id: $username password: $password")
-            }
-
-            is CustomCredential -> {
-                if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                    try {
-                        val googleIdTokenCredential =
-                            GoogleIdTokenCredential.createFrom(credential.data)
-                        Log.d(ContentValues.TAG, "credential ${googleIdTokenCredential.id}")
-                        return googleIdTokenCredential.idToken
-                    } catch (e: GoogleIdTokenParsingException) {
-                        Log.e(ContentValues.TAG, "Invalid Value Token", e)
-                    }
-                } else {
-                    Log.e(ContentValues.TAG, "Unexpected type of credential")
-                }
-            }
+    fun handleSignInResult(completedTask: Task<GoogleSignInAccount>): String? {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            return account?.serverAuthCode
+        } catch (e: ApiException) {
+            Log.w(TAG, "signInResult:Failed code=${e.statusCode}")
         }
         return null
-    }
-
-    fun handleFailure(e: GetCredentialException) {
-        Log.d(ContentValues.TAG, "fail")
-    }
-
-    // google accessToken
-    fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val authCode: String? =
-                completedTask.getResult(ApiException::class.java)?.serverAuthCode
-        } catch (e: ApiException) {
-            Log.e(TAG, "handleSignInResult: error ${e.statusCode}")
-        }
-    }
-
-    fun signIn(activity: Activity) {
-        val sigInIntent: Intent = googleSignInClient.signInIntent
-        activity.startActivityForResult(sigInIntent, 1000)
-    }
-
-    fun signOut(context: Context) {
-        googleSignInClient.signOut()
-            .addOnCompleteListener {
-                Toast.makeText(context, "로그아웃 되셨습니다!", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    fun isLogin(context: Context): Boolean {
-        val account = GoogleSignIn.getLastSignedInAccount(context)
-        return account != null
     }
 }
