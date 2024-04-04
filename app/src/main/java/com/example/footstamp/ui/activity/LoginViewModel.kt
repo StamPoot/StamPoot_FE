@@ -1,6 +1,5 @@
 package com.example.footstamp.ui.activity
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.data_source.LoginService
 import com.example.footstamp.data.repository.LoginRepository
@@ -28,11 +27,10 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
         _accessToken.value = loginToken
     }
 
-    fun googleLogin() {
+    fun googleAccessTokenLogin() {
         viewModelScope.launch {
-            repository.googleLogin(LoginService.Provider.GOOGLE, _googleToken.value!!).also {
-                Log.d("TAG",it.body().toString())
-            }
+            repository.googleAccessTokenLogin(LoginService.Provider.GOOGLE, _googleToken.value!!)
+                .also { _accessToken.value = it.body()?.auth }
         }
     }
 }

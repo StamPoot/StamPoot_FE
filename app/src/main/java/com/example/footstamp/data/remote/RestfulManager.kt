@@ -22,40 +22,6 @@ object RestfulManager {
     @Provides
     fun provideBaseUrl() = "https://impine.shop/"
 
-//    @Singleton
-//    @Provides
-//    fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
-//        val loggingInterceptor = HttpLoggingInterceptor()
-//        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-//        OkHttpClient.Builder()
-//            .addInterceptor(loggingInterceptor)
-//            .build()
-//    } else {
-//        OkHttpClient.Builder().build()
-//    }
-//
-//    @Singleton
-//    @Provides
-//    fun provideRetrofit(): Retrofit {
-//        return Retrofit.Builder()
-//            .baseUrl(provideBaseUrl())
-//            .client(
-//                OkHttpClient
-//                    .Builder()
-//                    .addNetworkInterceptor { chain ->
-//                        chain.proceed(
-//                            chain.request()
-//                                .also { log(it) }
-//                                .newBuilder()
-//                                .build()
-//                        )
-//                    }
-//                    .build()
-//            )
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//    }
-
     private fun log(request: Request) {
         val url = request.url
         val headers = request.headers
