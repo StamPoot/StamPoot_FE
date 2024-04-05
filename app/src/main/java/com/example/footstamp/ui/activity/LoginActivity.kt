@@ -1,8 +1,10 @@
 package com.example.footstamp.ui.activity
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -37,11 +39,11 @@ class LoginActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-            loginViewModel.googleToken.collect {
-                if (it != null) loginViewModel.googleAccessTokenLogin()
+            loginViewModel.accessToken.collect {
+                if (it != null) moveToHomeScreen()
+                Log.d(TAG, it.toString())
             }
         }
-
     }
 
     @Deprecated("Deprecated in Java")
@@ -53,6 +55,7 @@ class LoginActivity : ComponentActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             googleLogin.handleSignInResult(task)?.let { token ->
                 loginViewModel.updateGoogleToken(token)
+                loginViewModel.googleAccessTokenLogin()
             }
         }
     }
@@ -66,6 +69,10 @@ class LoginActivity : ComponentActivity() {
 
     private fun kakaoLoginEvent() {
 
+    }
+
+    private fun moveToHomeScreen() {
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     companion object {

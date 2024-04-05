@@ -1,4 +1,4 @@
-package com.example.footstamp.data.dto
+package com.example.footstamp.data.dto.diary
 
 import retrofit2.Response
 import retrofit2.http.GET

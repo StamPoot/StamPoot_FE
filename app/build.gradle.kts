@@ -21,7 +21,7 @@ android {
         buildConfigField(
             "String",
             "GOOGLE_BASE_URL",
-            "\"https://impine.shop/login/oauth2/code/google\""
+            "\"https://impine.shop/login/oauth2/code/google/\""
         )
         buildConfigField(
             "String",
