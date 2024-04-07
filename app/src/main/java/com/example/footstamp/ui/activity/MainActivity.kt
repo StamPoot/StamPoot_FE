@@ -3,6 +3,7 @@ package com.example.footstamp.ui.activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,7 +34,6 @@ import com.example.footstamp.ui.activity.MainActivity.Companion.screens
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.screen.board.BoardScreen
 import com.example.footstamp.ui.screen.gallery.GalleryScreen
-import com.example.footstamp.ui.screen.login.LoginScreen
 import com.example.footstamp.ui.screen.map.MapScreen
 import com.example.footstamp.ui.screen.profile.ProfileScreen
 import com.example.footstamp.ui.theme.FootStampTheme
@@ -43,6 +43,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val mainViewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,7 +69,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView() {
     val navController = rememberNavController()

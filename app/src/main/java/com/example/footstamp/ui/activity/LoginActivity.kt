@@ -15,6 +15,8 @@ import com.example.footstamp.data.login.GoogleLogin
 import com.example.footstamp.ui.screen.login.LoginScreen
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,6 +25,7 @@ class LoginActivity : ComponentActivity() {
 
     private val loginViewModel by viewModels<LoginViewModel>()
     private lateinit var googleLogin: GoogleLogin
+    lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +71,8 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun kakaoLoginEvent() {
+        UserApiClient.instance.loginWithKakaoTalk(this, callback = kakaoCallback)
+
 
     }
 

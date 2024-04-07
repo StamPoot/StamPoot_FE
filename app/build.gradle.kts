@@ -29,6 +29,11 @@ android {
             "\"59599924227-masr58k95rljkkfa6oglphbiufnadatc.apps.googleusercontent.com\""
         )
         buildConfigField("String", "GOOGLE_CLIENT_SECRET", "\"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\"")
+        buildConfigField(
+            "String",
+            "KAKAO_NATIVE_APP_KEY",
+            "\"c17162ddfe7a97800cc572a4c27a4f4b\""
+        )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -147,6 +152,6 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 
-    // Chucker
-
+    // Kakao Login
+    implementation("com.kakao.sdk:v2-all:2.20.1")
 }

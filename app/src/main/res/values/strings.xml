@@ -8,5 +8,6 @@
     <string name="screen_profile">프로필</string>
 
     <string name="google_url">https://impine.shop/</string>
+    <string name="kakao_app_key">c17162ddfe7a97800cc572a4c27a4f4b</string>
 
 </resources>
