@@ -47,7 +47,7 @@ fun LoginScreen(
             }
             Column {
                 AddButton(text = "google", onClick = onGoogleLogin)
-                AddButton("kakao")
+                AddButton("kakao", onClick = onKakaoLogin)
             }
             SpaceMaker(height = 0.dp)
         }
