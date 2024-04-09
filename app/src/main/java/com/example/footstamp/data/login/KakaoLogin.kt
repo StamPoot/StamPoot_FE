@@ -8,10 +8,11 @@ import com.kakao.sdk.user.UserApiClient
 
 class KakaoLogin(val activity: Activity) {
 
-    lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
+    private lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
 
     init {
         setKakaoCallback()
+        kakaoDeleteInfo()
     }
 
     fun checkKakaoLogin(): Boolean {
@@ -83,8 +84,20 @@ class KakaoLogin(val activity: Activity) {
         UserApiClient.instance.logout { error ->
             if (error != null) {
                 Log.d("카카오", "카카오 로그아웃 실패")
+                Log.e("카카오 에러",error.message.toString())
             } else {
                 Log.d("카카오", "카카오 로그아웃 성공!")
+            }
+        }
+    }
+
+    fun kakaoDeleteInfo() {
+        UserApiClient.instance.unlink { error ->
+            if (error != null) {
+                Log.d("카카오로그인", "회원 탈퇴 실패")
+                Log.e("카카오 에러",error.message.toString())
+            } else {
+                Log.d("카카오로그인", "회원 탈퇴 성공")
             }
         }
     }

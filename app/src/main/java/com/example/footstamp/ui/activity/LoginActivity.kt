@@ -56,6 +56,7 @@ class LoginActivity : ComponentActivity() {
         if (requestCode == GOOGLE_API_CODE) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             googleLogin.handleSignInResult(task)?.let { token ->
+                Log.d(TAG, "code: $token")
                 loginViewModel.updateGoogleToken(token)
                 loginViewModel.googleAccessTokenLogin()
             }

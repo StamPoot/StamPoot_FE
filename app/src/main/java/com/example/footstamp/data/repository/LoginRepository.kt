@@ -1,17 +1,18 @@
 package com.example.footstamp.data.repository
 
 import com.example.footstamp.BuildConfig
-import com.example.footstamp.data.data_source.LoginService
-import com.example.footstamp.data.dto.login.AuthToken
+import com.example.footstamp.data.data_source.AuthService
+import com.example.footstamp.data.dto.response.auth.AuthToken
+import com.example.footstamp.data.util.RestfulManager
 import retrofit2.Response
 import javax.inject.Inject
 
-class LoginRepository @Inject constructor(private val service: LoginService) {
+class LoginRepository @Inject constructor(
+    private val authService: AuthService
+) {
     suspend fun googleAccessTokenLogin(
-        provider: LoginService.Provider,
-        token: String
+        provider: AuthService.Provider, token: String
     ): Response<AuthToken> {
-        return LoginService.loginRetrofit(BuildConfig.GOOGLE_BASE_URL)
-            .getLoginToken(provider.provider, token)
+        return authService.authLoginToken(provider.provider, token)
     }
 }

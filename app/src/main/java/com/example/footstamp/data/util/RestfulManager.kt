@@ -1,9 +1,10 @@
-package com.example.footstamp.data.remote
+package com.example.footstamp.data.util
 
 import android.util.Log
-import com.example.footstamp.data.data_source.LoginService
-import com.example.footstamp.data.repository.LoginRepository
-import com.google.firebase.auth.ktx.BuildConfig
+import com.example.footstamp.BuildConfig
+import com.example.footstamp.data.data_source.AuthService
+import com.example.footstamp.ui.base.BaseService
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,14 +14,13 @@ import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RestfulManager {
-    @Provides
-    fun provideBaseUrl() = "https://impine.shop/"
 
     private fun log(request: Request) {
         val url = request.url
@@ -50,6 +50,15 @@ object RestfulManager {
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .addNetworkInterceptor { chain ->
+                chain.proceed(
+                    chain.request().also { request ->
+                        log(request)
+                    }
+                        .newBuilder()
+                        .build()
+                )
+            }
             .connectTimeout(5000L, TimeUnit.SECONDS)
             .readTimeout(5000L, TimeUnit.SECONDS)
             .writeTimeout(5000L, TimeUnit.SECONDS)
@@ -61,16 +70,30 @@ object RestfulManager {
     fun provideRetrofit(
         okHttpClient: OkHttpClient,
     ): Retrofit {
+        val gson = GsonBuilder().setLenient().create()
+
         return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(ScalarsConverterFactory.create())
             .client(okHttpClient)
-            .baseUrl(provideBaseUrl())
+            .baseUrl(BuildConfig.BASE_URL)
             .build()
     }
 
     @Singleton
     @Provides
-    fun provideLoginService(retrofit: Retrofit): LoginService {
-        return retrofit.create(LoginService::class.java)
+    fun provideLoginService(retrofit: Retrofit): BaseService {
+        return retrofit.create(AuthService::class.java)
+    }
+
+    @Singleton
+    fun getRestful(): BaseService {
+        return provideLoginService(
+            provideRetrofit(
+                provideOkHttpClient(
+                    provideHttpLoggingInterceptor()
+                )
+            )
+        )
     }
 }
