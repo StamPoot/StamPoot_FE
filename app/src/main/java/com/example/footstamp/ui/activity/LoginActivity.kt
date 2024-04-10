@@ -41,7 +41,7 @@ class LoginActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-            loginViewModel.accessToken.collect {
+            loginViewModel.loginToken.collect {
                 if (it != null) moveToHomeScreen()
                 Log.d(TAG, it.toString())
             }
@@ -57,7 +57,7 @@ class LoginActivity : ComponentActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             googleLogin.handleSignInResult(task)?.let { token ->
                 Log.d(TAG, "code: $token")
-                loginViewModel.updateGoogleToken(token)
+                loginViewModel.updateGoogleIdToken(token)
                 loginViewModel.googleAccessTokenLogin()
             }
         }
@@ -71,10 +71,11 @@ class LoginActivity : ComponentActivity() {
     }
 
     private fun kakaoLoginEvent() {
-        kakaoLogin = KakaoLogin(this)
+        kakaoLogin = KakaoLogin(this) { token ->
+            loginViewModel.updateLoginToken(token)
+        }
         if (kakaoLogin.checkKakaoLogin()) {
             kakaoLogin.kakaoAppLogin()
-            moveToHomeScreen()
         } else {
             kakaoLogin.kakaoAccountLogin()
         }

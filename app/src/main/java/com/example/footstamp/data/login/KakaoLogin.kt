@@ -6,7 +6,7 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.user.UserApiClient
 
-class KakaoLogin(val activity: Activity) {
+class KakaoLogin(val activity: Activity, val getToken: (token: String) -> Unit) {
 
     private lateinit var kakaoCallback: (OAuthToken?, Throwable?) -> Unit
 
@@ -70,8 +70,9 @@ class KakaoLogin(val activity: Activity) {
             } else if (token != null) {
                 Log.d("[카카오로그인]", "로그인에 성공하였습니다.\n${token.accessToken}")
                 UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+                    getToken(token.accessToken)
                     UserApiClient.instance.me { user, error ->
-//                        nickname.text = "닉네임: ${user?.kakaoAccount?.profile?.nickname}"
+                        user?.kakaoAccount?.profile?.nickname
                     }
                 }
             } else {
@@ -84,7 +85,7 @@ class KakaoLogin(val activity: Activity) {
         UserApiClient.instance.logout { error ->
             if (error != null) {
                 Log.d("카카오", "카카오 로그아웃 실패")
-                Log.e("카카오 에러",error.message.toString())
+                Log.e("카카오 에러", error.message.toString())
             } else {
                 Log.d("카카오", "카카오 로그아웃 성공!")
             }
@@ -95,7 +96,7 @@ class KakaoLogin(val activity: Activity) {
         UserApiClient.instance.unlink { error ->
             if (error != null) {
                 Log.d("카카오로그인", "회원 탈퇴 실패")
-                Log.e("카카오 에러",error.message.toString())
+                Log.e("카카오 에러", error.message.toString())
             } else {
                 Log.d("카카오로그인", "회원 탈퇴 성공")
             }
