@@ -2,6 +2,7 @@ package com.example.footstamp.ui.activity
 
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.data_source.AuthService
+import com.example.footstamp.data.model.Provider
 import com.example.footstamp.data.repository.LoginRepository
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +30,7 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
 
     fun googleAccessTokenLogin() {
         viewModelScope.launch {
-            repository.googleAccessTokenLogin(AuthService.Provider.GOOGLE, _googleToken.value!!)
+            repository.googleAccessTokenLogin(Provider.GOOGLE, _googleToken.value!!)
                 .also { _accessToken.value = it.body()?.auth }
         }
     }

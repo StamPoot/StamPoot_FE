@@ -3,6 +3,7 @@ package com.example.footstamp.data.repository
 import com.example.footstamp.data.dao.DiaryDao
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.SeoulLocation
+import com.example.footstamp.ui.base.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
@@ -10,7 +11,7 @@ import kotlinx.coroutines.flow.flowOn
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-class DiaryRepository @Inject constructor(private val diaryDao: DiaryDao) {
+class DiaryRepository @Inject constructor(private val diaryDao: DiaryDao) : BaseRepository() {
 
     val diaries: Flow<List<Diary>> = diaryDao.getAll().flowOn(Dispatchers.IO).conflate()
 
