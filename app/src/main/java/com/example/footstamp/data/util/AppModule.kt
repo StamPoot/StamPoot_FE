@@ -68,28 +68,43 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideLoginRepository(authService: AuthService) = LoginRepository(authService)
+    fun provideLoginRepository(tokenManager: TokenManager, authService: AuthService) =
+        LoginRepository(tokenManager, authService)
 
 
     @Singleton
     @Provides
-    fun provideDiaryRepository(diaryDao: DiaryDao, diaryService: DiaryService): DiaryRepository {
-        return DiaryRepository(diaryDao, diaryService)
+    fun provideDiaryRepository(
+        tokenManager: TokenManager,
+        diaryDao: DiaryDao,
+        diaryService: DiaryService
+    ): DiaryRepository {
+        return DiaryRepository(tokenManager, diaryDao, diaryService)
     }
 
     @Singleton
     @Provides
-    fun provideBoardRepository(boardService: BoardService): BoardRepository {
-        return BoardRepository(boardService)
+    fun provideBoardRepository(
+        tokenManager: TokenManager,
+        boardService: BoardService
+    ): BoardRepository {
+        return BoardRepository(tokenManager, boardService)
     }
 
     @Singleton
     @Provides
     fun provideProfileRepository(
+        tokenManager: TokenManager,
         profileDao: ProfileDao,
         userService: UserService
     ): ProfileRepository {
-        return ProfileRepository(profileDao, userService)
+        return ProfileRepository(tokenManager, profileDao, userService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideTokenManager(@ApplicationContext context: Context): TokenManager {
+        return TokenManager(context)
     }
 
     @Singleton

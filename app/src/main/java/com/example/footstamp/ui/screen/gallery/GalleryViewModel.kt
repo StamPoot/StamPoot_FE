@@ -46,6 +46,7 @@ class GalleryViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
+
             repository.getAll().distinctUntilChanged().collect { diaryList ->
                 if (diaryList.isEmpty()) {
                     Log.d(TAG, "EMPTY")

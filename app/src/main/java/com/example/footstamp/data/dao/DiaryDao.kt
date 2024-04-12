@@ -43,10 +43,10 @@ interface DiaryDao {
     fun updateLocation(id: Long, location: SeoulLocation)
 
     @Query("UPDATE diaries SET diary_photo_bitmaps = :photoURLs WHERE id = :id")
-    fun updatePhotoUrl(id: Long, photoURLs: List<String>)
+    fun updatePhotoList(id: Long, photoURLs: List<String>)
 
     @Query("UPDATE diaries SET diary_thumbnail= :thumbNail WHERE id = :id")
-    fun updateThumbnail(id: Long, thumbNail: Int)
+    fun updateThumbnailIndex(id: Long, thumbNail: Int)
 
     // 탐색
     @Query("SELECT * FROM diaries")
