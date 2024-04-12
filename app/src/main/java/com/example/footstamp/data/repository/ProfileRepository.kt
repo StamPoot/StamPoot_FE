@@ -12,6 +12,7 @@ import javax.inject.Inject
 
 class ProfileRepository @Inject constructor(
     private val profileDao: ProfileDao,
+    private val userService: UserService
 ) : BaseRepository() {
 
     val profile: Flow<Profile> = profileDao.getProfile().flowOn(Dispatchers.IO).conflate()

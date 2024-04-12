@@ -7,6 +7,7 @@ import com.example.footstamp.data.data_source.BoardService
 import com.example.footstamp.data.data_source.DiaryService
 import com.example.footstamp.data.data_source.ReplyService
 import com.example.footstamp.data.data_source.UserService
+import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.repository.LoginRepository
 import com.example.footstamp.data.repository.ProfileRepository
 import com.example.footstamp.ui.base.BaseService
@@ -76,34 +77,4 @@ object RestfulModule {
             .addConverterFactory(ScalarsConverterFactory.create()).client(okHttpClient)
             .baseUrl(BuildConfig.BASE_URL).build()
     }
-
-    @Singleton
-    @Provides
-    fun provideAuthService(retrofit: Retrofit): AuthService {
-        return retrofit.create(AuthService::class.java)
-    }
-    @Singleton
-    @Provides
-    fun provideBoardService(retrofit: Retrofit): BoardService {
-        return retrofit.create(BoardService::class.java)
-    }
-    @Singleton
-    @Provides
-    fun provideDiaryService(retrofit: Retrofit): DiaryService {
-        return retrofit.create(DiaryService::class.java)
-    }
-    @Singleton
-    @Provides
-    fun provideReplyService(retrofit: Retrofit): ReplyService {
-        return retrofit.create(ReplyService::class.java)
-    }
-    @Singleton
-    @Provides
-    fun provideUserService(retrofit: Retrofit): UserService {
-        return retrofit.create(UserService::class.java)
-    }
-
-    @Singleton
-    @Provides
-    fun provideLoginRepository(authService: AuthService) = LoginRepository(authService)
 }
