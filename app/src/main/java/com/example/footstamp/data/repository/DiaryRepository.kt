@@ -21,32 +21,57 @@ class DiaryRepository @Inject constructor(
 
     val diaries: Flow<List<Diary>> = diaryDao.getAll().flowOn(Dispatchers.IO).conflate()
 
-    suspend fun writeDiary(diary: Diary) {
-        insertDiary(diary)
-        diaryService.diaryWrite(tokenManager.accessToken!!, diary)
+    suspend fun getDiaries() {
+        diaryDao.getAll()
+        diaryService.diaryList(tokenManager.accessToken!!)
     }
 
-    // 생성
-    suspend fun insertDiaries(diaryList: List<Diary>) = diaryDao.insertDiaries(diaryList)
+    suspend fun writeDiary(diary: Diary) {
+        diaryService.diaryWrite(tokenManager.accessToken!!, diary)
+        insertDiaryDao(diary)
+    }
 
-    suspend fun insertDiary(diary: Diary) = diaryDao.insertDiaries(diary)
+    suspend fun readDiary(diary: Diary) {
+        diaryService.diaryDetail(tokenManager.accessToken!!, diary.id.toString())
+    }
 
-    // 삭제
-    suspend fun deleteDiary(id: Long) = diaryDao.deleteDiary(id)
+    // id 수정 필요
+    suspend fun deleteDiary(diary: Diary) {
+        diaryService.diaryDelete(diary.id.toString(), tokenManager.accessToken!!)
+        deleteDiaryDao(diary.id)
+    }
 
-    suspend fun deleteAll() = diaryDao.deleteAll()
-
-    // 업데이트
-
+    // 일기 수정 API 요청
     suspend fun updateDiary(
+        diary: Diary,
+        title: String? = null,
+        message: String? = null,
+        date: LocalDateTime? = null,
+        isShared: Boolean? = null,
+        location: SeoulLocation? = null,
+        photoList: List<String>? = null,
+        thumbnailIndex: Int? = null,
+    ) {
+        updateDiaryDao(diary.id)
+    }
+
+    // dao Database
+
+    suspend fun insertDiaryDao(diary: Diary) = diaryDao.insertDiaries(diary)
+
+    suspend fun deleteDiaryDao(id: Long) = diaryDao.deleteDiary(id)
+
+    suspend fun deleteAllDao() = diaryDao.deleteAll()
+
+    suspend fun updateDiaryDao(
         id: Long,
-        title: String?,
-        message: String?,
-        date: LocalDateTime?,
-        isShared: Boolean?,
-        location: SeoulLocation?,
-        photoList: List<String>?,
-        thumbnailIndex: Int?,
+        title: String? = null,
+        message: String? = null,
+        date: LocalDateTime? = null,
+        isShared: Boolean? = null,
+        location: SeoulLocation? = null,
+        photoList: List<String>? = null,
+        thumbnailIndex: Int? = null,
     ) {
         title?.let { diaryDao.updateTitle(id, it) }
         message?.let { diaryDao.updateMessage(id, it) }
@@ -57,13 +82,12 @@ class DiaryRepository @Inject constructor(
         thumbnailIndex?.let { diaryDao.updateThumbnailIndex(id, it) }
     }
 
-    // 탐색
-    suspend fun getAll(): Flow<List<Diary>> =
+    suspend fun getAllDao(): Flow<List<Diary>> =
         diaryDao.getAll().flowOn(Dispatchers.IO).conflate()
 
-    suspend fun getDiary(id: Long): Diary =
+    suspend fun getDiaryDao(id: Long): Diary =
         diaryDao.getDiary(id)
 
-    suspend fun getDiaryByLocation(location: SeoulLocation): List<Diary> =
+    suspend fun getDiaryByLocationDao(location: SeoulLocation): List<Diary> =
         diaryDao.getDiaryByLocation(location)
 }

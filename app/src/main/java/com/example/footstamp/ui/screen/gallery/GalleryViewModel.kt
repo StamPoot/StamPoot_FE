@@ -47,7 +47,7 @@ class GalleryViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
 
-            repository.getAll().distinctUntilChanged().collect { diaryList ->
+            repository.getAllDao().distinctUntilChanged().collect { diaryList ->
                 if (diaryList.isEmpty()) {
                     Log.d(TAG, "EMPTY")
                 } else {
@@ -64,24 +64,16 @@ class GalleryViewModel @Inject constructor(
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repository.insertDiary(_writingDiary.value)
+                repository.insertDiaryDao(_writingDiary.value)
             }
         }
         return true
     }
 
-    fun addDiaries(diaries: List<Diary>) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                repository.insertDiaries(diaries)
-            }
-        }
-    }
-
     fun removeDiary(id: Long) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repository.deleteDiary(id)
+                repository.deleteDiaryDao(id)
             }
         }
     }

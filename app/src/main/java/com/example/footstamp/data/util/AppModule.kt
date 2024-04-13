@@ -86,9 +86,10 @@ object AppModule {
     @Provides
     fun provideBoardRepository(
         tokenManager: TokenManager,
-        boardService: BoardService
+        boardService: BoardService,
+        replyService: ReplyService,
     ): BoardRepository {
-        return BoardRepository(tokenManager, boardService)
+        return BoardRepository(tokenManager, boardService, replyService)
     }
 
     @Singleton

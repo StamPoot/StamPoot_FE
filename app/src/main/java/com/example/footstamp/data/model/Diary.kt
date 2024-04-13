@@ -17,7 +17,7 @@ data class Diary(
     @ColumnInfo(name = "diary_thumbnail") var thumbnail: Int = 0,
     @ColumnInfo(name = "diary_uid") val uid: String = ""
 ) {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     var id: Long = 0
 
     override fun toString(): String {

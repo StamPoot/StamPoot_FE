@@ -31,7 +31,7 @@ class BoardViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getAll().distinctUntilChanged().collect { diaryList ->
+            repository.getAllDao().distinctUntilChanged().collect { diaryList ->
                 if (diaryList.isEmpty()) {
                     Log.d(TAG, "EMPTY")
                 } else {
