@@ -16,6 +16,9 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
     private val _googleIdToken = MutableStateFlow<String?>(null)
     val googleIdToken = _googleIdToken.asStateFlow()
 
+    private val _kakaoIdToken = MutableStateFlow<String?>(null)
+    val kakaoIdToken = _kakaoIdToken.asStateFlow()
+
     private val _loginToken = MutableStateFlow<String?>(null)
     val loginToken = _loginToken.asStateFlow()
 
