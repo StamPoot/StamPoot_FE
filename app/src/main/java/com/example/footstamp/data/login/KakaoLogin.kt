@@ -1,6 +1,7 @@
 package com.example.footstamp.data.login
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.util.Log
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
@@ -12,10 +13,10 @@ class KakaoLogin(val activity: Activity, val getToken: (token: String) -> Unit) 
 
     init {
         setKakaoCallback()
-        kakaoDeleteInfo()
     }
 
     fun checkKakaoLogin(): Boolean {
+        UserApiClient.Companion
         return UserApiClient.instance.isKakaoTalkLoginAvailable(activity)
     }
 

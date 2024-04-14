@@ -30,6 +30,16 @@ android {
         )
         buildConfigField(
             "String",
+            "KAKAO_REDIRECT_URL",
+            "\"https://impine.shop/login/oauth2/code/kakao\""
+        )
+        buildConfigField(
+            "String",
+            "KAKAO_BASE_URL",
+            "\"https://kauth.kakao.com/oauth/\""
+        )
+        buildConfigField(
+            "String",
             "GOOGLE_CLIENT_ID",
             "\"59599924227-masr58k95rljkkfa6oglphbiufnadatc.apps.googleusercontent.com\""
         )

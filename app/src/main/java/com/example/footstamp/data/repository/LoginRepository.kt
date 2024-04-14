@@ -14,7 +14,7 @@ class LoginRepository @Inject constructor(
     private val tokenManager: TokenManager, private val authService: AuthService
 ) : BaseRepository() {
 
-    suspend fun googleAccessTokenLogin(
+    suspend fun accessTokenLogin(
         provider: Provider, token: String
     ): Response<AuthToken> {
         return authService.authLoginToken(provider.provider, token).also { response ->
@@ -22,6 +22,12 @@ class LoginRepository @Inject constructor(
                 tokenManager.accessToken = response.body()?.auth
                 Log.d(TAG, "Token Inputed : ${response.body()?.auth}")
             }
+        }
+    }
+
+    suspend fun kakaoLogin(): Response<AuthToken> {
+        return authService.kakaoLogin().also {
+            Log.d(TAG, "TOKEN SUCCESS ${it.body()}")
         }
     }
 }

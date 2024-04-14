@@ -13,6 +13,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.example.footstamp.data.login.GoogleLogin
 import com.example.footstamp.data.login.KakaoLogin
+import com.example.footstamp.data.model.Provider
 import com.example.footstamp.ui.screen.login.LoginScreen
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -72,10 +73,11 @@ class LoginActivity : ComponentActivity() {
 
     private fun kakaoLoginEvent() {
         kakaoLogin = KakaoLogin(this) { token ->
-            loginViewModel.updateLoginToken(token)
+            loginViewModel.kakaoAccessTokenLogin(token)
         }
         if (kakaoLogin.checkKakaoLogin()) {
-            kakaoLogin.kakaoAppLogin()
+//            kakaoLogin.kakaoAppLogin()
+            loginViewModel.kakaoLogin()
         } else {
             kakaoLogin.kakaoAccountLogin()
         }

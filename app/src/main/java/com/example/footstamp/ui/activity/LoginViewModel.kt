@@ -29,8 +29,21 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
 
     fun googleAccessTokenLogin() {
         viewModelScope.launch {
-            repository.googleAccessTokenLogin(Provider.GOOGLE, _googleIdToken.value!!)
+            repository.accessTokenLogin(Provider.GOOGLE, _googleIdToken.value!!)
                 .also { _loginToken.value = it.body()?.auth }
+        }
+    }
+
+    fun kakaoAccessTokenLogin(token: String) {
+        viewModelScope.launch {
+            repository.accessTokenLogin(Provider.KAKAO, token)
+                .also { _loginToken.value = token }
+        }
+    }
+
+    fun kakaoLogin() {
+        viewModelScope.launch {
+            repository.kakaoLogin()
         }
     }
 }

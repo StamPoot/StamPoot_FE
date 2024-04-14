@@ -73,8 +73,11 @@ object RestfulModule {
     ): Retrofit {
         val gson = GsonBuilder().setLenient().create()
 
-        return Retrofit.Builder().addConverterFactory(GsonConverterFactory.create(gson))
-            .addConverterFactory(ScalarsConverterFactory.create()).client(okHttpClient)
-            .baseUrl(BuildConfig.BASE_URL).build()
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .client(okHttpClient)
+            .baseUrl(BuildConfig.BASE_URL)
+            .build()
     }
 }
