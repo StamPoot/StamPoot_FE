@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,6 +17,7 @@ import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.AddButton
+import com.example.footstamp.ui.components.CustomWebView
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.theme.MainColor
@@ -26,7 +28,9 @@ fun LoginScreen(
     onGoogleLogin: () -> Unit,
     onKakaoLogin: () -> Unit
 ) {
-    BaseScreen {  paddingValue, screenWidth, screenHeight ->
+    val isKakaoLoginPress = loginViewModel.isKakaoLoginPress.collectAsState()
+
+    BaseScreen { paddingValue, screenWidth, screenHeight ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -47,9 +51,18 @@ fun LoginScreen(
             }
             Column {
                 AddButton(text = "google", onClick = onGoogleLogin)
-                AddButton("kakao", onClick = onKakaoLogin)
+                AddButton("kakao", onClick = {
+//                    onKakaoLogin()
+                    loginViewModel.pressKakaoLogin()
+                })
             }
             SpaceMaker(height = 0.dp)
         }
     }
+    if (isKakaoLoginPress.value) KakaoLoginWebView()
+}
+
+@Composable
+fun KakaoLoginWebView() {
+    CustomWebView(url = "https://kauth.kakao.com/oauth/authorize?client_id=1835b017f8241b82663c7f11a394c9cb&redirect_uri=https://impine.shop/login/oauth2/code/kakao&response_type=code")
 }
