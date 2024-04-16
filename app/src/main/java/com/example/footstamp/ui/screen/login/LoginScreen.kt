@@ -10,8 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
@@ -64,5 +66,5 @@ fun LoginScreen(
 
 @Composable
 fun KakaoLoginWebView() {
-    CustomWebView(url = "https://kauth.kakao.com/oauth/authorize?client_id=1835b017f8241b82663c7f11a394c9cb&redirect_uri=https://impine.shop/login/oauth2/code/kakao&response_type=code")
+    CustomWebView(url = getString(LocalContext.current, R.string.kakao_auth_url))
 }
