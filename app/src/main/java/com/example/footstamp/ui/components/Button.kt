@@ -8,6 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Button
@@ -25,8 +26,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
@@ -53,6 +57,23 @@ fun AddButton(
             BodyLargeText(text, Color.White)
         }
     }
+}
+
+@Composable
+fun ImageButton(
+    image: Int,
+    buttonWidth: Dp,
+    onClick: () -> Unit = {}
+) {
+
+    AsyncImage(
+        model = image,
+        modifier = Modifier
+            .size(width = buttonWidth, height = buttonWidth * 8 / 35)
+            .clickable { onClick() },
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+    )
 }
 
 @Composable

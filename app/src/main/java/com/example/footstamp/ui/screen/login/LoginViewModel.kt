@@ -18,4 +18,7 @@ class LoginViewModel @Inject constructor(
     fun pressKakaoLogin() {
         _isKakaoLoginPress.value = true
     }
+    fun hideKakaoLogin() {
+        _isKakaoLoginPress.value = false
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.footstamp.ui.screen.login
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +22,7 @@ import com.example.footstamp.R
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.AddButton
 import com.example.footstamp.ui.components.CustomWebView
+import com.example.footstamp.ui.components.ImageButton
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.theme.MainColor
@@ -52,19 +55,32 @@ fun LoginScreen(
                 TitleLargeText(text = "로그인", color = Color.White)
             }
             Column {
-                AddButton(text = "google", onClick = onGoogleLogin)
-                AddButton("kakao", onClick = {
-//                    onKakaoLogin()
-                    loginViewModel.pressKakaoLogin()
-                })
+                ImageButton(
+                    image = R.drawable.icon_google_login,
+                    buttonWidth = screenWidth / 2,
+                    onClick = onGoogleLogin
+                )
+                SpaceMaker(height = 10.dp)
+                ImageButton(image = R.drawable.icon_kakao_login,
+                    buttonWidth = screenWidth / 2,
+                    onClick = {
+                        onKakaoLogin()
+                        loginViewModel.pressKakaoLogin()
+                    })
             }
             SpaceMaker(height = 0.dp)
         }
     }
-    if (isKakaoLoginPress.value) KakaoLoginWebView()
+    if (isKakaoLoginPress.value) KakaoLoginWebView { loginViewModel.hideKakaoLogin() }
 }
 
 @Composable
-fun KakaoLoginWebView() {
-    CustomWebView(url = getString(LocalContext.current, R.string.kakao_auth_url))
+fun KakaoLoginWebView(onResult: () -> Unit) {
+    CustomWebView(
+        url = getString(
+            LocalContext.current,
+            R.string.kakao_auth_url,
+        ),
+        onResult = onResult
+    )
 }
