@@ -29,8 +29,4 @@ class BoardRepository @Inject constructor(
     suspend fun deleteReply(id: String) {
         replyService.replyDelete(id, tokenManager.accessToken!!)
     }
-
-    suspend fun reportReply(id: String, reason: String) {
-        replyService.replyReport(id, tokenManager.accessToken!!, ReportReqDTO(reason))
-    }
 }

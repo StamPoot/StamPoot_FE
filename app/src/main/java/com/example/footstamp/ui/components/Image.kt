@@ -238,7 +238,7 @@ fun PhotoSelector(
             screenWidth = screenWidth,
             screenHeight = screenHeight
         )
-        AddButton(buttonText) { launchPhotoPicker() }
+        CommonButton(buttonText) { launchPhotoPicker() }
     }
 }
 

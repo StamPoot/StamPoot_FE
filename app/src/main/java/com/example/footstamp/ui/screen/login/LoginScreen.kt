@@ -1,7 +1,5 @@
 package com.example.footstamp.ui.screen.login
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +18,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.ui.base.BaseScreen
-import com.example.footstamp.ui.components.AddButton
 import com.example.footstamp.ui.components.CustomWebView
 import com.example.footstamp.ui.components.ImageButton
 import com.example.footstamp.ui.components.SpaceMaker

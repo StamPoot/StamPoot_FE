@@ -35,6 +35,10 @@ class DiaryRepository @Inject constructor(
         diaryService.diaryDetail(tokenManager.accessToken!!, diary.id.toString())
     }
 
+//    suspend fun getBoardDiaries() {
+//        diaryService.
+//    }
+
     // id 수정 필요
     suspend fun deleteDiary(diary: Diary) {
         diaryService.diaryDelete(diary.id.toString(), tokenManager.accessToken!!)

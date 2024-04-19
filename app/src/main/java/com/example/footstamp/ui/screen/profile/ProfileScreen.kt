@@ -31,7 +31,7 @@ import com.example.footstamp.R
 import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
-import com.example.footstamp.ui.components.AddButton
+import com.example.footstamp.ui.components.CommonButton
 import com.example.footstamp.ui.components.BodyLargeText
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.HalfDialog
@@ -64,9 +64,10 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
                 screenHeight = screenHeight,
                 paddingValues = paddingValue,
             )
-            AddButton("수정하기") { profileViewModel.showEditProfileDialog() }
+            CommonButton("수정하기") { profileViewModel.showEditProfileDialog() }
             MyHistory(screenHeight = screenHeight, paddingValues = paddingValue)
         }
+
         if (editProfile != null) ProfileEditDialog(screenWidth = screenWidth,
             screenHeight = screenHeight,
             contentResolver = context.contentResolver,
@@ -215,7 +216,7 @@ fun ProfileEditDialog(
             )
 
             SpaceMaker(height = screenHeight / 80)
-            AddButton("수정") { onEdit() }
+            CommonButton("수정") { onEdit() }
             SpaceMaker(height = screenHeight / 80)
         }
     }

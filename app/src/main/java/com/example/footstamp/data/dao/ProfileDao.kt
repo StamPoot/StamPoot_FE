@@ -27,4 +27,7 @@ interface ProfileDao {
 
     @Query("SELECT * FROM profile")
     fun getProfile(): Flow<Profile>
+
+    @Query("DELETE FROM profile")
+    fun deleteProfile()
 }

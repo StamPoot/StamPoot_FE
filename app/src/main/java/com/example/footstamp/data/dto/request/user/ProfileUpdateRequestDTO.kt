@@ -6,5 +6,7 @@ data class ProfileUpdateRequestDTO(
     @SerializedName("nickname")
     val nickname: String,
     @SerializedName("picture")
-    val picture: String
+    val picture: String?,
+    @SerializedName("sentence")
+    val sentence: String?
 )

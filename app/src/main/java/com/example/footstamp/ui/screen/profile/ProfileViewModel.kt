@@ -38,6 +38,9 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getProfile(_isProfileExist.value)
+        }
     }
 
     fun showEditProfileDialog() {
@@ -55,17 +58,15 @@ class ProfileViewModel @Inject constructor(
         aboutMe: String = _editProfile.value!!.aboutMe,
     ) {
         _editProfile.value = Profile(uid, nickname, image, aboutMe)
-        Log.d(TAG, _editProfile.value.toString())
     }
 
     fun updateProfile(): Boolean {
         if (_editProfile.value == null) return false
         if (_editProfile.value!!.checkProfile() != null) return false
-        _profileState.value = _editProfile.value!!
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                if (_isProfileExist.value) repository.updateProfileDao(_editProfile.value!!)
+                if (_isProfileExist.value) repository.updateProfile(_editProfile.value!!)
                 else {
                     _isProfileExist.value = true
                     repository.insertProfileDao(_editProfile.value!!)

@@ -9,7 +9,11 @@ import android.util.Base64
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.example.footstamp.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
@@ -53,4 +57,20 @@ object Formatter {
         return ContextCompat.getDrawable(context, drawable)?.toBitmap()!!
     }
 
+    suspend fun fetchImageBitmap(imageUrl: String): Bitmap? {
+        var bitmap: Bitmap? = null
+        withContext(Dispatchers.IO) {
+            try {
+                val url = URL(imageUrl)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                val inputStream = connection.inputStream
+                bitmap = BitmapFactory.decodeStream(inputStream)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return bitmap
+    }
 }

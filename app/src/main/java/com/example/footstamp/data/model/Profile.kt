@@ -1,17 +1,8 @@
 package com.example.footstamp.data.model
 
-import android.content.res.Resources
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.footstamp.R
-import com.example.footstamp.data.util.Formatter
-import com.example.footstamp.ui.components.uriToBitmap
 
 @Entity(tableName = "profile")
 class Profile(
@@ -20,10 +11,10 @@ class Profile(
     @ColumnInfo(name = "profile_image") var image: String? = null,
     @ColumnInfo(name = "profile_about_me") var aboutMe: String = "자기소개를 설정해주세요",
 ) {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     var id: Long = 0
     override fun toString(): String {
-        return "uid = $uid nickname = $nickname about me = $aboutMe"
+        return "id = $id uid = $uid nickname = $nickname about me = $aboutMe"
     }
 
     fun checkProfile(): String? {
