@@ -1,6 +1,7 @@
 package com.example.footstamp.ui.screen.profile
 
 import android.content.ContentResolver
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,9 +26,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
+import com.example.footstamp.data.model.Notification
 import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
@@ -52,6 +55,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val profileState by profileViewModel.profileState.collectAsState()
     val editProfile by profileViewModel.editProfile.collectAsState()
+    val notificationList by profileViewModel.notificationList.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         Column(
@@ -65,7 +69,11 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
                 paddingValues = paddingValue,
             )
             CommonButton("수정하기") { profileViewModel.showEditProfileDialog() }
-            MyHistory(screenHeight = screenHeight, paddingValues = paddingValue)
+            MyHistory(
+                context = context,
+                notificationList = notificationList,
+                screenHeight = screenHeight,
+            )
         }
 
         if (editProfile != null) ProfileEditDialog(screenWidth = screenWidth,
@@ -82,10 +90,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
 
 @Composable
 fun ProfileCard(
-    profileState: Profile,
-    screenWidth: Dp,
-    screenHeight: Dp,
-    paddingValues: PaddingValues
+    profileState: Profile, screenWidth: Dp, screenHeight: Dp, paddingValues: PaddingValues
 ) {
 
     SpaceMaker(height = screenHeight / 20f)
@@ -121,7 +126,11 @@ fun ProfileCard(
 }
 
 @Composable
-fun MyHistory(screenHeight: Dp, paddingValues: PaddingValues) {
+fun MyHistory(
+    context: Context,
+    notificationList: List<Notification>,
+    screenHeight: Dp
+) {
     SpaceMaker(height = screenHeight / 40f)
     TopBar(text = "나의 활동")
     Column(
@@ -129,13 +138,13 @@ fun MyHistory(screenHeight: Dp, paddingValues: PaddingValues) {
             .fillMaxWidth(0.9f)
             .verticalScroll(rememberScrollState())
     ) {
-        NotificationItem("햄스터님이 댓글을 남겼습니다.", "3분전", "저두 그래요")
-        NotificationItem("피그님이 댓글을 남겼습니다.", "7분전", "정말 좋네요")
-        NotificationItem("기린님이 댓글을 남겼습니다.", "10분전", "ㄹㅇㅋㅋ")
-        NotificationItem("기린님이 댓글을 남겼습니다.", "10분전", "ㄹㅇㅋㅋ")
-        NotificationItem("기린님이 댓글을 남겼습니다.", "10분전", "ㄹㅇㅋㅋ")
-        NotificationItem("기린님이 댓글을 남겼습니다.", "10분전", "ㄹㅇㅋㅋ")
-        NotificationItem("기린님이 댓글을 남겼습니다.", "10분전", "ㄹㅇㅋㅋ")
+        notificationList.forEach { notification ->
+            NotificationItem(
+                text = notification.profile.nickname + getString(context, R.string.reply_message),
+                time = Formatter.dateStringToString(notification.dateTime),
+                message = notification.content
+            )
+        }
     }
 }
 

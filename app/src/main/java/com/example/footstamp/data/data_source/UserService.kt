@@ -1,6 +1,7 @@
 package com.example.footstamp.data.data_source
 
 import com.example.footstamp.data.dto.request.user.ProfileUpdateRequestDTO
+import com.example.footstamp.data.dto.response.user.NotificationDto
 import com.example.footstamp.data.dto.response.user.UserProfileDto
 import com.example.footstamp.ui.base.BaseService
 import retrofit2.Response
@@ -17,13 +18,12 @@ interface UserService : BaseService {
     @GET("/profile")
     suspend fun profileGet(
         @Header("token") token: String,
-        ): Response<UserProfileDto>
+    ): Response<UserProfileDto>
 
     // 프로필 수정 요청
     @PATCH("/profile")
     suspend fun profileEdit(
-        @Header("token") token: String,
-        @Body profileUpdateRequest: ProfileUpdateRequestDTO
+        @Header("token") token: String, @Body profileUpdateRequest: ProfileUpdateRequestDTO
     ): Response<Unit>
 
     // 회원 탈퇴
@@ -36,5 +36,5 @@ interface UserService : BaseService {
     @GET("/notification")
     suspend fun profileNotification(
         @Header("token") token: String,
-    )
+    ): Response<List<NotificationDto>>
 }

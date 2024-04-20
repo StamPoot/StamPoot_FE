@@ -3,6 +3,7 @@ package com.example.footstamp.ui.screen.profile
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.footstamp.data.model.Notification
 import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.repository.ProfileRepository
 import com.example.footstamp.ui.base.BaseViewModel
@@ -29,6 +30,9 @@ class ProfileViewModel @Inject constructor(
     private val _isProfileExist = MutableStateFlow(false)
     val isProfileExist = _isProfileExist.asStateFlow()
 
+    private val _notificationList = MutableStateFlow<List<Notification>>(emptyList())
+    val notificationList = _notificationList.asStateFlow()
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.profile.distinctUntilChanged().collect { profile ->
@@ -40,6 +44,9 @@ class ProfileViewModel @Inject constructor(
         }
         viewModelScope.launch(Dispatchers.IO) {
             repository.getProfile(_isProfileExist.value)
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            getNotificationList()
         }
     }
 
@@ -75,5 +82,15 @@ class ProfileViewModel @Inject constructor(
             }
         }
         return true
+    }
+
+    fun getNotificationList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getNotification().let {
+                if (it != null) {
+                    _notificationList.value = it
+                }
+            }
+        }
     }
 }

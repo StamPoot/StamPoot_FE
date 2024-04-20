@@ -27,6 +27,16 @@ object Formatter {
         return date.format(DateTimeFormatter.ofPattern(dateFormat))
     }
 
+    fun dateStringToString(dateString: String): String {
+        val year = dateString.substring(0..3)
+        val month = dateString.substring(5..6)
+        val day = dateString.substring(8..9)
+        val hour = dateString.substring(11..12)
+        val minute = dateString.substring(14..15)
+        val second = dateString.substring(17..18)
+        return "$year-$month-$day $hour:$minute:$second"
+    }
+
     @SuppressLint("SimpleDateFormat")
     fun convertMillisToDate(millis: Long): String {
         val formatter = SimpleDateFormat("yyyy년 MM월 dd일")

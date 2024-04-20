@@ -6,6 +6,7 @@ import android.util.Log
 import com.example.footstamp.data.dao.ProfileDao
 import com.example.footstamp.data.data_source.UserService
 import com.example.footstamp.data.dto.request.user.ProfileUpdateRequestDTO
+import com.example.footstamp.data.model.Notification
 import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.TokenManager
@@ -57,8 +58,35 @@ class ProfileRepository @Inject constructor(
         }
     }
 
+    suspend fun getNotification(): List<Notification>? {
+        userService.profileNotification(tokenManager.accessToken!!).let { listResponse ->
+            if (listResponse.isSuccessful) {
+                val response = listResponse.body()!!
+                val notificationList = response.map { notificationDto ->
 
-    // dao Database
+                    // Profile DTO -> Profile Model
+                    val profile = Profile(
+                        uid = notificationDto.profileDto.id.toString(),
+                        nickname = notificationDto.profileDto.nickname,
+                        image = notificationDto.profileDto.profileImg,
+                        aboutMe = notificationDto.profileDto.sentence.let { it ?: "" }
+                    )
+
+                    // Notification DTO -> Notification Model
+                    Notification(
+                        profile = profile,
+                        content = notificationDto.content,
+                        dateTime = notificationDto.dateTime
+                    )
+                }
+                return notificationList
+            }
+        }
+        return null
+    }
+
+
+// dao Database
 
     suspend fun insertProfileDao(profile: Profile) {
         profileDao.setProfile(profile)
