@@ -158,6 +158,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:3.11.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 
     // Google Login
     implementation("androidx.credentials:credentials:1.2.1")
@@ -165,7 +166,6 @@ dependencies {
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
-    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 
     // Kakao Login
     implementation("com.kakao.sdk:v2-all:2.20.1")

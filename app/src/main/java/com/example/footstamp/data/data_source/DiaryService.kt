@@ -1,6 +1,5 @@
 package com.example.footstamp.data.data_source
 
-import com.example.footstamp.data.dto.request.reply.ReportReqDTO
 import com.example.footstamp.data.dto.response.diary.DiaryDetailDTO
 import com.example.footstamp.data.dto.response.diary.DiaryListDTO
 import com.example.footstamp.data.model.Diary
@@ -21,7 +20,7 @@ interface DiaryService : BaseService {
     @POST("/diary")
     suspend fun diaryWrite(
         @Header("token") token: String,
-        @Query("req") diary: Diary
+        @Body diary: Diary
     ): Response<Unit>
 
     // 일기 비공개

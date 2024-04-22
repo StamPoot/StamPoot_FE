@@ -48,7 +48,7 @@ class ProfileRepository @Inject constructor(
             tokenManager.accessToken!!,
             ProfileUpdateRequestDTO(
                 profile.nickname,
-                profile.image,
+                "",
                 profile.aboutMe
             )
         ).let {

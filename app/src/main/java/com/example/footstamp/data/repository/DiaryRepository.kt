@@ -3,6 +3,7 @@ package com.example.footstamp.data.repository
 import com.example.footstamp.data.dao.DiaryDao
 import com.example.footstamp.data.data_source.DiaryService
 import com.example.footstamp.data.model.Diary
+import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.data.util.TokenManager
 import com.example.footstamp.ui.base.BaseRepository
@@ -27,12 +28,24 @@ class DiaryRepository @Inject constructor(
     }
 
     suspend fun writeDiary(diary: Diary) {
-        diaryService.diaryWrite(tokenManager.accessToken!!, diary)
-        insertDiaryDao(diary)
+        diaryService.diaryWrite(tokenManager.accessToken!!, diary).let {
+            if (it.isSuccessful) insertDiaryDao(diary)
+        }
     }
 
-    suspend fun readDiary(diary: Diary) {
-        diaryService.diaryDetail(tokenManager.accessToken!!, diary.id.toString())
+    suspend fun readDiary(diaryId: String): Diary? {
+        diaryService.diaryDetail(tokenManager.accessToken!!, diaryId).let {
+            if (it.isSuccessful) {
+                val response = it.body()!!
+                return Diary(
+                    title = response.title,
+                    message = response.content,
+                    date = Formatter.longToLocalDateTime(response.date.toLong()),
+                    location = response.location
+                )
+            }
+        }
+        return null
     }
 
 //    suspend fun getBoardDiaries() {

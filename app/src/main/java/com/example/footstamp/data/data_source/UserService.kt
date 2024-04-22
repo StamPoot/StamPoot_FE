@@ -23,7 +23,8 @@ interface UserService : BaseService {
     // 프로필 수정 요청
     @PATCH("/profile")
     suspend fun profileEdit(
-        @Header("token") token: String, @Body profileUpdateRequest: ProfileUpdateRequestDTO
+        @Header("token") token: String,
+        @Body profileUpdateRequest: ProfileUpdateRequestDTO
     ): Response<Unit>
 
     // 회원 탈퇴

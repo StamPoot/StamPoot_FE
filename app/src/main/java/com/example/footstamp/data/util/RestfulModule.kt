@@ -37,14 +37,14 @@ object RestfulModule {
 
         Log.d("[RESTFUL]", "RequestURL : $url")
         Log.d("[RESTFUL]", "RequestHeader : $headers")
-        Log.d("[RESTFUL]", "RequestBody : $body")
+        Log.d("[RESTFUL]", "RequestBody : ${body.toString()}")
     }
 
     @Singleton
     @Provides
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT).apply {
-            level = if (com.google.firebase.BuildConfig.DEBUG) {
+            level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
             } else {
                 HttpLoggingInterceptor.Level.NONE
@@ -57,13 +57,19 @@ object RestfulModule {
     fun provideOkHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
-        return OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor)
+        return OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
             .addNetworkInterceptor { chain ->
-                chain.proceed(chain.request().also { request ->
-                    log(request)
-                }.newBuilder().build())
-            }.connectTimeout(5000L, TimeUnit.SECONDS).readTimeout(5000L, TimeUnit.SECONDS)
-            .writeTimeout(5000L, TimeUnit.SECONDS).build()
+                chain.proceed(
+                    chain.request()
+                        .newBuilder()
+                        .build()
+                )
+            }
+            .connectTimeout(5000L, TimeUnit.MILLISECONDS)
+            .readTimeout(5000L, TimeUnit.MILLISECONDS)
+            .writeTimeout(5000L, TimeUnit.MILLISECONDS)
+            .build()
     }
 
     @Singleton
