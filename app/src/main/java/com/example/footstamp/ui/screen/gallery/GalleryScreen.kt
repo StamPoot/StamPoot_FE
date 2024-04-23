@@ -1,12 +1,12 @@
 package com.example.footstamp.ui.screen.gallery
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +19,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,17 +27,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
-import com.example.footstamp.ui.components.BodyLargeText
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
 import com.example.footstamp.ui.components.SpaceMaker
@@ -56,6 +57,7 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
     val writeOrReadScreenState by galleryViewModel.writeOrRead.collectAsState()
     val sortType by galleryViewModel.sortType.collectAsState()
     val currentDiary by galleryViewModel.diaries.collectAsState()
+    val context = LocalContext.current
 
     BaseScreen(floatingButton = {
         GalleryFloatingButton {
@@ -69,6 +71,7 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             GalleryGridLayout(diaries = currentDiary,
                 paddingValues = paddingValue,
                 sortType = sortType,
+                context = context,
                 screenHeight = screenHeight,
                 onClick = { galleryViewModel.showReadScreen(it) })
         }
@@ -77,8 +80,9 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             writeOrReadScreenState = writeOrReadScreenState,
             onChangeState = { galleryViewModel.hideWriteOrReadScreen() },
             onClickWrite = {
-                galleryViewModel.addDiary().also {
-                    if (it) galleryViewModel.hideWriteOrReadScreen()
+                galleryViewModel.addDiary(context).also {
+                    //TODO: 수정
+                    galleryViewModel.hideWriteOrReadScreen()
                 }
             }
         )
@@ -88,6 +92,7 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 @Composable
 fun GalleryGridLayout(
     diaries: List<Diary>,
+    context: Context,
     screenHeight: Dp,
     paddingValues: PaddingValues,
     sortType: GalleryViewModel.SortByDateOrLocation,
@@ -111,6 +116,15 @@ fun GalleryGridLayout(
             }
         }.forEach { diary ->
             GalleryItemView(diary = diary, screenHeight = screenHeight / 4, onClick = onClick)
+        }
+        if (diaries.isEmpty()) {
+            SpaceMaker(height = screenHeight / 3)
+            TitleLargeText(
+                text = getString(context, R.string.gallery_no_diary),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                color = SubColor
+            )
         }
     }
 }
@@ -136,7 +150,7 @@ fun GalleryItemView(diary: Diary, screenHeight: Dp, onClick: (Diary) -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TitleText(Formatter.dateToString(diary.date), Color.White)
+            TitleText(Formatter.dateToUserString(diary.date), Color.White)
             SpaceMaker(height = 10.dp)
             TitleLargeText(diary.title, Color.White)
             SpaceMaker(height = 10.dp)

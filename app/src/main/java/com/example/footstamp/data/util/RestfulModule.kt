@@ -30,17 +30,6 @@ import javax.inject.Singleton
 object RestfulModule {
 
     @Singleton
-    private fun log(request: Request) {
-        val url = request.url
-        val headers = request.headers
-        val body = request.body
-
-        Log.d("[RESTFUL]", "RequestURL : $url")
-        Log.d("[RESTFUL]", "RequestHeader : $headers")
-        Log.d("[RESTFUL]", "RequestBody : ${body.toString()}")
-    }
-
-    @Singleton
     @Provides
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT).apply {

@@ -1,12 +1,18 @@
 package com.example.footstamp.data.dto.request.user
 
 import com.google.gson.annotations.SerializedName
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.http.Part
 
 data class ProfileUpdateRequestDTO(
     @SerializedName("nickname")
-    val nickname: String,
+    @Part
+    val nickname: RequestBody,
     @SerializedName("picture")
-    val picture: String?,
+    @Part
+    val picture: MultipartBody.Part?,
     @SerializedName("sentence")
-    val sentence: String?
+    @Part
+    val sentence: RequestBody?,
 )

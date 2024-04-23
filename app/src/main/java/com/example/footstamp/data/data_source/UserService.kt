@@ -1,16 +1,17 @@
 package com.example.footstamp.data.data_source
 
-import com.example.footstamp.data.dto.request.user.ProfileUpdateRequestDTO
-import com.example.footstamp.data.dto.response.user.NotificationDto
-import com.example.footstamp.data.dto.response.user.UserProfileDto
+import com.example.footstamp.data.dto.response.user.NotificationDTO
+import com.example.footstamp.data.dto.response.user.UserProfileDTO
 import com.example.footstamp.ui.base.BaseService
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
-import retrofit2.http.Query
+import retrofit2.http.Part
 
 interface UserService : BaseService {
 
@@ -18,13 +19,16 @@ interface UserService : BaseService {
     @GET("/profile")
     suspend fun profileGet(
         @Header("token") token: String,
-    ): Response<UserProfileDto>
+    ): Response<UserProfileDTO>
 
     // 프로필 수정 요청
+    @Multipart
     @PATCH("/profile")
     suspend fun profileEdit(
         @Header("token") token: String,
-        @Body profileUpdateRequest: ProfileUpdateRequestDTO
+        @Part("nickname") nickname: RequestBody,
+        @Part picture: MultipartBody.Part?,
+        @Part("sentence") sentence: RequestBody?,
     ): Response<Unit>
 
     // 회원 탈퇴
@@ -37,5 +41,5 @@ interface UserService : BaseService {
     @GET("/notification")
     suspend fun profileNotification(
         @Header("token") token: String,
-    ): Response<List<NotificationDto>>
+    ): Response<List<NotificationDTO>>
 }

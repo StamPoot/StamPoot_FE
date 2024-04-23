@@ -1,11 +1,8 @@
 package com.example.footstamp.data.repository
 
-import android.content.ContentValues.TAG
-import android.graphics.BitmapFactory
-import android.util.Log
+import android.content.Context
 import com.example.footstamp.data.dao.ProfileDao
 import com.example.footstamp.data.data_source.UserService
-import com.example.footstamp.data.dto.request.user.ProfileUpdateRequestDTO
 import com.example.footstamp.data.model.Notification
 import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.util.Formatter
@@ -15,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 class ProfileRepository @Inject constructor(
@@ -43,14 +41,14 @@ class ProfileRepository @Inject constructor(
         }
     }
 
-    suspend fun updateProfile(profile: Profile) {
+    suspend fun updateProfile(profile: Profile, context: Context) {
+        val imageBitmap = profile.image?.let { Formatter.convertStringToBitmap(it) }
+
         userService.profileEdit(
             tokenManager.accessToken!!,
-            ProfileUpdateRequestDTO(
-                profile.nickname,
-                "",
-                profile.aboutMe
-            )
+            Formatter.createPartFromString(profile.nickname),
+            imageBitmap?.let { Formatter.convertBitmapToFile("picture", it, context) },
+            Formatter.createPartFromString(profile.aboutMe),
         ).let {
             if (it.isSuccessful) {
                 updateProfileDao(profile)

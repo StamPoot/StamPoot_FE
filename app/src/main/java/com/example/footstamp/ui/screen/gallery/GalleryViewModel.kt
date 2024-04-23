@@ -1,8 +1,7 @@
 package com.example.footstamp.ui.screen.gallery
 
-import android.content.ContentValues.TAG
+import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.DiaryRepository
@@ -46,28 +45,22 @@ class GalleryViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-
             repository.getAllDao().distinctUntilChanged().collect { diaryList ->
-                if (diaryList.isEmpty()) {
-                    Log.d(TAG, "EMPTY")
-                } else {
-                    _diaries.value = diaryList
-                }
+                if (diaryList.isNotEmpty()) _diaries.value = diaryList
             }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getDiaries()
         }
     }
 
-    fun addDiary(): Boolean {
-        if (_writingDiary.value.checkDiary() != null) {
-            return false
-        }
+    fun addDiary(context: Context) {
+        if (_writingDiary.value.checkDiary() != null) return
 
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                repository.insertDiaryDao(_writingDiary.value)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.writeDiary(_writingDiary.value, context)
         }
-        return true
     }
 
     fun removeDiary(id: Long) {

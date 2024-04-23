@@ -164,7 +164,7 @@ fun DateAndLocationDialogLayout(
 fun CalendarChangeButton(time: LocalDateTime, onClick: () -> Unit) {
     ChangeButton(
         icon = Icons.Default.CalendarMonth,
-        text = Formatter.dateToString(time),
+        text = Formatter.dateToUserString(time),
         color = Color.Transparent,
         tint = MainColor,
         underLine = true,

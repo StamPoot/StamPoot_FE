@@ -2,20 +2,26 @@ package com.example.footstamp.data.util
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import com.example.footstamp.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -23,7 +29,8 @@ import java.util.Date
 
 object Formatter {
 
-    fun dateToString(date: LocalDateTime, dateFormat: String = "yyyy년 MM월 dd일"): String {
+    fun dateToUserString(date: LocalDateTime): String {
+        val dateFormat = "yyyy년 MM월 dd일"
         return date.format(DateTimeFormatter.ofPattern(dateFormat))
     }
 
@@ -35,6 +42,25 @@ object Formatter {
         val minute = dateString.substring(14..15)
         val second = dateString.substring(17..18)
         return "$year-$month-$day $hour:$minute:$second"
+    }
+
+    fun localTimeToDiaryString(localDateTime: LocalDateTime): String {
+        val dateFormat = "yyyy-MM-dd"
+        return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat))
+    }
+
+    fun localTimeToReplyString(localDateTime: LocalDateTime): String {
+        return ""
+    }
+
+    fun dateStringToLocalDateTime(dateString: String): LocalDateTime {
+        val dateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return LocalDate.parse(dateString, dateTime).atStartOfDay()
+    }
+
+    fun replyStringToLocalDateTime(dateString: String): LocalDateTime {
+        val dateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+        return LocalDateTime.parse(dateString, dateTime)
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -53,7 +79,7 @@ object Formatter {
 
     fun convertBitmapToString(bitmap: Bitmap): String {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream)
         val byteArray = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
@@ -82,5 +108,31 @@ object Formatter {
             }
         }
         return bitmap
+    }
+
+    fun createPartFromString(value: String): RequestBody {
+        return value.toRequestBody(MultipartBody.FORM)
+    }
+
+    fun convertBitmapToFile(
+        fieldName: String,
+        bitmap: Bitmap,
+        context: Context
+    ): MultipartBody.Part {
+        val file = File(context.cacheDir, fieldName)
+        file.createNewFile()
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val bitmapData = byteArrayOutputStream.toByteArray()
+
+        FileOutputStream(file).apply {
+            write(bitmapData)
+            flush()
+            close()
+        }
+
+        val requestFile = file.asRequestBody("image/png".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData(fieldName, file.name, requestFile)
     }
 }

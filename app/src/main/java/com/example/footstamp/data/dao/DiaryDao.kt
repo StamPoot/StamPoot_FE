@@ -17,7 +17,7 @@ interface DiaryDao {
     fun insertDiaries(diaries: List<Diary>)
 
     @Insert
-    fun insertDiaries(diary: Diary)
+    fun insertDiary(diary: Diary)
 
     // 삭제
     @Query("DELETE FROM diaries where id = :id")

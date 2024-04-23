@@ -1,6 +1,7 @@
 package com.example.footstamp.ui.screen.profile
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Notification
@@ -42,20 +43,13 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }
+
         viewModelScope.launch(Dispatchers.IO) {
             repository.getProfile(_isProfileExist.value)
         }
         viewModelScope.launch(Dispatchers.IO) {
             getNotificationList()
         }
-    }
-
-    fun showEditProfileDialog() {
-        _editProfile.value = _profileState.value
-    }
-
-    fun hideEditProfileDialog() {
-        _editProfile.value = null
     }
 
     fun updateEditProfile(
@@ -67,13 +61,13 @@ class ProfileViewModel @Inject constructor(
         _editProfile.value = Profile(uid, nickname, image, aboutMe)
     }
 
-    fun updateProfile(): Boolean {
+    fun updateProfile(context: Context): Boolean {
         if (_editProfile.value == null) return false
         if (_editProfile.value!!.checkProfile() != null) return false
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                if (_isProfileExist.value) repository.updateProfile(_editProfile.value!!)
+                if (_isProfileExist.value) repository.updateProfile(_editProfile.value!!, context)
                 else {
                     _isProfileExist.value = true
                     repository.insertProfileDao(_editProfile.value!!)
@@ -92,5 +86,13 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun showEditProfileDialog() {
+        _editProfile.value = _profileState.value
+    }
+
+    fun hideEditProfileDialog() {
+        _editProfile.value = null
     }
 }

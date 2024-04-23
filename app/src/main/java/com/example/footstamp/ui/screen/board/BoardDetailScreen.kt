@@ -40,7 +40,6 @@ import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.MainColor
-import com.example.footstamp.ui.theme.SubColor
 
 @Composable
 fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
@@ -110,7 +109,7 @@ fun MapDateAndLocationLayout(screenHeight: Dp, readingDiary: Diary) {
                 tint = MainColor
             )
             TitleText(
-                text = Formatter.dateToString(readingDiary.date),
+                text = Formatter.dateToUserString(readingDiary.date),
                 color = MainColor,
                 textAlign = TextAlign.Start
             )

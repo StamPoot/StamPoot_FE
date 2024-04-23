@@ -4,24 +4,34 @@ import com.example.footstamp.data.dto.response.diary.DiaryDetailDTO
 import com.example.footstamp.data.dto.response.diary.DiaryListDTO
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.ui.base.BaseService
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DiaryService : BaseService {
 
     // 일기 작성
+    @Multipart
     @POST("/diary")
     suspend fun diaryWrite(
         @Header("token") token: String,
-        @Body diary: Diary
-    ): Response<Unit>
+        @Part("title") title: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part("date") date: RequestBody,
+        @Part("location") location: RequestBody,
+        @Part("thumbnailNo") thumbnailNo: RequestBody,
+        @Part photos: List<MultipartBody.Part>
+    ): Response<String>
 
     // 일기 비공개
     @POST("/diary/{id}/public")

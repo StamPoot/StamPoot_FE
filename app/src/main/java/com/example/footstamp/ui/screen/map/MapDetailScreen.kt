@@ -77,7 +77,7 @@ fun MapDateAndLocationLayout(screenHeight: Dp, readingDiary: Diary) {
                 tint = MainColor
             )
             TitleText(
-                text = Formatter.dateToString(readingDiary.date),
+                text = Formatter.dateToUserString(readingDiary.date),
                 color = MainColor,
                 textAlign = TextAlign.Start
             )

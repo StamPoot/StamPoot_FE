@@ -24,6 +24,10 @@ data class Diary(
         return "id = $id, name = $title, message = $message, location = $location"
     }
 
+    fun insertId(id: Long) {
+        this@Diary.id = id
+    }
+
     fun checkDiary(): String? {
         if (title.length <= 3 || title.length > 10) return DIARY_ERROR_TITLE
         if (date > LocalDateTime.now()) return DIARY_ERROR_DATE

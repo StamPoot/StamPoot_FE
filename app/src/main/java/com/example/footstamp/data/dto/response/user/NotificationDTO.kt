@@ -2,9 +2,9 @@ package com.example.footstamp.data.dto.response.user
 
 import com.google.gson.annotations.SerializedName
 
-data class NotificationDto(
+data class NotificationDTO(
     @SerializedName("profileDto")
-    val profileDto: UserProfileDto,
+    val profileDto: UserProfileDTO,
     @SerializedName("content")
     val content: String,
     @SerializedName("dateTime")

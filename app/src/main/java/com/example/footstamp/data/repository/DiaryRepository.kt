@@ -1,5 +1,8 @@
 package com.example.footstamp.data.repository
 
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.util.Log
 import com.example.footstamp.data.dao.DiaryDao
 import com.example.footstamp.data.data_source.DiaryService
 import com.example.footstamp.data.model.Diary
@@ -23,13 +26,52 @@ class DiaryRepository @Inject constructor(
     val diaries: Flow<List<Diary>> = diaryDao.getAll().flowOn(Dispatchers.IO).conflate()
 
     suspend fun getDiaries() {
-        diaryDao.getAll()
-        diaryService.diaryList(tokenManager.accessToken!!)
+        diaryService.diaryList(tokenManager.accessToken!!).let { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body()!!
+                val responseDiaries = mutableListOf<Diary>()
+
+                responseBody.diaries.values.map { diaries ->
+                    diaries.map { diaryDTO ->
+                        val diaryPhotos = diaryDTO.photos.map { Formatter.fetchImageBitmap(it)!! }
+
+                        Diary(
+                            title = diaryDTO.title,
+                            date = Formatter.dateStringToLocalDateTime(diaryDTO.date),
+                            message = diaryDTO.content,
+                            isShared = diaryDTO.isPublic,
+                            location = diaryDTO.location,
+                            photoBitmapStrings = diaryPhotos.map { Formatter.convertBitmapToString(it) },
+                            thumbnail = diaryDTO.thumbnailNo,
+                            uid = diaryDTO.id.toString()
+                        )
+                    }.let { responseDiaries.addAll(it) }
+                }
+                // DB 내의 일기들 최신화
+                deleteAllDao()
+                insertDiariesDao(responseDiaries)
+            }
+        }
     }
 
-    suspend fun writeDiary(diary: Diary) {
-        diaryService.diaryWrite(tokenManager.accessToken!!, diary).let {
-            if (it.isSuccessful) insertDiaryDao(diary)
+    suspend fun writeDiary(diary: Diary, context: Context) {
+        diaryService.diaryWrite(
+            token = tokenManager.accessToken!!,
+            title = Formatter.createPartFromString(diary.title),
+            content = Formatter.createPartFromString(diary.message),
+            date = Formatter.createPartFromString(Formatter.localTimeToDiaryString(diary.date)),
+            location = Formatter.createPartFromString(diary.location.toString()),
+            thumbnailNo = Formatter.createPartFromString(diary.thumbnail.toString()),
+            photos = diary.photoBitmapStrings.map { photoString ->
+                val photo = Formatter.convertStringToBitmap(photoString)
+                Formatter.convertBitmapToFile("photos", photo, context)
+            }
+        ).let { response ->
+            if (response.isSuccessful) {
+                Log.d(TAG, "id: ${response.body()}")
+//                val id = response.body()!!.toLong()
+//                insertDiaryDao(diary.apply { insertId(id) })
+            }
         }
     }
 
@@ -47,10 +89,6 @@ class DiaryRepository @Inject constructor(
         }
         return null
     }
-
-//    suspend fun getBoardDiaries() {
-//        diaryService.
-//    }
 
     // id 수정 필요
     suspend fun deleteDiary(diary: Diary) {
@@ -74,7 +112,9 @@ class DiaryRepository @Inject constructor(
 
     // dao Database
 
-    suspend fun insertDiaryDao(diary: Diary) = diaryDao.insertDiaries(diary)
+    suspend fun insertDiaryDao(diary: Diary) = diaryDao.insertDiary(diary)
+
+    suspend fun insertDiariesDao(diaries: List<Diary>) = diaryDao.insertDiaries(diaries)
 
     suspend fun deleteDiaryDao(id: Long) = diaryDao.deleteDiary(id)
 

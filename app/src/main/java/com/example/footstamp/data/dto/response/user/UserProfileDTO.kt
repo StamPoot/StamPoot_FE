@@ -2,7 +2,7 @@ package com.example.footstamp.data.dto.response.user
 
 import com.google.gson.annotations.SerializedName
 
-data class UserProfileDto(
+data class UserProfileDTO(
     @SerializedName("nickname")
     val nickname: String,
     @SerializedName("profileImg")

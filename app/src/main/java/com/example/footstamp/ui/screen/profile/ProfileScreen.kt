@@ -83,7 +83,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
             onChangeNickname = { profileViewModel.updateEditProfile(nickname = it) },
             onChangeImage = { profileViewModel.updateEditProfile(image = it) },
             onChangeAboutMe = { profileViewModel.updateEditProfile(aboutMe = it) },
-            onEdit = { profileViewModel.updateProfile() },
+            onEdit = { profileViewModel.updateProfile(context) },
             onDismiss = { profileViewModel.hideEditProfileDialog() })
     }
 }

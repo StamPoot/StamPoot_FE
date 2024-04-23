@@ -12,4 +12,6 @@
     <string name="kakao_auth_url">https://kauth.kakao.com/oauth/authorize?client_id=1835b017f8241b82663c7f11a394c9cb&amp;redirect_uri=https://impine.shop/login/oauth2/code/kakao&amp;response_type=code</string>
 
     <string name="reply_message">님이 댓글을 남겼습니다.</string>
+
+    <string name="gallery_no_diary">"일기를 작성해주세요"</string>
 </resources>

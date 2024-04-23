@@ -1,6 +1,5 @@
 package com.example.footstamp.ui.screen.map
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,9 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -25,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -33,14 +29,10 @@ import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
-import com.example.footstamp.ui.components.BodyLargeText
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
-import com.example.footstamp.ui.components.ImagesLayout
 import com.example.footstamp.ui.components.SpaceMaker
-import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
-import com.example.footstamp.ui.screen.gallery.GalleryReadScreen
 import com.example.footstamp.ui.screen.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.SubColor
@@ -117,7 +109,7 @@ fun StaggeredViewItem(diary: Diary, onClickBox: (diary: Diary) -> Unit) {
             )
             SpaceMaker(height = 5.dp)
             BodyText(
-                text = Formatter.dateToString(diary.date),
+                text = Formatter.dateToUserString(diary.date),
                 color = SubColor,
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
