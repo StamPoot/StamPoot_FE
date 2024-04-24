@@ -32,6 +32,7 @@ import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Notification
 import com.example.footstamp.data.model.Profile
+import com.example.footstamp.data.util.BitmapManager
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.CommonButton
@@ -210,6 +211,7 @@ fun ProfileEditDialog(
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
                 image = if (editProfile.image != null) Formatter.convertStringToBitmap(editProfile.image!!) else null,
+                photoResizer = BitmapManager::bitmapResize1MB,
                 onSetPhoto = onChangeImage
             )
 

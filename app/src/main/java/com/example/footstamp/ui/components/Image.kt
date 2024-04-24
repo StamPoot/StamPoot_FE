@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,6 +45,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -203,6 +205,7 @@ fun PhotoSelector(
     screenHeight: Dp,
     onClickPhoto: (image: Bitmap) -> Unit,
     onClickPhotoIndex: (imageIndex: Int) -> Unit,
+    photoResizer: (bitmap: Bitmap) -> Bitmap,
     thumbnailIndex: Int?,
     contentResolver: ContentResolver,
     onSetPhoto: (List<String>) -> Unit
@@ -212,14 +215,17 @@ fun PhotoSelector(
     }
     val buttonText = "사진 선택"
     val multiplePhotoPickerLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickMultipleVisualMedia(
-            maxItems = maxSelectionCount
-        ), onResult = { uris ->
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickMultipleVisualMedia(
+                maxItems = maxSelectionCount
+            )
+        ) { uris ->
             uris.map { uriToBitmap(it, contentResolver) }.also { bitmapList ->
-                selectedImages = bitmapList
-                onSetPhoto(bitmapList.map { Formatter.convertBitmapToString(it) })
+                val resizedList = bitmapList.map { bitmap -> photoResizer(bitmap) }
+                selectedImages = resizedList
+                onSetPhoto(resizedList.map { Formatter.convertBitmapToString(it) })
             }
-        })
+        }
 
     fun launchPhotoPicker() {
         multiplePhotoPickerLauncher.launch(
@@ -247,6 +253,7 @@ fun ProfilePhotoSelector(
     screenWidth: Dp,
     screenHeight: Dp,
     image: Bitmap?,
+    photoResizer: (bitmap: Bitmap) -> Bitmap,
     contentResolver: ContentResolver,
     onSetPhoto: (String) -> Unit
 ) {
@@ -256,8 +263,9 @@ fun ProfilePhotoSelector(
             onResult = { uri ->
                 if (uri != null) {
                     uriToBitmap(uri, contentResolver).also {
-                        profileImage = it
-                        onSetPhoto(Formatter.convertBitmapToString(it))
+                        val resizedPhoto = photoResizer(it)
+                        profileImage = resizedPhoto
+                        onSetPhoto(Formatter.convertBitmapToString(resizedPhoto))
                     }
                 }
             })

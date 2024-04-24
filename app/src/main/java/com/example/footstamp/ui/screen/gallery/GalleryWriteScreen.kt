@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.footstamp.data.model.Diary
+import com.example.footstamp.data.util.BitmapManager
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
@@ -124,6 +125,7 @@ fun DiaryMainWriteLayout(
         onClickPhoto = onPhotoSelect,
         onClickPhotoIndex = onPhotoIndexSelect,
         thumbnailIndex = writingDiary.thumbnail,
+        photoResizer = BitmapManager::bitmapResize1MB,
         contentResolver = contentResolver,
         onSetPhoto = onSetPhoto,
     )
