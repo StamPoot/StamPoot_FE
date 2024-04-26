@@ -1,6 +1,7 @@
 package com.example.footstamp.data.data_source
 
 import com.example.footstamp.data.dto.response.diary.DiaryDetailDTO
+import com.example.footstamp.data.dto.response.diary.DiaryIdDTO
 import com.example.footstamp.data.dto.response.diary.DiaryListDTO
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.ui.base.BaseService

@@ -41,7 +41,11 @@ class DiaryRepository @Inject constructor(
                             message = diaryDTO.content,
                             isShared = diaryDTO.isPublic,
                             location = diaryDTO.location,
-                            photoBitmapStrings = diaryPhotos.map { Formatter.convertBitmapToString(it) },
+                            photoBitmapStrings = diaryPhotos.map {
+                                Formatter.convertBitmapToString(
+                                    it
+                                )
+                            },
                             thumbnail = diaryDTO.thumbnailNo,
                             uid = diaryDTO.id.toString()
                         )
@@ -68,9 +72,8 @@ class DiaryRepository @Inject constructor(
             }
         ).let { response ->
             if (response.isSuccessful) {
-                Log.d(TAG, "id: ${response.body()}")
-//                val id = response.body()!!.toLong()
-//                insertDiaryDao(diary.apply { insertId(id) })
+                val id = response.body()!!.removeRange(0..9).toLong()
+                insertDiaryDao(diary.apply { insertId(id) })
             }
         }
     }

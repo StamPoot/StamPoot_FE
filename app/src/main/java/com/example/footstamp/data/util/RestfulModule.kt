@@ -69,8 +69,8 @@ object RestfulModule {
         val gson = GsonBuilder().setLenient().create()
 
         return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(gson))
             .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .baseUrl(BuildConfig.BASE_URL)
             .build()
