@@ -42,13 +42,11 @@ class DiaryRepository @Inject constructor(
                             isShared = diaryDTO.isPublic,
                             location = diaryDTO.location,
                             photoBitmapStrings = diaryPhotos.map {
-                                Formatter.convertBitmapToString(
-                                    it
-                                )
+                                Formatter.convertBitmapToString(it)
                             },
                             thumbnail = diaryDTO.thumbnailNo,
-                            uid = diaryDTO.id.toString()
-                        )
+                            uid = responseBody.userId.toString()
+                        ).apply { insertId(diaryDTO.id.toLong()) }
                     }.let { responseDiaries.addAll(it) }
                 }
                 // DB 내의 일기들 최신화
