@@ -98,17 +98,24 @@ class DiaryRepository @Inject constructor(
     }
 
     // 일기 수정 API 요청
-    suspend fun updateDiary(
-        diary: Diary,
-        title: String? = null,
-        message: String? = null,
-        date: LocalDateTime? = null,
-        isShared: Boolean? = null,
-        location: SeoulLocation? = null,
-        photoList: List<String>? = null,
-        thumbnailIndex: Int? = null,
-    ) {
-        updateDiaryDao(diary.id)
+    suspend fun updateDiary(diary: Diary, context: Context) {
+        diaryService.diaryEdit(
+            token = tokenManager.accessToken!!,
+            title = Formatter.createPartFromString(diary.title),
+            content = Formatter.createPartFromString(diary.message),
+            date = Formatter.createPartFromString(Formatter.localTimeToDiaryString(diary.date)),
+            location = Formatter.createPartFromString(diary.location.toString()),
+            thumbnailNo = Formatter.createPartFromString(diary.thumbnail.toString()),
+            photos = diary.photoBitmapStrings.map { photoString ->
+                val photo = Formatter.convertStringToBitmap(photoString)
+                Formatter.convertBitmapToFile("photos", photo, context)
+            },
+            id = diary.id.toString()
+        ).let {
+            if (it.isSuccessful) {
+                getDiaries()
+            }
+        }
     }
 
     // dao Database

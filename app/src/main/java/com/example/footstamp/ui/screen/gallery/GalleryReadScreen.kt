@@ -28,6 +28,8 @@ import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
+import com.example.footstamp.ui.components.CommonButton
+import com.example.footstamp.ui.components.HalfDialog
 import com.example.footstamp.ui.components.ImageDialog
 import com.example.footstamp.ui.components.ImagesLayout
 import com.example.footstamp.ui.components.SpaceMaker
@@ -39,6 +41,7 @@ import com.example.footstamp.ui.theme.MainColor
 fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
     val readingDiary by galleryViewModel.readingDiary.collectAsState()
     val openingImage by galleryViewModel.openingImage.collectAsState()
+    val isShowDiaryMenu by galleryViewModel.isShowDiaryMenu.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         val scrollState = rememberScrollState()
@@ -52,15 +55,23 @@ fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.Top
         ) {
             DateAndLocationReadLayout(screenHeight = screenHeight, readingDiary = readingDiary)
-            DiaryMainReadLayout(
-                readingDiary = readingDiary,
+            DiaryMainReadLayout(readingDiary = readingDiary,
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
-                onClick = { galleryViewModel.openImageDetail(it) }
-            )
+                onClick = { galleryViewModel.openImageDetail(it) })
         }
         // 사진 크게보기
         openingImage?.let { ImageDialog(image = it, onClick = { galleryViewModel.closeImage() }) }
+        if (isShowDiaryMenu) {
+            GalleryDiaryMenu(
+                screenHeight = screenHeight,
+                onClickEdit = { galleryViewModel.showEditScreen() },
+                onClickShare = {
+                    //TODO: 일기 공유
+                },
+                onChangeState = { galleryViewModel.initializeViewState() }
+            )
+        }
     }
 }
 
@@ -95,10 +106,7 @@ fun DateAndLocationReadLayout(screenHeight: Dp, readingDiary: Diary) {
 
 @Composable
 fun DiaryMainReadLayout(
-    readingDiary: Diary,
-    screenWidth: Dp,
-    screenHeight: Dp,
-    onClick: (Bitmap) -> Unit
+    readingDiary: Diary, screenWidth: Dp, screenHeight: Dp, onClick: (Bitmap) -> Unit
 ) {
     SpaceMaker(height = screenHeight / 20)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
@@ -120,5 +128,20 @@ fun DiaryMainReadLayout(
         BodyText(
             text = readingDiary.message, color = Color.Black, minLines = 8
         )
+    }
+}
+
+@Composable
+fun GalleryDiaryMenu(
+    screenHeight: Dp,
+    onClickEdit: () -> Unit,
+    onClickShare: () -> Unit,
+    onChangeState: () -> Unit
+) {
+    HalfDialog(onChangeState = onChangeState) {
+        BodyText(text = "일기 메뉴", color = MainColor)
+        SpaceMaker(height = screenHeight / 40)
+        CommonButton(text = "일기 수정하기") { onClickEdit() }
+        CommonButton(text = "게시판에 공유하기") { onClickShare() }
     }
 }

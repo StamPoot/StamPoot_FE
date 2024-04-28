@@ -63,10 +63,16 @@ interface DiaryService : BaseService {
     ): Response<Unit>
 
     // 일기 수정
+    @Multipart
     @PATCH("/diary/{id}")
     suspend fun diaryEdit(
         @Header("token") token: String,
-        @Query("req") request: Diary,
+        @Part("title") title: RequestBody,
+        @Part("content") content: RequestBody,
+        @Part("date") date: RequestBody,
+        @Part("location") location: RequestBody,
+        @Part("thumbnailNo") thumbnailNo: RequestBody,
+        @Part photos: List<MultipartBody.Part>,
         @Path("id") id: String
     ): Response<Unit>
 

@@ -16,6 +16,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -54,7 +56,7 @@ import com.example.footstamp.ui.theme.SubColor
 @Composable
 fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 
-    val writeOrReadScreenState by galleryViewModel.writeOrRead.collectAsState()
+    val viewState by galleryViewModel.viewState.collectAsState()
     val sortType by galleryViewModel.sortType.collectAsState()
     val currentDiary by galleryViewModel.diaries.collectAsState()
     val context = LocalContext.current
@@ -77,14 +79,14 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
         }
 
         GalleryReadOrWriteScreen(
-            writeOrReadScreenState = writeOrReadScreenState,
-            onChangeState = { galleryViewModel.hideWriteOrReadScreen() },
+            viewState = viewState,
+            onChangeState = { galleryViewModel.initializeViewState() },
             onClickWrite = {
-                galleryViewModel.addDiary(context).also {
-                    //TODO: 수정
-                    galleryViewModel.hideWriteOrReadScreen()
-                }
-            }
+                galleryViewModel.addDiary(context)
+                galleryViewModel.initializeViewState()
+            },
+            onClickMenu = { galleryViewModel.showDiaryMenu() },
+            onClickEdit = { galleryViewModel.updateDiary(context) }
         )
     }
 }
@@ -167,14 +169,16 @@ fun GalleryItemView(diary: Diary, screenHeight: Dp, onClick: (Diary) -> Unit) {
 
 @Composable
 fun GalleryReadOrWriteScreen(
-    writeOrReadScreenState: GalleryViewModel.WriteAndRead,
+    viewState: GalleryViewModel.GalleryScreenState,
     onChangeState: () -> Unit,
-    onClickWrite: () -> Unit
+    onClickWrite: () -> Unit,
+    onClickMenu: () -> Unit,
+    onClickEdit: () -> Unit
 ) {
-    when (writeOrReadScreenState) {
-        GalleryViewModel.WriteAndRead.WRITE -> {
+    when (viewState) {
+        GalleryViewModel.GalleryScreenState.WRITE -> {
             FullDialog(
-                title = GalleryViewModel.WriteAndRead.WRITE.text,
+                title = GalleryViewModel.GalleryScreenState.WRITE.text,
                 screen = { GalleryWriteScreen() },
                 rightIcon = Icons.AutoMirrored.Filled.ArrowRightAlt,
                 onBackIconPressed = onChangeState,
@@ -182,17 +186,27 @@ fun GalleryReadOrWriteScreen(
             )
         }
 
-        GalleryViewModel.WriteAndRead.READ -> {
+        GalleryViewModel.GalleryScreenState.READ -> {
             FullDialog(
-                title = GalleryViewModel.WriteAndRead.READ.text,
+                title = GalleryViewModel.GalleryScreenState.READ.text,
                 screen = { GalleryReadScreen() },
-                rightIcon = Icons.AutoMirrored.Filled.ArrowRightAlt,
+                rightIcon = Icons.Default.Menu,
                 onBackIconPressed = onChangeState,
-                onClickPressed = {}
+                onClickPressed = onClickMenu
             )
         }
 
-        GalleryViewModel.WriteAndRead.NULL -> {}
+        GalleryViewModel.GalleryScreenState.EDIT -> {
+            FullDialog(
+                title = GalleryViewModel.GalleryScreenState.EDIT.text,
+                screen = { GalleryEditScreen() },
+                rightIcon = Icons.Default.Check,
+                onBackIconPressed = onChangeState,
+                onClickPressed = onClickEdit
+            )
+        }
+
+        GalleryViewModel.GalleryScreenState.NULL -> {}
     }
 }
 

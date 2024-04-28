@@ -39,8 +39,8 @@ import com.example.footstamp.ui.theme.MainColor
 import java.time.LocalDateTime
 
 @Composable
-fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
-    val writingDiary by galleryViewModel.editingDiary.collectAsState()
+fun GalleryEditScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
+    val editingDiary by galleryViewModel.editingDiary.collectAsState()
     val openingImage by galleryViewModel.openingImage.collectAsState()
     val dateOrLocationState by galleryViewModel.dateOrLocation.collectAsState()
 
@@ -54,13 +54,13 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 .padding(horizontal = screenWidth / 12),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            DateAndLocationWriteLayout(
-                writingDiary = writingDiary,
+            DateAndLocationEditLayout(
+                writingDiary = editingDiary,
                 onClickDate = { galleryViewModel.showDateDialog() },
                 onClickLocation = { galleryViewModel.showLocationDialog() })
 
-            DiaryMainWriteLayout(
-                writingDiary = writingDiary,
+            DiaryMainEditLayout(
+                writingDiary = editingDiary,
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
                 onPhotoIndexSelect = { galleryViewModel.updateWriteDiary(thumbnail = it) },
@@ -70,9 +70,9 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 onMessageFieldChange = { galleryViewModel.updateWriteDiary(message = it) }
             )
         }
-        DateAndLocationDialogLayout(
+        EditDateAndLocationDialogLayout(
             dateOrLocationState = dateOrLocationState,
-            writingDiary = writingDiary,
+            writingDiary = editingDiary,
             onClickDate = { time ->
                 galleryViewModel.updateWriteDiary(date = time)
             },
@@ -88,23 +88,23 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun DateAndLocationWriteLayout(
+fun DateAndLocationEditLayout(
     writingDiary: Diary, onClickDate: () -> Unit, onClickLocation: () -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
     ) {
-        CalendarChangeButton(writingDiary.date) {
+        EditCalendarChangeButton(writingDiary.date) {
             onClickDate()
         }
-        LocationChangeButton(writingDiary.location) {
+        EditLocationChangeButton(writingDiary.location) {
             onClickLocation()
         }
     }
 }
 
 @Composable
-fun DiaryMainWriteLayout(
+fun DiaryMainEditLayout(
     writingDiary: Diary,
     screenWidth: Dp,
     screenHeight: Dp,
@@ -134,7 +134,7 @@ fun DiaryMainWriteLayout(
 }
 
 @Composable
-fun DateAndLocationDialogLayout(
+fun EditDateAndLocationDialogLayout(
     dateOrLocationState: GalleryViewModel.DateAndLocation,
     writingDiary: Diary,
     onClickDate: (LocalDateTime) -> Unit,
@@ -163,7 +163,7 @@ fun DateAndLocationDialogLayout(
 }
 
 @Composable
-fun CalendarChangeButton(time: LocalDateTime, onClick: () -> Unit) {
+fun EditCalendarChangeButton(time: LocalDateTime, onClick: () -> Unit) {
     ChangeButton(
         icon = Icons.Default.CalendarMonth,
         text = Formatter.dateToUserString(time),
@@ -175,7 +175,7 @@ fun CalendarChangeButton(time: LocalDateTime, onClick: () -> Unit) {
 }
 
 @Composable
-fun LocationChangeButton(location: SeoulLocation, onClick: () -> Unit) {
+fun EditLocationChangeButton(location: SeoulLocation, onClick: () -> Unit) {
     ChangeButton(
         icon = Icons.Default.PinDrop,
         text = location.location,

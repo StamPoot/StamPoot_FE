@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,7 +25,6 @@ import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
-import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
@@ -34,8 +32,6 @@ import com.example.footstamp.ui.components.LabelText
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.screen.gallery.GalleryViewModel
-import com.example.footstamp.ui.screen.map.MapDetailScreen
-import com.example.footstamp.ui.screen.map.MapLocationScreen
 import com.example.footstamp.ui.theme.SubColor
 
 @Composable
@@ -102,7 +98,7 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
 fun BoardReadScreen(readingDiary: Diary?, onChangeState: () -> Unit) {
     if (readingDiary != null) {
         FullDialog(
-            title = GalleryViewModel.WriteAndRead.READ.text,
+            title = GalleryViewModel.GalleryScreenState.READ.text,
             screen = { BoardDetailScreen() },
             rightIcon = Icons.AutoMirrored.Filled.ArrowRightAlt,
             onBackIconPressed = onChangeState,

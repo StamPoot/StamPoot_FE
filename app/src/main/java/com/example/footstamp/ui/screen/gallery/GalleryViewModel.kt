@@ -28,8 +28,8 @@ class GalleryViewModel @Inject constructor(
     private val _sortType = MutableStateFlow(SortByDateOrLocation.DATE)
     val sortType = _sortType.asStateFlow()
 
-    private val _writingDiary = MutableStateFlow(Diary())
-    val writingDiary = _writingDiary.asStateFlow()
+    private val _editingDiary = MutableStateFlow(Diary())
+    val editingDiary = _editingDiary.asStateFlow()
 
     private val _readingDiary = MutableStateFlow(Diary())
     val readingDiary = _readingDiary.asStateFlow()
@@ -37,8 +37,11 @@ class GalleryViewModel @Inject constructor(
     private val _openingImage = MutableStateFlow<Bitmap?>(null)
     val openingImage = _openingImage.asStateFlow()
 
-    private val _writeOrRead = MutableStateFlow(WriteAndRead.NULL)
-    val writeOrRead = _writeOrRead.asStateFlow()
+    private val _viewState = MutableStateFlow(GalleryScreenState.NULL)
+    val viewState = _viewState.asStateFlow()
+
+    private val _isShowDiaryMenu = MutableStateFlow<Boolean>(false)
+    val isShowDiaryMenu = _isShowDiaryMenu.asStateFlow()
 
     private val _dateOrLocation = MutableStateFlow(DateAndLocation.NULL)
     val dateOrLocation = _dateOrLocation.asStateFlow()
@@ -56,10 +59,10 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun addDiary(context: Context) {
-        if (_writingDiary.value.checkDiary() != null) return
+        if (_editingDiary.value.checkDiary() != null) return
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.writeDiary(_writingDiary.value, context)
+            repository.writeDiary(_editingDiary.value, context)
         }
     }
 
@@ -72,16 +75,16 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun updateWriteDiary(
-        title: String = writingDiary.value.title,
-        date: LocalDateTime = writingDiary.value.date,
-        message: String = writingDiary.value.message,
-        isShared: Boolean = writingDiary.value.isShared,
-        location: SeoulLocation = writingDiary.value.location,
-        photoURLs: List<String> = writingDiary.value.photoBitmapStrings,
-        thumbnail: Int = writingDiary.value.thumbnail,
-        uid: String = writingDiary.value.uid
+        title: String = editingDiary.value.title,
+        date: LocalDateTime = editingDiary.value.date,
+        message: String = editingDiary.value.message,
+        isShared: Boolean = editingDiary.value.isShared,
+        location: SeoulLocation = editingDiary.value.location,
+        photoURLs: List<String> = editingDiary.value.photoBitmapStrings,
+        thumbnail: Int = editingDiary.value.thumbnail,
+        uid: String = editingDiary.value.uid
     ) {
-        _writingDiary.value = Diary(
+        _editingDiary.value = Diary(
             title = title,
             date = date,
             message = message,
@@ -91,7 +94,12 @@ class GalleryViewModel @Inject constructor(
             thumbnail = thumbnail,
             uid = uid
         )
+    }
 
+    fun updateDiary(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateDiary(_editingDiary.value, context)
+        }
     }
 
     fun changeSortSwitch() {
@@ -99,6 +107,14 @@ class GalleryViewModel @Inject constructor(
             SortByDateOrLocation.DATE -> SortByDateOrLocation.LOCATION
             SortByDateOrLocation.LOCATION -> SortByDateOrLocation.DATE
         }
+    }
+
+    fun showDiaryMenu() {
+        _isShowDiaryMenu.value = true
+    }
+
+    fun hideDiaryMenu() {
+        _isShowDiaryMenu.value = false
     }
 
     fun openImageDetail(image: Bitmap) {
@@ -113,19 +129,24 @@ class GalleryViewModel @Inject constructor(
         return diaries.value
     }
 
-    fun hideWriteOrReadScreen() {
-        _writeOrRead.value = WriteAndRead.NULL
+    fun initializeViewState() {
+        _viewState.value = GalleryScreenState.NULL
         _dateOrLocation.value = DateAndLocation.NULL
+        _isShowDiaryMenu.value = false
         _openingImage.value = null
     }
 
     fun showWriteScreen() {
-        _writeOrRead.value = WriteAndRead.WRITE
+        _viewState.value = GalleryScreenState.WRITE
     }
 
     fun showReadScreen(diary: Diary) {
         _readingDiary.value = diary
-        _writeOrRead.value = WriteAndRead.READ
+        _viewState.value = GalleryScreenState.READ
+    }
+
+    fun showEditScreen() {
+        _viewState.value = GalleryScreenState.EDIT
     }
 
     fun hideHalfDialog() {
@@ -144,8 +165,8 @@ class GalleryViewModel @Inject constructor(
         DATE("날짜 별 보기"), LOCATION("위치 별 보기")
     }
 
-    enum class WriteAndRead(val text: String) {
-        WRITE("일기 쓰기"), READ("일기 읽기"), NULL("")
+    enum class GalleryScreenState(val text: String) {
+        WRITE("일기 쓰기"), READ("일기 읽기"), EDIT("일기 수정"), NULL("")
     }
 
     enum class DateAndLocation {
