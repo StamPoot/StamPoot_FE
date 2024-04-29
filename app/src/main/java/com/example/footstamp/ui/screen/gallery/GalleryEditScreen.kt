@@ -116,7 +116,7 @@ fun DiaryMainEditLayout(
     onMessageFieldChange: (text: String) -> Unit,
 ) {
     SpaceMaker(height = screenHeight / 20)
-    TextInput(hint = "제목", onValueChange = onTitleFieldChange)
+    TextInput(baseText = writingDiary.title, hint = "제목", onValueChange = onTitleFieldChange)
     SpaceMaker(height = screenHeight / 40)
     PhotoSelector(
         maxSelectionCount = 5,
@@ -128,9 +128,16 @@ fun DiaryMainEditLayout(
         photoResizer = BitmapManager::bitmapResize1MB,
         contentResolver = contentResolver,
         onSetPhoto = onSetPhoto,
+        basePhoto = writingDiary.photoBitmapStrings.map { Formatter.convertStringToBitmap(it) }
     )
     SpaceMaker(height = screenHeight / 40)
-    TextInput(hint = "내용을 입력하세요", minLines = 5, maxLines = 10, onValueChange = onMessageFieldChange)
+    TextInput(
+        baseText = writingDiary.message,
+        hint = "내용을 입력하세요",
+        minLines = 5,
+        maxLines = 10,
+        onValueChange = onMessageFieldChange
+    )
 }
 
 @Composable

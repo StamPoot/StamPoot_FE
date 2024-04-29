@@ -208,11 +208,10 @@ fun PhotoSelector(
     photoResizer: (bitmap: Bitmap) -> Bitmap,
     thumbnailIndex: Int?,
     contentResolver: ContentResolver,
-    onSetPhoto: (List<String>) -> Unit
+    onSetPhoto: (List<String>) -> Unit,
+    basePhoto: List<Bitmap> = emptyList()
 ) {
-    var selectedImages by remember {
-        mutableStateOf<List<Bitmap>>(emptyList())
-    }
+    var selectedImages by remember { mutableStateOf(basePhoto) }
     val buttonText = "사진 선택"
     val multiplePhotoPickerLauncher =
         rememberLauncherForActivityResult(

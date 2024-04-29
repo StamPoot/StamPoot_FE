@@ -82,7 +82,8 @@ class GalleryViewModel @Inject constructor(
         location: SeoulLocation = editingDiary.value.location,
         photoURLs: List<String> = editingDiary.value.photoBitmapStrings,
         thumbnail: Int = editingDiary.value.thumbnail,
-        uid: String = editingDiary.value.uid
+        uid: String = editingDiary.value.uid,
+        id: Long = editingDiary.value.id
     ) {
         _editingDiary.value = Diary(
             title = title,
@@ -92,14 +93,22 @@ class GalleryViewModel @Inject constructor(
             location = location,
             photoBitmapStrings = photoURLs,
             thumbnail = thumbnail,
-            uid = uid
-        )
+            uid = uid,
+        ).apply {
+            insertId(id)
+        }
     }
 
     fun updateDiary(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateDiary(_editingDiary.value, context)
+            repository.updateDiary(_editingDiary.value, context).let { isSuccessful ->
+                if (isSuccessful) initializeViewState()
+            }
         }
+    }
+
+    fun transDiaryReadToEdit() {
+        _editingDiary.value = _readingDiary.value
     }
 
     fun changeSortSwitch() {
@@ -134,6 +143,8 @@ class GalleryViewModel @Inject constructor(
         _dateOrLocation.value = DateAndLocation.NULL
         _isShowDiaryMenu.value = false
         _openingImage.value = null
+        _readingDiary.value = Diary()
+        _editingDiary.value = Diary()
     }
 
     fun showWriteScreen() {

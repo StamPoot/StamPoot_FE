@@ -98,7 +98,7 @@ class DiaryRepository @Inject constructor(
     }
 
     // 일기 수정 API 요청
-    suspend fun updateDiary(diary: Diary, context: Context) {
+    suspend fun updateDiary(diary: Diary, context: Context): Boolean {
         diaryService.diaryEdit(
             token = tokenManager.accessToken!!,
             title = Formatter.createPartFromString(diary.title),
@@ -114,7 +114,9 @@ class DiaryRepository @Inject constructor(
         ).let {
             if (it.isSuccessful) {
                 getDiaries()
+                return true
             }
+            return false
         }
     }
 
