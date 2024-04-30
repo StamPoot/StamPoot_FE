@@ -1,6 +1,7 @@
 package com.example.footstamp.ui.screen.gallery
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.PinDrop
+import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,7 +46,6 @@ import com.example.footstamp.ui.theme.SubColor
 fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
     val readingDiary by galleryViewModel.readingDiary.collectAsState()
     val openingImage by galleryViewModel.openingImage.collectAsState()
-    val isShowDiaryMenu by galleryViewModel.isShowDiaryMenu.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         val scrollState = rememberScrollState()
@@ -57,29 +59,17 @@ fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.Top
         ) {
             DateAndLocationReadLayout(screenHeight = screenHeight, readingDiary = readingDiary)
-            DiaryMainReadLayout(readingDiary = readingDiary,
+            DiaryMainReadLayout(
+                readingDiary = readingDiary,
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
-                onClick = { galleryViewModel.openImageDetail(it) })
+                onClick = { galleryViewModel.openImageDetail(it) },
+                onShare = { galleryViewModel.shareTransDiary() }
+            )
         }
 
         // 사진 크게보기
         openingImage?.let { ImageDialog(image = it, onClick = { galleryViewModel.closeImage() }) }
-
-        if (isShowDiaryMenu) {
-            GalleryDiaryMenu(
-                screenHeight = screenHeight,
-                isDiaryShared = readingDiary.isShared,
-                onClickEdit = {
-                    galleryViewModel.showEditScreen()
-                    galleryViewModel.transDiaryReadToEdit()
-                },
-                onClickShare = {
-                    //TODO: 일기 공유
-                },
-                onChangeState = { galleryViewModel.initializeViewState() }
-            )
-        }
     }
 }
 
@@ -114,11 +104,18 @@ fun DateAndLocationReadLayout(screenHeight: Dp, readingDiary: Diary) {
 
 @Composable
 fun DiaryMainReadLayout(
-    readingDiary: Diary, screenWidth: Dp, screenHeight: Dp, onClick: (Bitmap) -> Unit
+    readingDiary: Diary, screenWidth: Dp, screenHeight: Dp, onClick: (Bitmap) -> Unit,
+    onShare: () -> Unit
 ) {
     SpaceMaker(height = screenHeight / 20)
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         TitleLargeText(text = readingDiary.title, color = Color.Black)
+        Icon(
+            imageVector = Icons.Default.PushPin,
+            contentDescription = null,
+            tint = if (readingDiary.isShared) MainColor else SubColor,
+            modifier = Modifier.clickable { onShare() }
+        )
     }
     SpaceMaker(height = screenHeight / 40)
     ImagesLayout(
@@ -136,33 +133,5 @@ fun DiaryMainReadLayout(
         BodyText(
             text = readingDiary.message, color = Color.Black, minLines = 8
         )
-    }
-}
-
-@Composable
-fun GalleryDiaryMenu(
-    screenHeight: Dp,
-    isDiaryShared: Boolean,
-    onClickEdit: () -> Unit,
-    onClickShare: () -> Unit,
-    onChangeState: () -> Unit
-) {
-    HalfDialog(onChangeState = onChangeState) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(10.dp)
-        ) {
-            SpaceMaker(height = screenHeight / 40)
-            BodyLargeText(
-                text = "일기 메뉴",
-                color = MainColor,
-                textAlign = TextAlign.Center
-            )
-            SpaceMaker(height = screenHeight / 40)
-            CommonButton(text = "일기 수정하기") { onClickEdit() }
-            if (!isDiaryShared) CommonButton(text = "게시판에 공유하기") { onClickShare() }
-            else CommonButton(text = "공유 취소하기", color = SubColor) { onClickShare() }
-            SpaceMaker(height = screenHeight / 40)
-        }
     }
 }

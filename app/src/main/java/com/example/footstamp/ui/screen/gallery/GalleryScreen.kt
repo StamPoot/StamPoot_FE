@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -85,7 +86,7 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 galleryViewModel.addDiary(context)
                 galleryViewModel.initializeViewState()
             },
-            onClickMenu = { galleryViewModel.showDiaryMenu() },
+            onClickMenu = { galleryViewModel.showEditScreen(context) },
             onClickEdit = { galleryViewModel.updateDiary(context) }
         )
     }
@@ -190,7 +191,7 @@ fun GalleryReadOrWriteScreen(
             FullDialog(
                 title = GalleryViewModel.GalleryScreenState.READ.text,
                 screen = { GalleryReadScreen() },
-                rightIcon = Icons.Default.Menu,
+                rightIcon = Icons.Default.Edit,
                 onBackIconPressed = onChangeState,
                 onClickPressed = onClickMenu
             )

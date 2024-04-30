@@ -120,6 +120,16 @@ class DiaryRepository @Inject constructor(
         }
     }
 
+    // 일기 공유 상태 수정
+    suspend fun shareDiary(diaryId: String) {
+        diaryService.diaryTransPublic(
+            token = tokenManager.accessToken!!,
+            id = diaryId
+        ).let {
+            if (it.isSuccessful) { getDiaries() }
+        }
+    }
+
     // dao Database
 
     suspend fun insertDiaryDao(diary: Diary) = diaryDao.insertDiary(diary)

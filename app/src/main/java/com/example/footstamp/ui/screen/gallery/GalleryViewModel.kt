@@ -2,6 +2,7 @@ package com.example.footstamp.ui.screen.gallery
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.widget.Toast
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.DiaryRepository
@@ -39,9 +40,6 @@ class GalleryViewModel @Inject constructor(
 
     private val _viewState = MutableStateFlow(GalleryScreenState.NULL)
     val viewState = _viewState.asStateFlow()
-
-    private val _isShowDiaryMenu = MutableStateFlow<Boolean>(false)
-    val isShowDiaryMenu = _isShowDiaryMenu.asStateFlow()
 
     private val _dateOrLocation = MutableStateFlow(DateAndLocation.NULL)
     val dateOrLocation = _dateOrLocation.asStateFlow()
@@ -103,7 +101,15 @@ class GalleryViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateDiary(_editingDiary.value, context).let { isSuccessful ->
                 if (isSuccessful) initializeViewState()
+                // TODO : 실패시 대응
             }
+        }
+    }
+
+    fun shareTransDiary() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.shareDiary(_readingDiary.value.id.toString())
+            initializeViewState()
         }
     }
 
@@ -116,14 +122,6 @@ class GalleryViewModel @Inject constructor(
             SortByDateOrLocation.DATE -> SortByDateOrLocation.LOCATION
             SortByDateOrLocation.LOCATION -> SortByDateOrLocation.DATE
         }
-    }
-
-    fun showDiaryMenu() {
-        _isShowDiaryMenu.value = true
-    }
-
-    fun hideDiaryMenu() {
-        _isShowDiaryMenu.value = false
     }
 
     fun openImageDetail(image: Bitmap) {
@@ -141,7 +139,6 @@ class GalleryViewModel @Inject constructor(
     fun initializeViewState() {
         _viewState.value = GalleryScreenState.NULL
         _dateOrLocation.value = DateAndLocation.NULL
-        _isShowDiaryMenu.value = false
         _openingImage.value = null
         _readingDiary.value = Diary()
         _editingDiary.value = Diary()
@@ -156,7 +153,10 @@ class GalleryViewModel @Inject constructor(
         _viewState.value = GalleryScreenState.READ
     }
 
-    fun showEditScreen() {
+    fun showEditScreen(context: Context) {
+        if (_readingDiary.value.isShared) {
+            Toast.makeText(context, "공유 중인 일기는 수정할 수 없어요", Toast.LENGTH_SHORT).show()
+        }
         _viewState.value = GalleryScreenState.EDIT
     }
 
