@@ -1,23 +1,12 @@
 package com.example.footstamp.data.util
 
-import android.util.Log
 import com.example.footstamp.BuildConfig
-import com.example.footstamp.data.data_source.AuthService
-import com.example.footstamp.data.data_source.BoardService
-import com.example.footstamp.data.data_source.DiaryService
-import com.example.footstamp.data.data_source.ReplyService
-import com.example.footstamp.data.data_source.UserService
-import com.example.footstamp.data.repository.DiaryRepository
-import com.example.footstamp.data.repository.LoginRepository
-import com.example.footstamp.data.repository.ProfileRepository
-import com.example.footstamp.ui.base.BaseService
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

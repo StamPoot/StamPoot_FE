@@ -20,14 +20,11 @@ class LoginRepository @Inject constructor(
         return authService.authLoginToken(provider.provider, token).also { response ->
             if (response.isSuccessful && response.body() != null) {
                 tokenManager.accessToken = response.body()?.auth
-                Log.d(TAG, "Token Inputed : ${response.body()?.auth}")
             }
         }
     }
 
     suspend fun kakaoLogin(): Response<AuthToken> {
-        return authService.kakaoLogin().also {
-            Log.d(TAG, "TOKEN SUCCESS ${it.body()}")
-        }
+        return authService.kakaoLogin()
     }
 }

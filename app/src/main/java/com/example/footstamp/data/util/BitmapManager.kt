@@ -19,8 +19,6 @@ object BitmapManager {
         val newHeight = (newWidth / ratio).toInt()
 
 
-        return Bitmap.createScaledBitmap(bitmap, newWidth,newHeight, true).also {
-            Log.d(TAG,"SIZE ${it.byteCount} ${it.width} ${it.height}")
-        }
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
     }
 }

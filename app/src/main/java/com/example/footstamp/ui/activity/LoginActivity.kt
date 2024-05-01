@@ -44,7 +44,6 @@ class LoginActivity : ComponentActivity() {
         lifecycleScope.launch {
             loginViewModel.loginToken.collect {
                 if (it != null) moveToHomeScreen()
-                Log.d(TAG, it.toString())
             }
         }
     }
@@ -57,7 +56,6 @@ class LoginActivity : ComponentActivity() {
         if (requestCode == GOOGLE_API_CODE) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             googleLogin.handleSignInResult(task)?.let { token ->
-                Log.d(TAG, "code: $token")
                 loginViewModel.updateGoogleIdToken(token)
                 loginViewModel.googleAccessTokenLogin()
             }

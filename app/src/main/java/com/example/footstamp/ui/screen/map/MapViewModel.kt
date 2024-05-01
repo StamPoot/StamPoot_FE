@@ -68,7 +68,7 @@ class MapViewModel @Inject constructor(
     }
 
     fun getLocationDiariesCount(location: SeoulLocation): Int {
-        return _diaries.value.count { it.location == location }.also { Log.d(TAG, it.toString()) }
+        return _diaries.value.count { it.location == location }
     }
 
     fun openImageDetail(image: Bitmap) {

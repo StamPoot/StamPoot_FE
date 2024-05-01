@@ -39,7 +39,6 @@ class CustomWebViewClient(val onResult: () -> Unit) : WebViewClient() {
     @Deprecated("Deprecated in Java")
     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
         url?.let {
-            Log.d(TAG, "Token : $it")
 //            if (it.startsWith("https://impine.shop/login/oauth2/code/kakao")) {
 //                onResult()
 //                return true

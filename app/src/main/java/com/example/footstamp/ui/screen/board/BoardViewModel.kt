@@ -32,11 +32,7 @@ class BoardViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAllDao().distinctUntilChanged().collect { diaryList ->
-                if (diaryList.isEmpty()) {
-                    Log.d(TAG, "EMPTY")
-                } else {
-                    _diaries.value = diaryList
-                }
+                if (diaryList.isNotEmpty()) _diaries.value = diaryList
             }
         }
     }
