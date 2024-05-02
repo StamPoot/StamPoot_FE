@@ -1,10 +1,10 @@
 package com.example.footstamp.data.repository
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
+import android.graphics.Bitmap
 import com.example.footstamp.data.dao.DiaryDao
 import com.example.footstamp.data.data_source.DiaryService
+import com.example.footstamp.data.dto.response.diary.DiaryDTO
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
@@ -31,22 +31,16 @@ class DiaryRepository @Inject constructor(
                 val responseBody = response.body()!!
                 val responseDiaries = mutableListOf<Diary>()
 
+                // 지역 별로 데이터가 수신되기 때문에 이중 map 사용
                 responseBody.diaries.values.map { diaries ->
                     diaries.map { diaryDTO ->
-                        val diaryPhotos = diaryDTO.photos.map { Formatter.fetchImageBitmap(it)!! }
+                        val photoBitmaps = diaryDTO.photos.map { Formatter.fetchImageBitmap(it)!! }
 
-                        Diary(
-                            title = diaryDTO.title,
-                            date = Formatter.dateStringToLocalDateTime(diaryDTO.date),
-                            message = diaryDTO.content,
-                            isShared = diaryDTO.isPublic,
-                            location = diaryDTO.location,
-                            photoBitmapStrings = diaryPhotos.map {
-                                Formatter.convertBitmapToString(it)
-                            },
-                            thumbnail = diaryDTO.thumbnailNo,
+                        diaryDTOToDiary(
+                            diaryDTO = diaryDTO,
+                            photoBitmaps = photoBitmaps,
                             uid = responseBody.userId.toString()
-                        ).apply { insertId(diaryDTO.id.toLong()) }
+                        )
                     }.let { responseDiaries.addAll(it) }
                 }
                 // DB 내의 일기들 최신화
@@ -126,7 +120,9 @@ class DiaryRepository @Inject constructor(
             token = tokenManager.accessToken!!,
             id = diaryId
         ).let {
-            if (it.isSuccessful) { getDiaries() }
+            if (it.isSuccessful) {
+                getDiaries()
+            }
         }
     }
 
@@ -167,4 +163,20 @@ class DiaryRepository @Inject constructor(
 
     suspend fun getDiaryByLocationDao(location: SeoulLocation): List<Diary> =
         diaryDao.getDiaryByLocation(location)
+
+    private fun diaryDTOToDiary(diaryDTO: DiaryDTO, photoBitmaps: List<Bitmap>, uid: String): Diary {
+
+        return Diary(
+            title = diaryDTO.title,
+            date = Formatter.dateStringToLocalDateTime(diaryDTO.date),
+            message = diaryDTO.content,
+            isShared = diaryDTO.isPublic,
+            location = diaryDTO.location,
+            photoBitmapStrings = photoBitmaps.map {
+                Formatter.convertBitmapToString(it)
+            },
+            thumbnail = diaryDTO.thumbnailNo,
+            uid = uid
+        ).apply { insertId(diaryDTO.id.toLong()) }
+    }
 }

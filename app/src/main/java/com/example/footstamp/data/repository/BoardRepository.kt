@@ -1,14 +1,14 @@
 package com.example.footstamp.data.repository
 
+import android.graphics.Bitmap
 import com.example.footstamp.data.data_source.BoardService
 import com.example.footstamp.data.data_source.ReplyService
 import com.example.footstamp.data.dto.request.reply.CreateReplyReqDTO
-import com.example.footstamp.data.dto.request.reply.ReportReqDTO
 import com.example.footstamp.data.dto.response.diary.DiaryDTO
 import com.example.footstamp.data.model.Diary
+import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.TokenManager
 import com.example.footstamp.ui.base.BaseRepository
-import retrofit2.Response
 import javax.inject.Inject
 
 class BoardRepository @Inject constructor(
@@ -17,8 +17,22 @@ class BoardRepository @Inject constructor(
     private val replyService: ReplyService
 ) : BaseRepository() {
 
-    suspend fun getBoardDiaryList(): Response<List<DiaryDTO>> {
-        return boardService.boardFeeds(1)
+    suspend fun getBoardDiaryList(sortType: BoardSortType): List<Diary>? {
+        boardService.boardFeeds(sortType.sortCode).let { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body()!!
+
+                responseBody.map { diaryDTO ->
+                    val photoBitmaps = diaryDTO.photos.map { Formatter.fetchImageBitmap(it)!! }
+
+                    diaryDTOToDiary(
+                        diaryDTO = diaryDTO,
+                        photoBitmaps = photoBitmaps
+                    )
+                }.let { return it }
+            }
+            return null
+        }
     }
 
     suspend fun addReply(id: String, content: String) {
@@ -29,4 +43,24 @@ class BoardRepository @Inject constructor(
     suspend fun deleteReply(id: String) {
         replyService.replyDelete(id, tokenManager.accessToken!!)
     }
+
+    private fun diaryDTOToDiary(diaryDTO: DiaryDTO, photoBitmaps: List<Bitmap>): Diary {
+
+        return Diary(
+            title = diaryDTO.title,
+            date = Formatter.dateStringToLocalDateTime(diaryDTO.date),
+            message = diaryDTO.content,
+            isShared = diaryDTO.isPublic,
+            location = diaryDTO.location,
+            photoBitmapStrings = photoBitmaps.map {
+                Formatter.convertBitmapToString(it)
+            },
+            thumbnail = diaryDTO.thumbnailNo,
+        ).apply { insertId(diaryDTO.id.toLong()) }
+    }
+}
+
+enum class BoardSortType(val sortCode: Int) {
+    RECENT(1),
+    LIKE(2)
 }

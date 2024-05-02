@@ -24,6 +24,9 @@ import com.example.footstamp.ui.theme.SubColor
 fun TopBar(
     text: String,
     backgroundColor: Color = Color.Transparent,
+    icon: ImageVector? = null,
+    iconColor: Color = MainColor,
+    onClickPressed: () -> Unit = {}
 ) {
     TopAppBar(
         colors = TopAppBarColors(
@@ -34,11 +37,31 @@ fun TopBar(
             Color.White
         ),
         title = {
-            TitleLargeText(
-                text = text,
-                MainColor,
-                modifier = Modifier,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                TitleLargeText(
+                    text = text,
+                    MainColor,
+                    modifier = Modifier,
+                )
+                if (icon != null) {
+                    Button(
+                        onClick = onClickPressed,
+                        modifier = Modifier.background(backgroundColor),
+                        colors = ButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = iconColor,
+                            disabledContainerColor = Color.Transparent,
+                            disabledContentColor = Color.Transparent
+                        )
+                    ) {
+                        Icon(icon, null)
+                    }
+                }
+            }
         },
     )
     Divider(color = SubColor)

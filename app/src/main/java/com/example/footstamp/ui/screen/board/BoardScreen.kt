@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.runtime.Composable
@@ -24,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
+import com.example.footstamp.data.repository.BoardSortType
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
@@ -38,13 +41,20 @@ import com.example.footstamp.ui.theme.SubColor
 fun BoardScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         val diaries by boardViewModel.diaries.collectAsState()
+        val boardState by boardViewModel.boardState.collectAsState()
         val readingDiary by boardViewModel.readingDiary.collectAsState()
 
         Column(modifier = Modifier.fillMaxSize()) {
-            TopBar(text = stringResource(R.string.screen_board), backgroundColor = Color.White)
-
+            TopBar(
+                text = stringResource(R.string.screen_board),
+                backgroundColor = Color.White,
+                icon = when (boardState) {
+                    BoardSortType.RECENT -> Icons.Default.AccessTime
+                    BoardSortType.LIKE -> Icons.Default.Star
+                },
+                onClickPressed = { boardViewModel.changeBoardState() }
+            )
             BoardGridLayout(diaries = diaries, onClick = { boardViewModel.showReadScreen(it) })
-
             BoardReadScreen(
                 readingDiary = readingDiary,
                 onChangeState = { boardViewModel.hideReadScreen() })
@@ -68,12 +78,8 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
         .clickable { onClick(diary) }) {
         Card(
             colors = CardColors(
-                Color.White,
-                Color.Transparent,
-                Color.Transparent,
-                Color.Transparent
-            ),
-            border = BorderStroke(0.1.dp, SubColor)
+                Color.White, Color.Transparent, Color.Transparent, Color.Transparent
+            ), border = BorderStroke(0.1.dp, SubColor)
         ) {
             AsyncImage(
                 model = Formatter.convertStringToBitmap(diary.photoBitmapStrings[diary.thumbnail]),
@@ -81,12 +87,14 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
                 modifier = Modifier.padding(10.dp)
             )
             BodyText(
-                text = diary.title, color = Color.Black,
+                text = diary.title,
+                color = Color.Black,
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             SpaceMaker(height = 3.dp)
             LabelText(
-                text = diary.location.location, color = SubColor,
+                text = diary.location.location,
+                color = SubColor,
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             SpaceMaker(height = 3.dp)
@@ -97,12 +105,10 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
 @Composable
 fun BoardReadScreen(readingDiary: Diary?, onChangeState: () -> Unit) {
     if (readingDiary != null) {
-        FullDialog(
-            title = GalleryViewModel.GalleryScreenState.READ.text,
+        FullDialog(title = GalleryViewModel.GalleryScreenState.READ.text,
             screen = { BoardDetailScreen() },
             rightIcon = Icons.AutoMirrored.Filled.ArrowRightAlt,
             onBackIconPressed = onChangeState,
-            onClickPressed = {}
-        )
+            onClickPressed = {})
     }
 }
