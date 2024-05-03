@@ -83,6 +83,13 @@ class ProfileRepository @Inject constructor(
         return null
     }
 
+    suspend fun deleteUser(): Boolean {
+        userService.profileDelete(tokenManager.accessToken!!).let {
+            if (it.isSuccessful) return true
+        }
+        return false
+    }
+
 
 // dao Database
 

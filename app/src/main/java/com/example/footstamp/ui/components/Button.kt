@@ -31,7 +31,8 @@ import com.example.footstamp.ui.theme.SubColor
 @Composable
 fun CommonButton(
     text: String = "",
-    color: Color = MainColor,
+    buttonColor: Color = MainColor,
+    textColor: Color = Color.White,
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -44,10 +45,10 @@ fun CommonButton(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .background(Color.Transparent),
-            colors = ButtonDefaults.outlinedButtonColors(color),
+            colors = ButtonDefaults.outlinedButtonColors(buttonColor),
             onClick = onClick
         ) {
-            BodyLargeText(text, Color.White)
+            BodyLargeText(text, textColor)
         }
     }
 }

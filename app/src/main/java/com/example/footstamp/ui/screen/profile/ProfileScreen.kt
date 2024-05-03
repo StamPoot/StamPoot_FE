@@ -3,6 +3,7 @@ package com.example.footstamp.ui.screen.profile
 import android.content.ContentResolver
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,14 +14,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -35,9 +41,9 @@ import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.util.BitmapManager
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
-import com.example.footstamp.ui.components.CommonButton
 import com.example.footstamp.ui.components.BodyLargeText
 import com.example.footstamp.ui.components.BodyText
+import com.example.footstamp.ui.components.CommonButton
 import com.example.footstamp.ui.components.HalfDialog
 import com.example.footstamp.ui.components.LabelText
 import com.example.footstamp.ui.components.ProfilePhotoSelector
@@ -49,6 +55,7 @@ import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.WarnColor
 
 @Composable
 fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
@@ -57,23 +64,28 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
     val profileState by profileViewModel.profileState.collectAsState()
     val editProfile by profileViewModel.editProfile.collectAsState()
     val notificationList by profileViewModel.notificationList.collectAsState()
+    val profileDeleteText by profileViewModel.profileDeleteText.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         Column(
             Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopBar(text = stringResource(R.string.screen_profile), backgroundColor = Color.White)
-            ProfileCard(
-                profileState = profileState,
+            ProfileCard(profileState = profileState,
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
                 paddingValues = paddingValue,
-            )
-            CommonButton("수정하기") { profileViewModel.showEditProfileDialog() }
-            MyHistory(
+                onClickEditButton = { profileViewModel.showEditProfileDialog() })
+            ProfileMyHistory(
                 context = context,
                 notificationList = notificationList,
                 screenHeight = screenHeight,
+            )
+            ProfileBottomLayout(
+                screenHeight = screenHeight,
+                profileDeleteText = profileDeleteText,
+                onTextChange = { profileViewModel.deleteProfile(it, context) },
+                onClickDeleteProfile = { profileViewModel.checkProfileDelete() }
             )
         }
 
@@ -91,7 +103,11 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
 
 @Composable
 fun ProfileCard(
-    profileState: Profile, screenWidth: Dp, screenHeight: Dp, paddingValues: PaddingValues
+    profileState: Profile,
+    screenWidth: Dp,
+    screenHeight: Dp,
+    paddingValues: PaddingValues,
+    onClickEditButton: () -> Unit
 ) {
 
     SpaceMaker(height = screenHeight / 20f)
@@ -124,13 +140,12 @@ fun ProfileCard(
         }
     }
     SpaceMaker(height = screenHeight / 40f)
+    CommonButton("수정하기") { onClickEditButton() }
 }
 
 @Composable
-fun MyHistory(
-    context: Context,
-    notificationList: List<Notification>,
-    screenHeight: Dp
+fun ProfileMyHistory(
+    context: Context, notificationList: List<Notification>, screenHeight: Dp
 ) {
     SpaceMaker(height = screenHeight / 40f)
     TopBar(text = "나의 활동")
@@ -166,6 +181,26 @@ fun NotificationItem(text: String, time: String, message: String) {
         SpaceMaker(height = 5.dp)
     }
     SpaceMaker(height = 5.dp)
+}
+
+@Composable
+fun ProfileBottomLayout(
+    profileDeleteText: String?,
+    screenHeight: Dp,
+    onTextChange: (text: String) -> Unit,
+    onClickDeleteProfile: () -> Unit,
+) {
+    SpaceMaker(height = screenHeight / 20)
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        if (profileDeleteText == null) {
+            CommonButton(text = "회원 탈퇴", buttonColor = WarnColor) { onClickDeleteProfile() }
+        } else {
+            TextInput(
+                hint = "탈퇴하시려면 '회원 탈퇴'를 입력해주세요",
+                onValueChange = onTextChange,
+            )
+        }
+    }
 }
 
 @Composable
