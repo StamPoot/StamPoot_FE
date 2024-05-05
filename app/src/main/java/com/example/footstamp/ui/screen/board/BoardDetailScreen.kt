@@ -1,6 +1,7 @@
 package com.example.footstamp.ui.screen.board
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.PinDrop
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
@@ -35,6 +37,7 @@ import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.ImageDialog
 import com.example.footstamp.ui.components.ImagesLayout
+import com.example.footstamp.ui.components.LabelText
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
@@ -58,11 +61,12 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
             verticalArrangement = Arrangement.Top
         ) {
             WriterLayout(writer = "햄스터", screenWidth = screenWidth, screenHeight = screenHeight)
-            MapDateAndLocationLayout(screenHeight = screenHeight, readingDiary = readingDiary!!)
-            MapDetailReadLayout(readingDiary = readingDiary!!,
+            BoardDateAndLocationLayout(screenHeight = screenHeight, readingDiary = readingDiary!!)
+            BoardDetailReadLayout(readingDiary = readingDiary!!,
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
                 onClick = { boardViewModel.openImageDetail(it) })
+            BoardShareLayout(diary = readingDiary!!, onTapLike = { boardViewModel.likeDiary() })
         }
         // 사진 크게보기
         openingImage?.let { ImageDialog(image = it, onClick = { boardViewModel.closeImage() }) }
@@ -97,7 +101,7 @@ fun WriterLayout(writer: String, screenWidth: Dp, screenHeight: Dp) {
 
 
 @Composable
-fun MapDateAndLocationLayout(screenHeight: Dp, readingDiary: Diary) {
+fun BoardDateAndLocationLayout(screenHeight: Dp, readingDiary: Diary) {
     SpaceMaker(height = screenHeight / 40)
     Row(
         horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
@@ -126,7 +130,7 @@ fun MapDateAndLocationLayout(screenHeight: Dp, readingDiary: Diary) {
 }
 
 @Composable
-fun MapDetailReadLayout(
+fun BoardDetailReadLayout(
     readingDiary: Diary, screenWidth: Dp, screenHeight: Dp, onClick: (Bitmap) -> Unit
 ) {
     SpaceMaker(height = screenHeight / 20)
@@ -147,7 +151,28 @@ fun MapDetailReadLayout(
             .padding(10.dp)
     ) {
         BodyText(
-            text = readingDiary.message, color = Color.Black, minLines = 8
+            text = readingDiary.message, color = Color.Black, minLines = 3
         )
     }
+    SpaceMaker(height = 5.dp)
+}
+
+@Composable
+fun BoardShareLayout(diary: Diary, onTapLike: () -> Unit) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                modifier = Modifier.clickable { onTapLike() },
+                contentDescription = null,
+                tint = MainColor
+            )
+            SpaceMaker(width = 2.dp)
+            LabelText(text = diary.likes.toString(), color = MainColor)
+        }
+    }
+
 }

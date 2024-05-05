@@ -41,13 +41,6 @@ interface DiaryService : BaseService {
         @Path("id") id: String
     ): Response<Unit>
 
-    // 좋아요 / 좋아요 취소
-    @POST("/diary/{id}/like")
-    suspend fun diaryTransLike(
-        @Header("token") token: String,
-        @Path("id") id: String
-    ): Response<Unit>
-
     // 앨범 > 일기 상세보기 조회
     @GET("/diary/{id}")
     suspend fun diaryDetail(

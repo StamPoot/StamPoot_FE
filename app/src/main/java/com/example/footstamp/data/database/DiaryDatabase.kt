@@ -7,7 +7,7 @@ import com.example.footstamp.data.dao.DiaryDao
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.ListConverters
 
-@Database(entities = [Diary::class], version = 3, exportSchema = false)
+@Database(entities = [Diary::class], version = 4, exportSchema = false)
 @TypeConverters(ListConverters::class)
 abstract class DiaryDatabase : RoomDatabase() {
     abstract fun diaryDao(): DiaryDao

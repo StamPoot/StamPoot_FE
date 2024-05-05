@@ -44,6 +44,10 @@ class BoardRepository @Inject constructor(
         replyService.replyDelete(id, tokenManager.accessToken!!)
     }
 
+    suspend fun likeDiary(id: String) {
+        boardService.diaryLikes(tokenManager.accessToken!!, id)
+    }
+
     private fun diaryDTOToDiary(diaryDTO: DiaryDTO, photoBitmaps: List<Bitmap>): Diary {
 
         return Diary(
@@ -56,6 +60,7 @@ class BoardRepository @Inject constructor(
                 Formatter.convertBitmapToString(it)
             },
             thumbnail = diaryDTO.thumbnailNo,
+            likes = diaryDTO.likes
         ).apply { insertId(diaryDTO.id.toLong()) }
     }
 }

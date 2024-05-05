@@ -15,7 +15,8 @@ data class Diary(
     @ColumnInfo(name = "diary_location") var location: SeoulLocation = SeoulLocation.CENTRAL,
     @ColumnInfo(name = "diary_photo_bitmaps") val photoBitmapStrings: List<String> = emptyList(),
     @ColumnInfo(name = "diary_thumbnail") var thumbnail: Int = 0,
-    @ColumnInfo(name = "diary_uid") val uid: String = ""
+    @ColumnInfo(name = "diary_uid") val uid: String = "",
+    @ColumnInfo(name = "diary_likes") val likes: Int = 0
 ) {
     @PrimaryKey(autoGenerate = false)
     var id: Long = 0

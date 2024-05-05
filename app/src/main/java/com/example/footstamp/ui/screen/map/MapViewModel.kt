@@ -39,12 +39,11 @@ class MapViewModel @Inject constructor(
                 if (diaryList.isNotEmpty()) _diaries.value = diaryList
             }
         }
-        viewModelScope.launch(Dispatchers.IO) {
-            getDiaries()
-        }
+
+        getDiaries()
     }
 
-    fun getDiaries() {
+    private fun getDiaries() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getDiaries()
         }

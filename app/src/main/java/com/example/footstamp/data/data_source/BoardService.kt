@@ -35,4 +35,11 @@ interface BoardService : BaseService {
         // sort 1: 최신, sort 2: 좋아요 순
         @Query("sort") sort: Int
     ): Response<List<DiaryDTO>>
+
+    // 좋아요 / 좋아요 취소
+    @POST("/diary/{id}/like")
+    suspend fun diaryLikes(
+        @Header("token") token: String,
+        @Path("id") id: String
+    ): Response<Unit>
 }

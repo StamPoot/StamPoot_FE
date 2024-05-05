@@ -51,6 +51,10 @@ class GalleryViewModel @Inject constructor(
             }
         }
 
+        updateDiariesState()
+    }
+
+    private fun updateDiariesState(){
         viewModelScope.launch(Dispatchers.IO) {
             repository.getDiaries()
         }

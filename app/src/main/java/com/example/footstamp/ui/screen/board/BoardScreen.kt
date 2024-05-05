@@ -1,10 +1,14 @@
 package com.example.footstamp.ui.screen.board
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -15,9 +19,11 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -35,6 +41,7 @@ import com.example.footstamp.ui.components.LabelText
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.screen.gallery.GalleryViewModel
+import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 
 @Composable
@@ -45,18 +52,15 @@ fun BoardScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
         val readingDiary by boardViewModel.readingDiary.collectAsState()
 
         Column(modifier = Modifier.fillMaxSize()) {
-            TopBar(
-                text = stringResource(R.string.screen_board),
+            TopBar(text = stringResource(R.string.screen_board),
                 backgroundColor = Color.White,
                 icon = when (boardState) {
                     BoardSortType.RECENT -> Icons.Default.AccessTime
                     BoardSortType.LIKE -> Icons.Default.Star
                 },
-                onClickPressed = { boardViewModel.changeBoardState() }
-            )
+                onClickPressed = { boardViewModel.changeBoardState() })
             BoardGridLayout(diaries = diaries, onClick = { boardViewModel.showReadScreen(it) })
-            BoardReadScreen(
-                readingDiary = readingDiary,
+            BoardReadScreen(readingDiary = readingDiary,
                 onChangeState = { boardViewModel.hideReadScreen() })
         }
     }
@@ -86,18 +90,36 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
                 contentDescription = null,
                 modifier = Modifier.padding(10.dp)
             )
-            BodyText(
-                text = diary.title,
-                color = Color.Black,
-                modifier = Modifier.padding(horizontal = 10.dp)
-            )
-            SpaceMaker(height = 3.dp)
-            LabelText(
-                text = diary.location.location,
-                color = SubColor,
-                modifier = Modifier.padding(horizontal = 10.dp)
-            )
-            SpaceMaker(height = 3.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    BodyText(
+                        text = diary.title,
+                        color = Color.Black,
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    )
+                    SpaceMaker(height = 3.dp)
+                    LabelText(
+                        text = diary.location.location,
+                        color = SubColor,
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    )
+                    SpaceMaker(height = 3.dp)
+                }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(horizontal = 3.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = null,
+                        tint = MainColor
+                    )
+                    LabelText(text = diary.likes.toString(), color = Color.Black)
+                    SpaceMaker(height = 3.dp)
+                }
+            }
         }
     }
 }

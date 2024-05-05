@@ -32,6 +32,10 @@ class BoardViewModel @Inject constructor(
     val openingImage = _openingImage.asStateFlow()
 
     init {
+        updateBoardState()
+    }
+
+    private fun updateBoardState() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getBoardDiaryList(BoardSortType.RECENT)?.let { diaryList ->
                 _diaries.value = diaryList
@@ -61,6 +65,13 @@ class BoardViewModel @Inject constructor(
 
     fun hideReadScreen() {
         _readingDiary.value = null
+    }
+
+    fun likeDiary() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.likeDiary(id = _readingDiary.value!!.id.toString())
+            repository.getBoardDiaryList(BoardSortType.RECENT)
+        }
     }
 
     fun openImageDetail(image: Bitmap) {
