@@ -29,6 +29,7 @@ import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.components.TransparentButton
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun MapScreen(mapViewModel: MapViewModel = hiltViewModel()) {
@@ -42,7 +43,7 @@ fun MapScreen(mapViewModel: MapViewModel = hiltViewModel()) {
                 .background(MainColor),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            TopBar(text = stringResource(R.string.screen_map), backgroundColor = Color.White)
+            TopBar(text = stringResource(R.string.screen_map), backgroundColor = WhiteColor)
             Box(
                 modifier = Modifier
                     .width(screenWidth)

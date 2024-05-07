@@ -36,6 +36,7 @@ import com.example.footstamp.ui.components.PhotoSelector
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TextInput
 import com.example.footstamp.ui.theme.MainColor
+import com.example.footstamp.ui.theme.TransparentColor
 import java.time.LocalDateTime
 
 @Composable
@@ -167,7 +168,7 @@ fun CalendarChangeButton(time: LocalDateTime, onClick: () -> Unit) {
     ChangeButton(
         icon = Icons.Default.CalendarMonth,
         text = Formatter.dateToUserString(time),
-        color = Color.Transparent,
+        color = TransparentColor,
         tint = MainColor,
         underLine = true,
         onClick = onClick
@@ -179,7 +180,7 @@ fun LocationChangeButton(location: SeoulLocation, onClick: () -> Unit) {
     ChangeButton(
         icon = Icons.Default.PinDrop,
         text = location.location,
-        color = Color.Transparent,
+        color = TransparentColor,
         tint = MainColor,
         underLine = true,
         onClick = onClick

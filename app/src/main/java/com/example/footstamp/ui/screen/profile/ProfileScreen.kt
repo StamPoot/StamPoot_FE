@@ -53,9 +53,11 @@ import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.theme.BackColor
+import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import com.example.footstamp.ui.theme.WarnColor
+import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
@@ -70,7 +72,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
         Column(
             Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TopBar(text = stringResource(R.string.screen_profile), backgroundColor = Color.White)
+            TopBar(text = stringResource(R.string.screen_profile), backgroundColor = WhiteColor)
             ProfileCard(profileState = profileState,
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
@@ -133,7 +135,7 @@ fun ProfileCard(
                     )
                 }
                 SpaceMaker(width = 20.dp)
-                TitleLargeText(text = profileState.nickname, color = Color.Black)
+                TitleLargeText(text = profileState.nickname, color = BlackColor)
             }
             SpaceMaker(height = 20.dp)
             BodyText(text = profileState.aboutMe, color = MainColor)
@@ -174,7 +176,7 @@ fun NotificationItem(text: String, time: String, message: String) {
         BodyText(text = text, color = MainColor, modifier = Modifier.padding(horizontal = 5.dp))
         SpaceMaker(height = 5.dp)
         BodyLargeText(
-            text = message, color = Color.Black, modifier = Modifier.padding(horizontal = 5.dp)
+            text = message, color = BlackColor, modifier = Modifier.padding(horizontal = 5.dp)
         )
         SpaceMaker(height = 5.dp)
         LabelText(text = time, color = SubColor, modifier = Modifier.padding(horizontal = 5.dp))
@@ -223,23 +225,23 @@ fun ProfileEditDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SpaceMaker(height = screenHeight / 40)
-            TitleLargeText(text = "프로필 수정", color = Color.Black)
+            TitleLargeText(text = "프로필 수정", color = BlackColor)
             SpaceMaker(height = screenHeight / 40)
 
             Divider(modifier = Modifier.fillMaxWidth(0.9f))
             SpaceMaker(height = screenHeight / 80)
-            TitleText(text = "닉네임", color = Color.Black)
+            TitleText(text = "닉네임", color = BlackColor)
             SpaceMaker(height = screenHeight / 80)
             TextInput(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .background(Color.White),
+                    .background(WhiteColor),
                 baseText = editProfile.nickname,
                 onValueChange = onChangeNickname
             )
 
             SpaceMaker(height = screenHeight / 80)
-            TitleText(text = "사진", color = Color.Black)
+            TitleText(text = "사진", color = BlackColor)
             SpaceMaker(height = screenHeight / 80)
             ProfilePhotoSelector(
                 contentResolver = contentResolver,
@@ -251,12 +253,12 @@ fun ProfileEditDialog(
             )
 
             SpaceMaker(height = screenHeight / 80)
-            TitleText(text = "한 줄 소개", color = Color.Black)
+            TitleText(text = "한 줄 소개", color = BlackColor)
             SpaceMaker(height = screenHeight / 80)
             TextInput(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .background(Color.White),
+                    .background(WhiteColor),
                 baseText = editProfile.aboutMe,
                 onValueChange = onChangeAboutMe
             )

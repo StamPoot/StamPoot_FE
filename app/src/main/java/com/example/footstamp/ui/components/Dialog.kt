@@ -24,7 +24,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.footstamp.ui.theme.BackColor
+import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun FullDialog(
@@ -52,7 +54,7 @@ fun FullDialog(
             TopBackBar(
                 text = title,
                 leftIcon = leftIcon,
-                backgroundColor = Color.White,
+                backgroundColor = WhiteColor,
                 rightIcon = rightIcon,
                 onBackPressed = onBackIconPressed,
                 onClickPressed = onClickPressed
@@ -115,15 +117,15 @@ fun HalfDialog(
 fun ImageDialog(image: Bitmap, onClick: () -> Unit = {}) {
     Box(
         modifier = Modifier
-            .background(Color.Black)
+            .background(BlackColor)
             .fillMaxSize()
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopBackBar(
                 text = "",
                 leftIcon = Icons.Default.Close,
-                backgroundColor = Color.Black,
-                iconColor = Color.White,
+                backgroundColor = BlackColor,
+                iconColor = WhiteColor,
                 onBackPressed = onClick
             )
             ZoomableImage(image = image)

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.footstamp.data.util.SeoulLocation
+import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun LocationPickerView(onClick: (seoulLocation: SeoulLocation) -> Unit) {
@@ -22,7 +23,7 @@ fun LocationPickerView(onClick: (seoulLocation: SeoulLocation) -> Unit) {
                 TitleLargeText(
                     modifier = Modifier.padding(horizontal = 20.dp),
                     text = seoulLocation.location,
-                    color = Color.White
+                    color = WhiteColor
                 )
             }
             SpaceMaker(height = 10.dp)

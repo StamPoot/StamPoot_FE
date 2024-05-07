@@ -35,7 +35,10 @@ import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.screen.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.BackColor
+import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.TransparentColor
+import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun MapLocationScreen(mapScreenState: SeoulLocation, mapViewModel: MapViewModel = hiltViewModel()) {
@@ -89,12 +92,12 @@ fun StaggeredViewItem(diary: Diary, onClickBox: (diary: Diary) -> Unit) {
         .clickable { onClickBox(diary) }) {
         Card(
             modifier = Modifier,
-            border = BorderStroke(5.dp, Color.White),
+            border = BorderStroke(5.dp, WhiteColor),
             colors = CardColors(
-                Color.White,
-                Color.Transparent,
-                Color.Transparent,
-                Color.Transparent
+                WhiteColor,
+                TransparentColor,
+                TransparentColor,
+                TransparentColor
             )
         ) {
             AsyncImage(
@@ -104,7 +107,7 @@ fun StaggeredViewItem(diary: Diary, onClickBox: (diary: Diary) -> Unit) {
             SpaceMaker(height = 5.dp)
             TitleText(
                 text = diary.title,
-                color = Color.Black,
+                color = BlackColor,
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             SpaceMaker(height = 5.dp)

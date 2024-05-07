@@ -52,6 +52,7 @@ import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.components.TransparentButton
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.WhiteColor
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -69,7 +70,7 @@ fun GalleryScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
     }) { paddingValue, screenWidth, screenHeight ->
 
         Column {
-            TopBar(text = stringResource(R.string.screen_gallery), backgroundColor = Color.White)
+            TopBar(text = stringResource(R.string.screen_gallery), backgroundColor = WhiteColor)
 
             GalleryGridLayout(diaries = currentDiary,
                 paddingValues = paddingValue,
@@ -153,11 +154,11 @@ fun GalleryItemView(diary: Diary, screenHeight: Dp, onClick: (Diary) -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TitleText(Formatter.dateToUserString(diary.date), Color.White)
+            TitleText(Formatter.dateToUserString(diary.date), WhiteColor)
             SpaceMaker(height = 10.dp)
-            TitleLargeText(diary.title, Color.White)
+            TitleLargeText(diary.title, WhiteColor)
             SpaceMaker(height = 10.dp)
-            BodyText(diary.location.location, Color.White)
+            BodyText(diary.location.location, WhiteColor)
         }
         TransparentButton(onClick = { onClick(diary) })
     }
@@ -219,7 +220,7 @@ fun GalleryFloatingButton(action: () -> Unit) {
         Icon(
             painter = painterResource(R.drawable.icon_pen),
             contentDescription = null,
-            tint = Color.White
+            tint = WhiteColor
         )
     }
 }

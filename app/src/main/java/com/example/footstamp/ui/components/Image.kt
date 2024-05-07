@@ -52,8 +52,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.data.util.Formatter
+import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.TransparentColor
+import com.example.footstamp.ui.theme.WhiteColor
 import kotlin.math.roundToInt
 
 @Composable
@@ -159,9 +162,9 @@ fun PhotoItem(
         modifier = Modifier
             .height(screenHeight / 3)
             .width(screenHeight / 3)
-            .background(Color.Transparent)
+            .background(TransparentColor)
             .padding(15.dp)
-            .border(3.dp, if (isThumbnail) MainColor else Color.Transparent),
+            .border(3.dp, if (isThumbnail) MainColor else TransparentColor),
     ) {
         AsyncImage(
             model = item,
@@ -174,7 +177,7 @@ fun PhotoItem(
                 .background(MainColor)
                 .padding(5.dp)
         ) {
-            Icon(imageVector = Icons.Default.Star, contentDescription = null, tint = Color.White)
+            Icon(imageVector = Icons.Default.Star, contentDescription = null, tint = WhiteColor)
         }
         TransparentButton(onClick = { onClick(item) })
     }
@@ -295,7 +298,7 @@ fun ZoomableImage(image: Bitmap) {
     Box(modifier = Modifier
         .clip(RectangleShape)
         .fillMaxSize()
-        .background(Color.Black)
+        .background(BlackColor)
         .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
         .pointerInput(Unit) {
             detectDragGestures { change, dragAmount ->

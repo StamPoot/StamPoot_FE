@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.footstamp.ui.theme.BackColor
+import com.example.footstamp.ui.theme.TransparentColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,9 +36,9 @@ fun TextInput(
         shape = CircleShape,
         modifier = modifier,
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color.Transparent,
-            disabledBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
+            focusedBorderColor = TransparentColor,
+            disabledBorderColor = TransparentColor,
+            unfocusedBorderColor = TransparentColor,
         ),
         maxLines = maxLines,
         minLines = minLines,

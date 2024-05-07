@@ -42,7 +42,9 @@ import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.theme.BackColor
+import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
+import com.example.footstamp.ui.theme.TransparentColor
 
 @Composable
 fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
@@ -78,9 +80,9 @@ fun WriterLayout(writer: String, screenWidth: Dp, screenHeight: Dp) {
     Card(
         colors = CardColors(
             BackColor,
-            Color.Transparent,
-            Color.Transparent,
-            Color.Transparent
+            TransparentColor,
+            TransparentColor,
+            TransparentColor
         )
     ) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -92,7 +94,7 @@ fun WriterLayout(writer: String, screenWidth: Dp, screenHeight: Dp) {
             SpaceMaker(width = 10.dp)
             BodyText(
                 text = writer,
-                color = Color.Black,
+                color = BlackColor,
                 textAlign = TextAlign.Start
             )
         }
@@ -135,7 +137,7 @@ fun BoardDetailReadLayout(
 ) {
     SpaceMaker(height = screenHeight / 20)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-        TitleLargeText(text = readingDiary.title, color = Color.Black)
+        TitleLargeText(text = readingDiary.title, color = BlackColor)
     }
     SpaceMaker(height = screenHeight / 40)
     ImagesLayout(
@@ -151,7 +153,7 @@ fun BoardDetailReadLayout(
             .padding(10.dp)
     ) {
         BodyText(
-            text = readingDiary.message, color = Color.Black, minLines = 3
+            text = readingDiary.message, color = BlackColor, minLines = 3
         )
     }
     SpaceMaker(height = 5.dp)

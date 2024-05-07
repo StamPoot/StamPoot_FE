@@ -41,8 +41,11 @@ import com.example.footstamp.ui.components.LabelText
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.screen.gallery.GalleryViewModel
+import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.TransparentColor
+import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun BoardScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
@@ -53,7 +56,7 @@ fun BoardScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
 
         Column(modifier = Modifier.fillMaxSize()) {
             TopBar(text = stringResource(R.string.screen_board),
-                backgroundColor = Color.White,
+                backgroundColor = WhiteColor,
                 icon = when (boardState) {
                     BoardSortType.RECENT -> Icons.Default.AccessTime
                     BoardSortType.LIKE -> Icons.Default.Star
@@ -82,7 +85,7 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
         .clickable { onClick(diary) }) {
         Card(
             colors = CardColors(
-                Color.White, Color.Transparent, Color.Transparent, Color.Transparent
+                WhiteColor, TransparentColor, TransparentColor, TransparentColor
             ), border = BorderStroke(0.1.dp, SubColor)
         ) {
             AsyncImage(
@@ -96,7 +99,7 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
                 Column {
                     BodyText(
                         text = diary.title,
-                        color = Color.Black,
+                        color = BlackColor,
                         modifier = Modifier.padding(horizontal = 10.dp)
                     )
                     SpaceMaker(height = 3.dp)
@@ -116,7 +119,7 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
                         contentDescription = null,
                         tint = MainColor
                     )
-                    LabelText(text = diary.likes.toString(), color = Color.Black)
+                    LabelText(text = diary.likes.toString(), color = BlackColor)
                     SpaceMaker(height = 3.dp)
                 }
             }

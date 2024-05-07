@@ -16,6 +16,7 @@ import com.example.footstamp.data.util.Formatter.convertMillisToDate
 import com.example.footstamp.data.util.Formatter.localDateTimeToLong
 import com.example.footstamp.data.util.Formatter.longToLocalDateTime
 import com.example.footstamp.ui.theme.MainColor
+import com.example.footstamp.ui.theme.WhiteColor
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Formatter
@@ -52,7 +53,7 @@ fun DatePickerView(
             }
             onDismiss()
         }) {
-            BodyLargeText(text = "확인", color = Color.White)
+            BodyLargeText(text = "확인", color = WhiteColor)
         }
         SpaceMaker(height = 32.dp)
     }

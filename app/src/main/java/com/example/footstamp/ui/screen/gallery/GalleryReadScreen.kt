@@ -39,6 +39,7 @@ import com.example.footstamp.ui.components.ImagesLayout
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
+import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 
@@ -109,7 +110,7 @@ fun DiaryMainReadLayout(
 ) {
     SpaceMaker(height = screenHeight / 20)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        TitleLargeText(text = readingDiary.title, color = Color.Black)
+        TitleLargeText(text = readingDiary.title, color = BlackColor)
         Icon(
             imageVector = Icons.Default.PushPin,
             contentDescription = null,
@@ -131,7 +132,7 @@ fun DiaryMainReadLayout(
             .padding(10.dp)
     ) {
         BodyText(
-            text = readingDiary.message, color = Color.Black, minLines = 8
+            text = readingDiary.message, color = BlackColor, minLines = 8
         )
     }
 }

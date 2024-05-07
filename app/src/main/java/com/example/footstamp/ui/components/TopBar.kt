@@ -18,12 +18,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.TransparentColor
+import com.example.footstamp.ui.theme.WhiteColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     text: String,
-    backgroundColor: Color = Color.Transparent,
+    backgroundColor: Color = TransparentColor,
     icon: ImageVector? = null,
     iconColor: Color = MainColor,
     onClickPressed: () -> Unit = {}
@@ -31,10 +33,10 @@ fun TopBar(
     TopAppBar(
         colors = TopAppBarColors(
             backgroundColor,
-            Color.White,
-            Color.White,
-            Color.White,
-            Color.White
+            WhiteColor,
+            WhiteColor,
+            WhiteColor,
+            WhiteColor
         ),
         title = {
             Row(
@@ -52,10 +54,10 @@ fun TopBar(
                         onClick = onClickPressed,
                         modifier = Modifier.background(backgroundColor),
                         colors = ButtonColors(
-                            containerColor = Color.Transparent,
+                            containerColor = TransparentColor,
                             contentColor = iconColor,
-                            disabledContainerColor = Color.Transparent,
-                            disabledContentColor = Color.Transparent
+                            disabledContainerColor = TransparentColor,
+                            disabledContentColor = TransparentColor
                         )
                     ) {
                         Icon(icon, null)
@@ -73,7 +75,7 @@ fun TopBackBar(
     text: String,
     leftIcon: ImageVector,
     rightIcon: ImageVector? = null,
-    backgroundColor: Color = Color.LightGray,
+    backgroundColor: Color = SubColor,
     iconColor: Color = MainColor,
     onBackPressed: () -> Unit = {},
     onClickPressed: () -> Unit = {}
@@ -82,10 +84,10 @@ fun TopBackBar(
         modifier = Modifier,
         colors = TopAppBarColors(
             backgroundColor,
-            Color.White,
-            Color.White,
-            Color.White,
-            Color.White
+            WhiteColor,
+            WhiteColor,
+            WhiteColor,
+            WhiteColor
         ),
         navigationIcon = {
             Button(
@@ -93,10 +95,10 @@ fun TopBackBar(
                 modifier = Modifier
                     .background(backgroundColor),
                 colors = ButtonColors(
-                    containerColor = Color.Transparent,
+                    containerColor = TransparentColor,
                     contentColor = iconColor,
-                    disabledContainerColor = Color.Transparent,
-                    disabledContentColor = Color.Transparent
+                    disabledContainerColor = TransparentColor,
+                    disabledContentColor = TransparentColor
                 )
             ) {
                 Icon(leftIcon, null)
@@ -115,10 +117,10 @@ fun TopBackBar(
                         modifier = Modifier
                             .background(backgroundColor),
                         colors = ButtonColors(
-                            containerColor = Color.Transparent,
+                            containerColor = TransparentColor,
                             contentColor = iconColor,
-                            disabledContainerColor = Color.Transparent,
-                            disabledContentColor = Color.Transparent
+                            disabledContainerColor = TransparentColor,
+                            disabledContentColor = TransparentColor
                         )
                     ) {
                         Icon(rightIcon, null)

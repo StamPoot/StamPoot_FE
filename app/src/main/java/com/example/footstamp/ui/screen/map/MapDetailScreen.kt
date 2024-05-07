@@ -33,6 +33,7 @@ import com.example.footstamp.ui.components.ImagesLayout
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
+import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 
 @Composable
@@ -102,7 +103,7 @@ fun MapDetailReadLayout(
 ) {
     SpaceMaker(height = screenHeight / 20)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-        TitleLargeText(text = readingDiary.title, color = Color.Black)
+        TitleLargeText(text = readingDiary.title, color = BlackColor)
     }
     SpaceMaker(height = screenHeight / 40)
     ImagesLayout(
@@ -118,7 +119,7 @@ fun MapDetailReadLayout(
             .padding(10.dp)
     ) {
         BodyText(
-            text = readingDiary.message, color = Color.Black, minLines = 8
+            text = readingDiary.message, color = BlackColor, minLines = 8
         )
     }
 }

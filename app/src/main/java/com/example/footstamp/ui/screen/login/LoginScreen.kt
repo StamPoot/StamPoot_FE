@@ -23,6 +23,7 @@ import com.example.footstamp.ui.components.ImageButton
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.theme.MainColor
+import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun LoginScreen(
@@ -47,9 +48,9 @@ fun LoginScreen(
                 contentScale = ContentScale.FillWidth
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                TitleLargeText(text = "발도장", color = Color.White, fontSize = 40.sp)
+                TitleLargeText(text = "발도장", color = WhiteColor, fontSize = 40.sp)
                 SpaceMaker(height = 20.dp)
-                TitleLargeText(text = "로그인", color = Color.White)
+                TitleLargeText(text = "로그인", color = WhiteColor)
             }
             Column {
                 ImageButton(

@@ -27,24 +27,26 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.TransparentColor
+import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun CommonButton(
     text: String = "",
     buttonColor: Color = MainColor,
-    textColor: Color = Color.White,
+    textColor: Color = WhiteColor,
     onClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
-            .background(Color.Transparent)
+            .background(TransparentColor)
             .clip(CircleShape),
-        colors = CardDefaults.outlinedCardColors(Color.Transparent)
+        colors = CardDefaults.outlinedCardColors(TransparentColor)
     ) {
         Button(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .background(Color.Transparent),
+                .background(TransparentColor),
             colors = ButtonDefaults.outlinedButtonColors(buttonColor),
             onClick = onClick
         ) {
@@ -81,7 +83,7 @@ fun ChangeButton(
 ) {
     Button(
         modifier = Modifier
-            .background(Color.Transparent),
+            .background(TransparentColor),
         colors = ButtonDefaults.outlinedButtonColors(color),
         shape = RectangleShape,
         onClick = onClick,
