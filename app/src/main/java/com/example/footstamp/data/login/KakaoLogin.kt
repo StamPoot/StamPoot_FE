@@ -1,7 +1,6 @@
 package com.example.footstamp.data.login
 
 import android.app.Activity
-import android.content.ContentValues.TAG
 import android.util.Log
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause

@@ -1,7 +1,5 @@
 package com.example.footstamp.data.repository
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import com.example.footstamp.data.data_source.AuthService
 import com.example.footstamp.data.dto.response.auth.AuthToken
 import com.example.footstamp.data.model.Provider
