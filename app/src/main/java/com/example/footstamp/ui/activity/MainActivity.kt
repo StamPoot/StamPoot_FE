@@ -4,22 +4,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,13 +38,18 @@ import androidx.navigation.compose.rememberNavController
 import com.example.footstamp.R
 import com.example.footstamp.ui.activity.MainActivity.Companion.screens
 import com.example.footstamp.ui.components.BodyText
+import com.example.footstamp.ui.components.SpaceMaker
+import com.example.footstamp.ui.components.TitleLargeText
+import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.screen.board.BoardScreen
 import com.example.footstamp.ui.screen.gallery.GalleryScreen
 import com.example.footstamp.ui.screen.map.MapScreen
 import com.example.footstamp.ui.screen.profile.ProfileScreen
 import com.example.footstamp.ui.theme.FootStampTheme
+import com.example.footstamp.ui.theme.HalfTransparentColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.WhiteColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,7 +64,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             FootStampTheme(darkTheme = false) {
-                MainView()
+                MainView(mainViewModel)
             }
         }
     }
@@ -70,7 +81,8 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainView() {
+fun MainView(viewModel: MainViewModel) {
+    val isLoading by viewModel.isLoading.collectAsState()
     val navController = rememberNavController()
     val navItems = screens
 
@@ -87,6 +99,7 @@ fun MainView() {
             composable("tab_profile") { ProfileScreen() }
         }
     }
+    if (!isLoading) LoadingScreen()
 }
 
 @Composable
@@ -122,14 +135,29 @@ fun BottomNavigation(navController: NavHostController, navItems: List<Navigation
     }
 }
 
+@Composable
+fun LoadingScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(HalfTransparentColor)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {},
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painterResource(id = R.drawable.icon_transparent),
+            contentDescription = null,
+            tint = WhiteColor
+        )
+        SpaceMaker(height = 10.dp)
+        TitleLargeText(text = "로딩 중", color = WhiteColor)
+    }
+}
+
 data class NavigationItem(
     val name: String, val iconRoute: Int, val route: String
 )
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FootStampTheme {
-        MainView()
-    }
-}

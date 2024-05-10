@@ -34,6 +34,7 @@ import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.BoardSortType
 import com.example.footstamp.data.util.Formatter
+import com.example.footstamp.ui.activity.MainViewModel
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
@@ -48,7 +49,10 @@ import com.example.footstamp.ui.theme.TransparentColor
 import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
-fun BoardScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
+fun BoardScreen(
+    boardViewModel: BoardViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel()
+) {
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         val diaries by boardViewModel.diaries.collectAsState()
         val boardState by boardViewModel.boardState.collectAsState()

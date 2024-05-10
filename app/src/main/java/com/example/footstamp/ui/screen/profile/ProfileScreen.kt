@@ -40,6 +40,7 @@ import com.example.footstamp.data.model.Notification
 import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.util.BitmapManager
 import com.example.footstamp.data.util.Formatter
+import com.example.footstamp.ui.activity.MainViewModel
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyLargeText
 import com.example.footstamp.ui.components.BodyText
@@ -60,8 +61,10 @@ import com.example.footstamp.ui.theme.WarnColor
 import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
-fun ProfileScreen(profileViewModel: ProfileViewModel = hiltViewModel()) {
-
+fun ProfileScreen(
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     val profileState by profileViewModel.profileState.collectAsState()
     val editProfile by profileViewModel.editProfile.collectAsState()

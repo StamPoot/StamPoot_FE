@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.footstamp.R
 import com.example.footstamp.data.util.SeoulLocation
+import com.example.footstamp.ui.activity.MainViewModel
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.FullDialog
 import com.example.footstamp.ui.components.TitleLargeText
@@ -32,7 +33,10 @@ import com.example.footstamp.ui.theme.SubColor
 import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
-fun MapScreen(mapViewModel: MapViewModel = hiltViewModel()) {
+fun MapScreen(
+    mapViewModel: MapViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel()
+) {
     BaseScreen(containerColor = MainColor) { paddingValue, screenWidth, screenHeight ->
         val diaries by mapViewModel.diaries.collectAsState()
         val mapScreenState by mapViewModel.screenMapState.collectAsState()

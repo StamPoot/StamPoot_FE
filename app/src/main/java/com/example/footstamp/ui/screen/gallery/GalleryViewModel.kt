@@ -50,11 +50,10 @@ class GalleryViewModel @Inject constructor(
                 if (diaryList.isNotEmpty()) _diaries.value = diaryList
             }
         }
-
         updateDiariesState()
     }
 
-    private fun updateDiariesState(){
+    private fun updateDiariesState() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getDiaries()
         }
@@ -69,10 +68,8 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun removeDiary(id: Long) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                repository.deleteDiaryDao(id)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteDiaryDao(id)
         }
     }
 
