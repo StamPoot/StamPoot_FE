@@ -1,7 +1,6 @@
-package com.example.footstamp.ui.screen.board
+package com.example.footstamp.ui.view.board.screen
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +24,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,9 +37,11 @@ import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
 import com.example.footstamp.ui.components.LabelText
+import com.example.footstamp.ui.components.LoadingScreen
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TopBar
-import com.example.footstamp.ui.screen.gallery.GalleryViewModel
+import com.example.footstamp.ui.view.board.BoardViewModel
+import com.example.footstamp.ui.view.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
@@ -50,9 +50,10 @@ import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun BoardScreen(
-    boardViewModel: BoardViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel()
+    boardViewModel: BoardViewModel = hiltViewModel()
 ) {
+    val isLoading by boardViewModel.isLoading.collectAsState()
+
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         val diaries by boardViewModel.diaries.collectAsState()
         val boardState by boardViewModel.boardState.collectAsState()
@@ -71,6 +72,7 @@ fun BoardScreen(
                 onChangeState = { boardViewModel.hideReadScreen() })
         }
     }
+    if (isLoading) LoadingScreen()
 }
 
 @Composable

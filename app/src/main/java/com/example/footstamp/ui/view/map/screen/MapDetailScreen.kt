@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.map
+package com.example.footstamp.ui.view.map.screen
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -33,6 +32,7 @@ import com.example.footstamp.ui.components.ImagesLayout
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
+import com.example.footstamp.ui.view.map.MapViewModel
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 

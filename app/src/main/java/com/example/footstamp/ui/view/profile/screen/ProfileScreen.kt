@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.profile
+package com.example.footstamp.ui.view.profile.screen
 
 import android.content.ContentResolver
 import android.content.Context
@@ -14,19 +14,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -47,12 +41,14 @@ import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.CommonButton
 import com.example.footstamp.ui.components.HalfDialog
 import com.example.footstamp.ui.components.LabelText
+import com.example.footstamp.ui.components.LoadingScreen
 import com.example.footstamp.ui.components.ProfilePhotoSelector
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TextInput
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.components.TopBar
+import com.example.footstamp.ui.view.profile.ProfileViewModel
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
@@ -62,16 +58,17 @@ import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun ProfileScreen(
-    profileViewModel: ProfileViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val profileState by profileViewModel.profileState.collectAsState()
-    val editProfile by profileViewModel.editProfile.collectAsState()
-    val notificationList by profileViewModel.notificationList.collectAsState()
-    val profileDeleteText by profileViewModel.profileDeleteText.collectAsState()
+    val isLoading by profileViewModel.isLoading.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
+        val context = LocalContext.current
+        val profileState by profileViewModel.profileState.collectAsState()
+        val editProfile by profileViewModel.editProfile.collectAsState()
+        val notificationList by profileViewModel.notificationList.collectAsState()
+        val profileDeleteText by profileViewModel.profileDeleteText.collectAsState()
+
         Column(
             Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -104,6 +101,8 @@ fun ProfileScreen(
             onEdit = { profileViewModel.updateProfile(context) },
             onDismiss = { profileViewModel.hideEditProfileDialog() })
     }
+
+    if (isLoading) LoadingScreen()
 }
 
 @Composable

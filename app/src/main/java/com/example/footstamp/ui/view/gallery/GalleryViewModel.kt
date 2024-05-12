@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.gallery
+package com.example.footstamp.ui.view.gallery
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -55,7 +54,9 @@ class GalleryViewModel @Inject constructor(
 
     private fun updateDiariesState() {
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             repository.getDiaries()
+            finishLoading()
         }
     }
 
@@ -63,13 +64,17 @@ class GalleryViewModel @Inject constructor(
         if (_editingDiary.value.checkDiary() != null) return
 
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             repository.writeDiary(_editingDiary.value, context)
+            finishLoading()
         }
     }
 
     fun removeDiary(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             repository.deleteDiaryDao(id)
+            finishLoading()
         }
     }
 
@@ -100,17 +105,21 @@ class GalleryViewModel @Inject constructor(
 
     fun updateDiary(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             repository.updateDiary(_editingDiary.value, context).let { isSuccessful ->
                 if (isSuccessful) initializeViewState()
                 // TODO : 실패시 대응
             }
+            finishLoading()
         }
     }
 
     fun shareTransDiary() {
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             repository.shareDiary(_readingDiary.value.id.toString())
             initializeViewState()
+            finishLoading()
         }
     }
 

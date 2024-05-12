@@ -25,9 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
@@ -40,11 +38,10 @@ import com.example.footstamp.ui.activity.MainActivity.Companion.screens
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
-import com.example.footstamp.ui.components.TitleText
-import com.example.footstamp.ui.screen.board.BoardScreen
-import com.example.footstamp.ui.screen.gallery.GalleryScreen
-import com.example.footstamp.ui.screen.map.MapScreen
-import com.example.footstamp.ui.screen.profile.ProfileScreen
+import com.example.footstamp.ui.view.board.screen.BoardScreen
+import com.example.footstamp.ui.view.gallery.screen.GalleryScreen
+import com.example.footstamp.ui.view.map.screen.MapScreen
+import com.example.footstamp.ui.view.profile.screen.ProfileScreen
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.example.footstamp.ui.theme.HalfTransparentColor
 import com.example.footstamp.ui.theme.MainColor
@@ -99,7 +96,6 @@ fun MainView(viewModel: MainViewModel) {
             composable("tab_profile") { ProfileScreen() }
         }
     }
-    if (!isLoading) LoadingScreen()
 }
 
 @Composable
@@ -132,29 +128,6 @@ fun BottomNavigation(navController: NavHostController, navItems: List<Navigation
                 }
             }
         }
-    }
-}
-
-@Composable
-fun LoadingScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(HalfTransparentColor)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {},
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            painterResource(id = R.drawable.icon_transparent),
-            contentDescription = null,
-            tint = WhiteColor
-        )
-        SpaceMaker(height = 10.dp)
-        TitleLargeText(text = "로딩 중", color = WhiteColor)
     }
 }
 

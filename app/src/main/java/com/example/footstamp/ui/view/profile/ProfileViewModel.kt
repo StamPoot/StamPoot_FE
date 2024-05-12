@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.profile
+package com.example.footstamp.ui.view.profile
 
 import android.content.Context
 import android.content.Intent
@@ -48,10 +48,14 @@ class ProfileViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             repository.getProfile(_isProfileExist.value)
+            finishLoading()
         }
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             getNotificationList()
+            finishLoading()
         }
     }
 
@@ -68,26 +72,28 @@ class ProfileViewModel @Inject constructor(
         if (_editProfile.value == null) return false
         if (_editProfile.value!!.checkProfile() != null) return false
 
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                if (_isProfileExist.value) repository.updateProfile(_editProfile.value!!, context)
-                else {
-                    _isProfileExist.value = true
-                    repository.insertProfileDao(_editProfile.value!!)
-                }
-                _editProfile.value = null
+        viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
+            if (_isProfileExist.value) repository.updateProfile(_editProfile.value!!, context)
+            else {
+                _isProfileExist.value = true
+                repository.insertProfileDao(_editProfile.value!!)
             }
+            _editProfile.value = null
+            finishLoading()
         }
         return true
     }
 
     fun getNotificationList() {
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             repository.getNotification().let {
                 if (it != null) {
                     _notificationList.value = it
                 }
             }
+            finishLoading()
         }
     }
 
@@ -97,11 +103,13 @@ class ProfileViewModel @Inject constructor(
 
     fun deleteProfile(deleteText: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             if (deleteText == "회원 탈퇴") repository.deleteUser().let { isSuccessful ->
                 if (isSuccessful) {
                     context.startActivity(Intent(context, LoginActivity::class.java))
                 }
             }
+            finishLoading()
         }
     }
 

@@ -1,8 +1,6 @@
-package com.example.footstamp.ui.screen.map
+package com.example.footstamp.ui.view.map
 
-import android.content.ContentValues.TAG
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.DiaryRepository
@@ -45,7 +43,9 @@ class MapViewModel @Inject constructor(
 
     private fun getDiaries() {
         viewModelScope.launch(Dispatchers.IO) {
+            startLoading()
             repository.getDiaries()
+            finishLoading()
         }
     }
 

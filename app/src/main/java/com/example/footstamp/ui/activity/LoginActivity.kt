@@ -1,10 +1,8 @@
 package com.example.footstamp.ui.activity
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -13,8 +11,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.example.footstamp.data.login.GoogleLogin
 import com.example.footstamp.data.login.KakaoLogin
-import com.example.footstamp.data.model.Provider
-import com.example.footstamp.ui.screen.login.LoginScreen
+import com.example.footstamp.ui.view.login.screen.LoginScreen
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import dagger.hilt.android.AndroidEntryPoint

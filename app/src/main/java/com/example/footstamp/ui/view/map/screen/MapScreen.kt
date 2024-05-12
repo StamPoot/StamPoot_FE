@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.map
+package com.example.footstamp.ui.view.map.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,7 +15,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -25,18 +24,21 @@ import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.activity.MainViewModel
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.FullDialog
+import com.example.footstamp.ui.components.LoadingScreen
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.components.TransparentButton
+import com.example.footstamp.ui.view.map.MapViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import com.example.footstamp.ui.theme.WhiteColor
 
 @Composable
 fun MapScreen(
-    mapViewModel: MapViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel()
+    mapViewModel: MapViewModel = hiltViewModel()
 ) {
+    val isLoading by mapViewModel.isLoading.collectAsState()
+
     BaseScreen(containerColor = MainColor) { paddingValue, screenWidth, screenHeight ->
         val diaries by mapViewModel.diaries.collectAsState()
         val mapScreenState by mapViewModel.screenMapState.collectAsState()
@@ -72,6 +74,7 @@ fun MapScreen(
             )
         }
     }
+    if (isLoading) LoadingScreen()
 }
 
 @Composable

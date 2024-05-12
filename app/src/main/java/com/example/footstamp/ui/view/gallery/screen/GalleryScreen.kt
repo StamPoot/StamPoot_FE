@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.gallery
+package com.example.footstamp.ui.view.gallery.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -28,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,11 +44,13 @@ import com.example.footstamp.ui.activity.MainViewModel
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
+import com.example.footstamp.ui.components.LoadingScreen
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.components.TransparentButton
+import com.example.footstamp.ui.view.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import com.example.footstamp.ui.theme.WhiteColor
@@ -58,20 +58,19 @@ import com.example.footstamp.ui.theme.WhiteColor
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun GalleryScreen(
-    galleryViewModel: GalleryViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel()
+    galleryViewModel: GalleryViewModel = hiltViewModel()
 ) {
-
-    val viewState by galleryViewModel.viewState.collectAsState()
-    val sortType by galleryViewModel.sortType.collectAsState()
-    val currentDiary by galleryViewModel.diaries.collectAsState()
-    val context = LocalContext.current
+    val isLoading by galleryViewModel.isLoading.collectAsState()
 
     BaseScreen(floatingButton = {
         GalleryFloatingButton {
             galleryViewModel.showWriteScreen()
         }
     }) { paddingValue, screenWidth, screenHeight ->
+        val viewState by galleryViewModel.viewState.collectAsState()
+        val sortType by galleryViewModel.sortType.collectAsState()
+        val currentDiary by galleryViewModel.diaries.collectAsState()
+        val context = LocalContext.current
 
         Column {
             TopBar(text = stringResource(R.string.screen_gallery), backgroundColor = WhiteColor)
@@ -95,6 +94,7 @@ fun GalleryScreen(
             onClickEdit = { galleryViewModel.updateDiary(context) }
         )
     }
+    if (isLoading) LoadingScreen()
 }
 
 @Composable

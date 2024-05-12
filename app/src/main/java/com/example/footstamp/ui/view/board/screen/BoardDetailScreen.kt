@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.board
+package com.example.footstamp.ui.view.board.screen
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.clickable
@@ -40,6 +40,7 @@ import com.example.footstamp.ui.components.LabelText
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
+import com.example.footstamp.ui.view.board.BoardViewModel
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor

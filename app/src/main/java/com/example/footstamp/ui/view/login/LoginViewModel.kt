@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.login
+package com.example.footstamp.ui.view.login
 
 import com.example.footstamp.data.repository.LoginRepository
 import com.example.footstamp.ui.base.BaseViewModel

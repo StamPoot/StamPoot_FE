@@ -9,14 +9,4 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor() : BaseViewModel() {
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading = _isLoading.asStateFlow()
-
-    fun startLoading() {
-        _isLoading.value = true
-    }
-
-    fun finishLoading() {
-        _isLoading.value = false
-    }
 }

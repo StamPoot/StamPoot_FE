@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.gallery
+package com.example.footstamp.ui.view.gallery.screen
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
@@ -18,7 +18,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,6 +34,7 @@ import com.example.footstamp.ui.components.LocationPickerView
 import com.example.footstamp.ui.components.PhotoSelector
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TextInput
+import com.example.footstamp.ui.view.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.TransparentColor
 import java.time.LocalDateTime

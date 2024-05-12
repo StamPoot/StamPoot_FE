@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.screen.login
+package com.example.footstamp.ui.view.login.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -20,8 +20,10 @@ import com.example.footstamp.R
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.CustomWebView
 import com.example.footstamp.ui.components.ImageButton
+import com.example.footstamp.ui.components.LoadingScreen
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
+import com.example.footstamp.ui.view.login.LoginViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.WhiteColor
 
@@ -32,6 +34,7 @@ fun LoginScreen(
     onKakaoLogin: () -> Unit
 ) {
     val isKakaoLoginPress = loginViewModel.isKakaoLoginPress.collectAsState()
+    val isLoading by loginViewModel.isLoading.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         Column(
@@ -69,6 +72,7 @@ fun LoginScreen(
             SpaceMaker(height = 0.dp)
         }
     }
+    if (isLoading) LoadingScreen()
     if (isKakaoLoginPress.value) KakaoLoginWebView { loginViewModel.hideKakaoLogin() }
 }
 
