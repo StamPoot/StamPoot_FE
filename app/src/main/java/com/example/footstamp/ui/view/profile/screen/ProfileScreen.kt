@@ -239,6 +239,7 @@ fun ProfileEditDialog(
                     .fillMaxWidth(0.9f)
                     .background(WhiteColor),
                 baseText = editProfile.nickname,
+                hint = "닉네임을 설정해주세요",
                 onValueChange = onChangeNickname
             )
 
@@ -262,6 +263,7 @@ fun ProfileEditDialog(
                     .fillMaxWidth(0.9f)
                     .background(WhiteColor),
                 baseText = editProfile.aboutMe,
+                hint = "자기소개를 설정해주세요",
                 onValueChange = onChangeAboutMe
             )
 

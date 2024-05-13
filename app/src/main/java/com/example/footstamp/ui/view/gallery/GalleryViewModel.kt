@@ -1,19 +1,17 @@
 package com.example.footstamp.ui.view.gallery
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -44,37 +42,34 @@ class GalleryViewModel @Inject constructor(
     val dateOrLocation = _dateOrLocation.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getAllDao().distinctUntilChanged().collect { diaryList ->
-                if (diaryList.isNotEmpty()) _diaries.value = diaryList
-            }
-        }
+        getDiariesFromDB()
         updateDiariesState()
     }
 
     private fun updateDiariesState() {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+        coroutineLoading {
             repository.getDiaries()
-            finishLoading()
+        }
+    }
+
+    private fun getDiariesFromDB() {
+        coroutineLoading {
+            repository.getAllDao().let { diaryList ->
+                if (diaryList.isNotEmpty()) _diaries.value = diaryList
+            }
         }
     }
 
     fun addDiary(context: Context) {
         if (_editingDiary.value.checkDiary() != null) return
-
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+        coroutineLoading {
             repository.writeDiary(_editingDiary.value, context)
-            finishLoading()
         }
     }
 
     fun removeDiary(id: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+        coroutineLoading {
             repository.deleteDiaryDao(id)
-            finishLoading()
         }
     }
 
@@ -104,22 +99,18 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun updateDiary(context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+        coroutineLoading {
             repository.updateDiary(_editingDiary.value, context).let { isSuccessful ->
                 if (isSuccessful) initializeViewState()
                 // TODO : 실패시 대응
             }
-            finishLoading()
         }
     }
 
     fun shareTransDiary() {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+        coroutineLoading {
             repository.shareDiary(_readingDiary.value.id.toString())
             initializeViewState()
-            finishLoading()
         }
     }
 

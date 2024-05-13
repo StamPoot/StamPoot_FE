@@ -1,17 +1,13 @@
 package com.example.footstamp.ui.view.map
 
 import android.graphics.Bitmap
-import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,20 +28,21 @@ class MapViewModel @Inject constructor(
     val openingImage = _openingImage.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getAllDao().distinctUntilChanged().collect { diaryList ->
-                if (diaryList.isNotEmpty()) _diaries.value = diaryList
-            }
-        }
-
+        getDiariesFromDB()
         getDiaries()
     }
 
     private fun getDiaries() {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+        coroutineLoading {
             repository.getDiaries()
-            finishLoading()
+        }
+    }
+
+    private fun getDiariesFromDB() {
+        coroutineLoading {
+            repository.getAllDao().let { diaryList ->
+                if (diaryList.isNotEmpty()) _diaries.value = diaryList
+            }
         }
     }
 

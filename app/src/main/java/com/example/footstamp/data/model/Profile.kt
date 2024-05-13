@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "profile")
 class Profile(
     @ColumnInfo(name = "profile_uid") var uid: String = "uid",
-    @ColumnInfo(name = "profile_nickname") var nickname: String = "닉네임을 설정해주세요",
+    @ColumnInfo(name = "profile_nickname") var nickname: String = "",
     @ColumnInfo(name = "profile_image") var image: String? = null,
-    @ColumnInfo(name = "profile_about_me") var aboutMe: String = "자기소개를 설정해주세요",
+    @ColumnInfo(name = "profile_about_me") var aboutMe: String = "",
 ) {
     @PrimaryKey(autoGenerate = false)
     var id: Long = 0

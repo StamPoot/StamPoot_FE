@@ -23,8 +23,6 @@ class DiaryRepository @Inject constructor(
     private val diaryService: DiaryService
 ) : BaseRepository() {
 
-    val diaries: Flow<List<Diary>> = diaryDao.getAll().flowOn(Dispatchers.IO).conflate()
-
     suspend fun getDiaries() {
         diaryService.diaryList(tokenManager.accessToken!!).let { response ->
             if (response.isSuccessful) {
@@ -34,7 +32,8 @@ class DiaryRepository @Inject constructor(
                 // 지역 별로 데이터가 수신되기 때문에 이중 map 사용
                 responseBody.diaries.values.map { diaries ->
                     diaries.map { diaryDTO ->
-                        val photoBitmaps = diaryDTO.photos.map { Formatter.fetchImageBitmap(it)!! }
+                        val photoBitmaps = if (diaryDTO.photos.isEmpty()) emptyList()
+                        else diaryDTO.photos.map { Formatter.fetchImageBitmap(it)!! }
 
                         diaryDTOToDiary(
                             diaryDTO = diaryDTO,
@@ -155,8 +154,8 @@ class DiaryRepository @Inject constructor(
         thumbnailIndex?.let { diaryDao.updateThumbnailIndex(id, it) }
     }
 
-    suspend fun getAllDao(): Flow<List<Diary>> =
-        diaryDao.getAll().flowOn(Dispatchers.IO).conflate()
+    suspend fun getAllDao(): List<Diary> =
+        diaryDao.getAll()
 
     suspend fun getDiaryDao(id: Long): Diary =
         diaryDao.getDiary(id)
@@ -164,7 +163,11 @@ class DiaryRepository @Inject constructor(
     suspend fun getDiaryByLocationDao(location: SeoulLocation): List<Diary> =
         diaryDao.getDiaryByLocation(location)
 
-    private fun diaryDTOToDiary(diaryDTO: DiaryDTO, photoBitmaps: List<Bitmap>, uid: String): Diary {
+    private fun diaryDTOToDiary(
+        diaryDTO: DiaryDTO,
+        photoBitmaps: List<Bitmap>,
+        uid: String
+    ): Diary {
 
         return Diary(
             title = diaryDTO.title,

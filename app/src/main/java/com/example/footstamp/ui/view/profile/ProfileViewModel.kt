@@ -2,19 +2,14 @@ package com.example.footstamp.ui.view.profile
 
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Notification
 import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.repository.ProfileRepository
 import com.example.footstamp.ui.activity.LoginActivity
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,24 +33,33 @@ class ProfileViewModel @Inject constructor(
     val profileDeleteText = _profileDeleteText.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.profile.distinctUntilChanged().collect { profile ->
+        getProfileFromDB()
+        getProfile()
+        getNotificationList()
+    }
+
+    private fun getProfile() {
+        coroutineLoading {
+            repository.getProfile(_isProfileExist.value).let { profile ->
+                if (profile != null) {
+                    _profileState.value = profile
+                    _isProfileExist.value = true
+                } else {
+                    _profileState.value =
+                        Profile(uid = "", nickname = SET_NICKNAME, aboutMe = SET_MESSAGE)
+                }
+            }
+        }
+    }
+
+    private fun getProfileFromDB() {
+        coroutineLoading {
+            repository.getProfileDao().let { profile ->
                 if (profile != null) {
                     _profileState.value = profile
                     _isProfileExist.value = true
                 }
             }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
-            repository.getProfile(_isProfileExist.value)
-            finishLoading()
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
-            getNotificationList()
-            finishLoading()
         }
     }
 
@@ -72,44 +76,40 @@ class ProfileViewModel @Inject constructor(
         if (_editProfile.value == null) return false
         if (_editProfile.value!!.checkProfile() != null) return false
 
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
-            if (_isProfileExist.value) repository.updateProfile(_editProfile.value!!, context)
-            else {
-                _isProfileExist.value = true
-                repository.insertProfileDao(_editProfile.value!!)
-            }
+        coroutineLoading {
+            repository.updateProfile(_editProfile.value!!, context, _isProfileExist.value)
+                .let { isSuccessful ->
+                    if (isSuccessful) {
+                        getProfile()
+                        _isProfileExist.value = true
+                    }
+                }
             _editProfile.value = null
-            finishLoading()
         }
         return true
     }
 
-    fun getNotificationList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+    private fun getNotificationList() {
+        coroutineLoading {
             repository.getNotification().let {
                 if (it != null) {
                     _notificationList.value = it
                 }
             }
-            finishLoading()
         }
     }
 
     fun checkProfileDelete() {
-        _profileDeleteText.value = ""
+        _profileDeleteText.value = INITIALIZE_CODE
     }
 
     fun deleteProfile(deleteText: String, context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
-            if (deleteText == "회원 탈퇴") repository.deleteUser().let { isSuccessful ->
+        coroutineLoading {
+            if (deleteText == DELETE_CODE) repository.deleteUser().let { isSuccessful ->
                 if (isSuccessful) {
                     context.startActivity(Intent(context, LoginActivity::class.java))
                 }
             }
-            finishLoading()
         }
     }
 
@@ -119,5 +119,12 @@ class ProfileViewModel @Inject constructor(
 
     fun hideEditProfileDialog() {
         _editProfile.value = null
+    }
+
+    companion object {
+        const val SET_NICKNAME = "닉네임을 설정해주세요"
+        const val SET_MESSAGE = "자기소개를 설정해주세요"
+        const val INITIALIZE_CODE = ""
+        const val DELETE_CODE = "회원 탈퇴"
     }
 }

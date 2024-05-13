@@ -138,7 +138,6 @@ fun BoardReadScreen(readingDiary: Diary?, onChangeState: () -> Unit) {
     if (readingDiary != null) {
         FullDialog(title = GalleryViewModel.GalleryScreenState.READ.text,
             screen = { BoardDetailScreen() },
-            rightIcon = Icons.AutoMirrored.Filled.ArrowRightAlt,
             onBackIconPressed = onChangeState,
             onClickPressed = {})
     }

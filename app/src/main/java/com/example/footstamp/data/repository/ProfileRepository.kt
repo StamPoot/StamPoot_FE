@@ -21,10 +21,7 @@ class ProfileRepository @Inject constructor(
     private val userService: UserService
 ) : BaseRepository() {
 
-    val profile: Flow<Profile> = profileDao.getProfile().flowOn(Dispatchers.IO).conflate()
-
-    suspend fun getProfile(isProfileExist: Boolean) {
-
+    suspend fun getProfile(isProfileExist: Boolean): Profile? {
         userService.profileGet(tokenManager.accessToken!!).let { response ->
             if (response.isSuccessful) {
                 val responseBody = response.body()!!
@@ -35,13 +32,22 @@ class ProfileRepository @Inject constructor(
                     image = responseImage?.let { Formatter.convertBitmapToString(it) },
                     aboutMe = responseBody.sentence.let { it ?: "" }
                 )
-                if (isProfileExist) updateProfileDao(responseProfile)
-                else insertProfileDao(responseProfile)
+                if (isProfileExist) {
+                    updateProfileDao(responseProfile)
+                } else {
+                    insertProfileDao(responseProfile)
+                }
+                return responseProfile
             }
+            return null
         }
     }
 
-    suspend fun updateProfile(profile: Profile, context: Context) {
+    suspend fun updateProfile(
+        profile: Profile,
+        context: Context,
+        isProfileExist: Boolean
+    ): Boolean {
         val imageBitmap = profile.image?.let { Formatter.convertStringToBitmap(it) }
 
         userService.profileEdit(
@@ -51,9 +57,12 @@ class ProfileRepository @Inject constructor(
             Formatter.createPartFromString(profile.aboutMe),
         ).let {
             if (it.isSuccessful) {
-                updateProfileDao(profile)
+                if (isProfileExist) updateProfileDao(profile)
+                else insertProfileDao(profile)
+                return true
             }
         }
+        return false
     }
 
     suspend fun getNotification(): List<Notification>? {
@@ -92,6 +101,10 @@ class ProfileRepository @Inject constructor(
 
 
 // dao Database
+
+    suspend fun getProfileDao(): Profile {
+        return profileDao.getProfile()
+    }
 
     suspend fun insertProfileDao(profile: Profile) {
         profileDao.setProfile(profile)

@@ -50,7 +50,7 @@ interface DiaryDao {
 
     // 탐색
     @Query("SELECT * FROM diaries")
-    fun getAll(): Flow<List<Diary>>
+    fun getAll(): List<Diary>
 
     @Query("SELECT * FROM diaries where id = :id")
     fun getDiary(id: Long): Diary

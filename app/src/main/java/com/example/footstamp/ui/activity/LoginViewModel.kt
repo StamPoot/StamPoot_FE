@@ -1,13 +1,11 @@
 package com.example.footstamp.ui.activity
 
-import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Provider
 import com.example.footstamp.data.repository.LoginRepository
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,21 +29,21 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
     }
 
     fun googleAccessTokenLogin() {
-        viewModelScope.launch {
+        coroutineLoading {
             repository.accessTokenLogin(Provider.GOOGLE, _googleIdToken.value!!)
                 .also { _loginToken.value = it.body()?.auth }
         }
     }
 
     fun kakaoAccessTokenLogin(token: String) {
-        viewModelScope.launch {
+        coroutineLoading {
             repository.accessTokenLogin(Provider.KAKAO, token)
                 .also { _loginToken.value = token }
         }
     }
 
     fun kakaoLogin() {
-        viewModelScope.launch {
+        coroutineLoading {
             repository.kakaoLogin()
         }
     }

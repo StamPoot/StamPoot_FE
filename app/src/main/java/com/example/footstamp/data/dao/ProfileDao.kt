@@ -26,7 +26,7 @@ interface ProfileDao {
     fun updateAboutMe(aboutMe: String)
 
     @Query("SELECT * FROM profile")
-    fun getProfile(): Flow<Profile>
+    fun getProfile(): Profile
 
     @Query("DELETE FROM profile")
     fun deleteProfile()

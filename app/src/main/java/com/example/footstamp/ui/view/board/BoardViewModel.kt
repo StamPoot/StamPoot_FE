@@ -36,18 +36,15 @@ class BoardViewModel @Inject constructor(
     }
 
     private fun updateBoardState() {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+        coroutineLoading {
             repository.getBoardDiaryList(BoardSortType.RECENT)?.let { diaryList ->
                 _diaries.value = diaryList
             }
-            finishLoading()
         }
     }
 
     fun changeBoardState() {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+        coroutineLoading {
             _boardState.value = when (_boardState.value) {
                 BoardSortType.RECENT -> {
                     repository.getBoardDiaryList(BoardSortType.LIKE)
@@ -59,7 +56,6 @@ class BoardViewModel @Inject constructor(
                     BoardSortType.RECENT
                 }
             }
-            finishLoading()
         }
     }
 
@@ -72,11 +68,9 @@ class BoardViewModel @Inject constructor(
     }
 
     fun likeDiary() {
-        viewModelScope.launch(Dispatchers.IO) {
-            startLoading()
+        coroutineLoading {
             repository.likeDiary(id = _readingDiary.value!!.id.toString())
             repository.getBoardDiaryList(BoardSortType.RECENT)
-            finishLoading()
         }
     }
 
