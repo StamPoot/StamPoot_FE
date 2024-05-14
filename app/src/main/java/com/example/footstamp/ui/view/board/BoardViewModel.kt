@@ -69,8 +69,13 @@ class BoardViewModel @Inject constructor(
 
     fun likeDiary() {
         coroutineLoading {
-            repository.likeDiary(id = _readingDiary.value!!.id.toString())
-            repository.getBoardDiaryList(BoardSortType.RECENT)
+            repository.likeDiary(id = _readingDiary.value!!.id.toString()).let { likeCount ->
+                _diaries.value.apply {
+                    this.find { it.id == _readingDiary.value!!.id }.apply {
+                        this!!.likes = likeCount!!
+                    }
+                }
+            }
         }
     }
 

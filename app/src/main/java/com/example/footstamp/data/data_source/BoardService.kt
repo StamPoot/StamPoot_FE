@@ -41,5 +41,5 @@ interface BoardService : BaseService {
     suspend fun diaryLikes(
         @Header("token") token: String,
         @Path("id") id: String
-    ): Response<Unit>
+    ): Response<String>
 }

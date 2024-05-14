@@ -44,8 +44,11 @@ class BoardRepository @Inject constructor(
         replyService.replyDelete(id, tokenManager.accessToken!!)
     }
 
-    suspend fun likeDiary(id: String) {
-        boardService.diaryLikes(tokenManager.accessToken!!, id)
+    suspend fun likeDiary(id: String): Int? {
+        boardService.diaryLikes(tokenManager.accessToken!!, id).let { response ->
+            return if (response.isSuccessful) response.body()!!.toInt()
+            else null
+        }
     }
 
     private fun diaryDTOToDiary(diaryDTO: DiaryDTO, photoBitmaps: List<Bitmap>): Diary {
