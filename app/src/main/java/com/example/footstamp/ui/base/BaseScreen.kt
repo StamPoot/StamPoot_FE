@@ -20,7 +20,6 @@ import androidx.compose.ui.window.Dialog
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.WhiteColor
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseScreen(
     modifier: Modifier = Modifier,

@@ -46,8 +46,10 @@ class BoardRepository @Inject constructor(
 
     suspend fun likeDiary(id: String): Int? {
         boardService.diaryLikes(tokenManager.accessToken!!, id).let { response ->
-            return if (response.isSuccessful) response.body()!!.toInt()
-            else null
+            return if (response.isSuccessful) {
+                val responseBody = response.body()!!
+                responseBody.substring(8).toInt()
+            } else null
         }
     }
 

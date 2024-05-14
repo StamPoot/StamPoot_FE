@@ -49,7 +49,7 @@ class DiaryRepository @Inject constructor(
         }
     }
 
-    suspend fun writeDiary(diary: Diary, context: Context) {
+    suspend fun writeDiary(diary: Diary, context: Context): Boolean {
         diaryService.diaryWrite(
             token = tokenManager.accessToken!!,
             title = Formatter.createPartFromString(diary.title),
@@ -65,8 +65,10 @@ class DiaryRepository @Inject constructor(
             if (response.isSuccessful) {
                 val id = response.body()!!.removeRange(0..9).toLong()
                 insertDiaryDao(diary.apply { insertId(id) })
+                return true
             }
         }
+        return false
     }
 
     suspend fun readDiary(diaryId: String): Diary? {

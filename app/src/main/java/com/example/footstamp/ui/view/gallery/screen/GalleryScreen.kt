@@ -40,11 +40,10 @@ import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
-import com.example.footstamp.ui.activity.MainViewModel
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
-import com.example.footstamp.ui.components.LoadingScreen
+import com.example.footstamp.ui.view.util.LoadingScreen
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
@@ -54,6 +53,7 @@ import com.example.footstamp.ui.view.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import com.example.footstamp.ui.theme.WhiteColor
+import com.example.footstamp.ui.view.util.AlertScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -61,6 +61,7 @@ fun GalleryScreen(
     galleryViewModel: GalleryViewModel = hiltViewModel()
 ) {
     val isLoading by galleryViewModel.isLoading.collectAsState()
+    val alert by galleryViewModel.alertState.collectAsState()
 
     BaseScreen(floatingButton = {
         GalleryFloatingButton {
@@ -83,18 +84,16 @@ fun GalleryScreen(
                 onClick = { galleryViewModel.showReadScreen(it) })
         }
 
-        GalleryReadOrWriteScreen(
-            viewState = viewState,
+        GalleryReadOrWriteScreen(viewState = viewState,
             onChangeState = { galleryViewModel.initializeViewState() },
             onClickWrite = {
-                galleryViewModel.addDiary(context)
-                galleryViewModel.initializeViewState()
+                galleryViewModel.writeDiary(context)
             },
             onClickMenu = { galleryViewModel.showEditScreen(context) },
-            onClickEdit = { galleryViewModel.updateDiary(context) }
-        )
+            onClickEdit = { galleryViewModel.updateDiary(context) })
     }
-    if (isLoading) LoadingScreen()
+    isLoading.let { if (it) LoadingScreen() }
+    alert?.let { AlertScreen(alert = it) }
 }
 
 @Composable

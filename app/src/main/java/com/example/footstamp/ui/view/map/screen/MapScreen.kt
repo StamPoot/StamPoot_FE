@@ -21,10 +21,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.footstamp.R
 import com.example.footstamp.data.util.SeoulLocation
-import com.example.footstamp.ui.activity.MainViewModel
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.FullDialog
-import com.example.footstamp.ui.components.LoadingScreen
+import com.example.footstamp.ui.view.util.LoadingScreen
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.components.TransparentButton
@@ -32,12 +31,14 @@ import com.example.footstamp.ui.view.map.MapViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import com.example.footstamp.ui.theme.WhiteColor
+import com.example.footstamp.ui.view.util.AlertScreen
 
 @Composable
 fun MapScreen(
     mapViewModel: MapViewModel = hiltViewModel()
 ) {
     val isLoading by mapViewModel.isLoading.collectAsState()
+    val alert by mapViewModel.alertState.collectAsState()
 
     BaseScreen(containerColor = MainColor) { paddingValue, screenWidth, screenHeight ->
         val diaries by mapViewModel.diaries.collectAsState()
@@ -74,7 +75,8 @@ fun MapScreen(
             )
         }
     }
-    if (isLoading) LoadingScreen()
+    isLoading.let { if (it) LoadingScreen() }
+    alert?.let { AlertScreen(alert = it) }
 }
 
 @Composable

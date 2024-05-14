@@ -1,4 +1,4 @@
-package com.example.footstamp.ui.components
+package com.example.footstamp.ui.view.util
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.footstamp.R
+import com.example.footstamp.ui.components.SpaceMaker
+import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.theme.HalfTransparentColor
 import com.example.footstamp.ui.theme.WhiteColor
 

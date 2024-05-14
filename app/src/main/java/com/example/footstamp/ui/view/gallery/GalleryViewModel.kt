@@ -1,10 +1,10 @@
 package com.example.footstamp.ui.view.gallery
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import android.widget.Toast
+import com.example.footstamp.data.model.Alert
+import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.util.SeoulLocation
@@ -60,10 +60,15 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun addDiary(context: Context) {
+    fun writeDiary(context: Context) {
         if (_editingDiary.value.checkDiary() != null) return
         coroutineLoading {
-            repository.writeDiary(_editingDiary.value, context)
+            repository.writeDiary(_editingDiary.value, context).let { isSuccessful ->
+                if (isSuccessful) {
+                    initializeViewState()
+                    getAllDiaries()
+                }
+            }
         }
     }
 
@@ -105,6 +110,20 @@ class GalleryViewModel @Inject constructor(
                 // TODO : 실패시 대응
             }
         }
+    }
+
+    fun shareTransDiaryAlert() {
+        val alert = Alert(
+            title = if (_readingDiary.value.isShared) "일기 공유를 취소하시겠어요?" else "정말 일기를 공유하시겠어요?",
+            message = if (_readingDiary.value.isShared) "공유했던 일기의 댓글과 별이 사라져요" else "공유한 일기는 모두가 볼 수 있어요",
+            buttonCount = ButtonCount.TWO,
+            onPressYes = {
+                shareTransDiary()
+                hideAlert()
+            },
+            onPressNo = { hideAlert() }
+        )
+        showAlert(alert)
     }
 
     fun shareTransDiary() {

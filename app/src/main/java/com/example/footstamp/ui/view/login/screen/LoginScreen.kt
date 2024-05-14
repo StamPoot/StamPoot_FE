@@ -20,12 +20,13 @@ import com.example.footstamp.R
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.CustomWebView
 import com.example.footstamp.ui.components.ImageButton
-import com.example.footstamp.ui.components.LoadingScreen
+import com.example.footstamp.ui.view.util.LoadingScreen
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.view.login.LoginViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.WhiteColor
+import com.example.footstamp.ui.view.util.AlertScreen
 
 @Composable
 fun LoginScreen(
@@ -35,6 +36,7 @@ fun LoginScreen(
 ) {
     val isKakaoLoginPress = loginViewModel.isKakaoLoginPress.collectAsState()
     val isLoading by loginViewModel.isLoading.collectAsState()
+    val alert by loginViewModel.alertState.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         Column(
@@ -72,7 +74,8 @@ fun LoginScreen(
             SpaceMaker(height = 0.dp)
         }
     }
-    if (isLoading) LoadingScreen()
+    isLoading.let { if (it) LoadingScreen() }
+    alert?.let { AlertScreen(alert = it) }
     if (isKakaoLoginPress.value) KakaoLoginWebView { loginViewModel.hideKakaoLogin() }
 }
 

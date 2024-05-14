@@ -61,7 +61,7 @@ fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
                 onClick = { galleryViewModel.openImageDetail(it) },
-                onShare = { galleryViewModel.shareTransDiary() }
+                onShare = { galleryViewModel.shareTransDiaryAlert() }
             )
         }
 
