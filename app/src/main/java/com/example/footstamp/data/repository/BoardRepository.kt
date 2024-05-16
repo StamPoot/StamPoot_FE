@@ -2,10 +2,12 @@ package com.example.footstamp.data.repository
 
 import android.graphics.Bitmap
 import com.example.footstamp.data.data_source.BoardService
+import com.example.footstamp.data.data_source.DiaryService
 import com.example.footstamp.data.data_source.ReplyService
 import com.example.footstamp.data.dto.request.reply.CreateReplyReqDTO
 import com.example.footstamp.data.dto.response.diary.DiaryDTO
 import com.example.footstamp.data.model.Diary
+import com.example.footstamp.data.model.Comment
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.TokenManager
 import com.example.footstamp.ui.base.BaseRepository
@@ -14,7 +16,8 @@ import javax.inject.Inject
 class BoardRepository @Inject constructor(
     private val tokenManager: TokenManager,
     private val boardService: BoardService,
-    private val replyService: ReplyService
+    private val replyService: ReplyService,
+    private val diaryService: DiaryService
 ) : BaseRepository() {
 
     suspend fun getBoardDiaryList(sortType: BoardSortType): List<Diary>? {
@@ -32,6 +35,22 @@ class BoardRepository @Inject constructor(
                 }.let { return it }
             }
             return null
+        }
+    }
+
+    suspend fun getDiaryComment(id: String): List<Comment> {
+        diaryService.diaryDetail(tokenManager.accessToken!!, id).let { response ->
+            val responseBody = response.body()!!
+
+            return responseBody.replyList.map { replyDTO ->
+                Comment(
+                    content = replyDTO.content,
+                    date = replyDTO.date,
+                    writerId = replyDTO.writerId,
+                    isMine = replyDTO.isMine,
+                    id = replyDTO.id.toLong()
+                )
+            }
         }
     }
 

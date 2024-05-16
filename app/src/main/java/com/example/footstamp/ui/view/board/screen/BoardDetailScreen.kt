@@ -1,17 +1,23 @@
 package com.example.footstamp.ui.view.board.screen
 
 import android.graphics.Bitmap
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.PinDrop
@@ -24,32 +30,38 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
+import com.example.footstamp.data.model.Comment
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
+import com.example.footstamp.ui.components.BodyLargeText
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.ImageDialog
 import com.example.footstamp.ui.components.ImagesLayout
 import com.example.footstamp.ui.components.LabelText
 import com.example.footstamp.ui.components.SpaceMaker
+import com.example.footstamp.ui.components.TextInput
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.view.board.BoardViewModel
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
+import com.example.footstamp.ui.theme.SubColor
 import com.example.footstamp.ui.theme.TransparentColor
 
 @Composable
 fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
     val readingDiary by boardViewModel.readingDiary.collectAsState()
     val openingImage by boardViewModel.openingImage.collectAsState()
+    val commentList by boardViewModel.commentList.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         val scrollState = rememberScrollState()
@@ -68,7 +80,10 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
                 onClick = { boardViewModel.openImageDetail(it) })
-            BoardShareLayout(diary = readingDiary!!, onTapLike = { boardViewModel.likeDiary() })
+            BoardShareLayout(diary = readingDiary!!,
+                onTapLike = { boardViewModel.likeDiary() },
+                commentList = commentList,
+                onWriteComment = { comment -> boardViewModel.writeComment(comment) })
         }
         // 사진 크게보기
         openingImage?.let { ImageDialog(image = it, onClick = { boardViewModel.closeImage() }) }
@@ -79,10 +94,7 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
 fun WriterLayout(writer: String, screenWidth: Dp, screenHeight: Dp) {
     Card(
         colors = CardColors(
-            BackColor,
-            TransparentColor,
-            TransparentColor,
-            TransparentColor
+            BackColor, TransparentColor, TransparentColor, TransparentColor
         )
     ) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -93,9 +105,7 @@ fun WriterLayout(writer: String, screenWidth: Dp, screenHeight: Dp) {
             )
             SpaceMaker(width = 10.dp)
             BodyText(
-                text = writer,
-                color = BlackColor,
-                textAlign = TextAlign.Start
+                text = writer, color = BlackColor, textAlign = TextAlign.Start
             )
         }
     }
@@ -160,7 +170,12 @@ fun BoardDetailReadLayout(
 }
 
 @Composable
-fun BoardShareLayout(diary: Diary, onTapLike: () -> Unit) {
+fun BoardShareLayout(
+    diary: Diary,
+    commentList: List<Comment>,
+    onTapLike: () -> Unit,
+    onWriteComment: (String) -> Unit
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -175,6 +190,78 @@ fun BoardShareLayout(diary: Diary, onTapLike: () -> Unit) {
             SpaceMaker(width = 2.dp)
             LabelText(text = diary.likes.toString(), color = MainColor)
         }
+        BoardCommentLayout(commentList = commentList)
+        BoardCommentWriteLayout(onWriteComment)
     }
+}
 
+@Composable
+fun BoardCommentLayout(commentList: List<Comment>) {
+    Column {
+        TitleLargeText(text = "댓글")
+        SpaceMaker(height = 10.dp)
+        Divider(thickness = 1.dp, color = MainColor)
+        SpaceMaker(height = 10.dp)
+        Column {
+            commentList.map { BoardComment(comment = it) }
+        }
+        SpaceMaker(height = 10.dp)
+    }
+}
+
+@Composable
+fun BoardCommentWriteLayout(onWriteComment: (String) -> Unit) {
+    var commentText = ""
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(BackColor),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextInput(
+            onValueChange = { commentText = it },
+            hint = "댓글을 입력해주세요",
+            modifier = Modifier.weight(0.9f)
+        )
+        Icon(
+            painter = painterResource(R.drawable.icon_pen),
+            contentDescription = null,
+            modifier = Modifier
+                .weight(0.1f)
+                .fillMaxHeight()
+                .clickable {
+                    onWriteComment(commentText)
+                    commentText = ""
+                },
+            tint = MainColor
+        )
+    }
+}
+
+@Composable
+fun BoardComment(comment: Comment) {
+    SpaceMaker(height = 5.dp)
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        SpaceMaker(height = 5.dp)
+        BodyText(
+            text = comment.writerId.toString(),
+            color = MainColor,
+            modifier = Modifier.padding(horizontal = 5.dp)
+        )
+        SpaceMaker(height = 5.dp)
+        BodyLargeText(
+            text = comment.content,
+            color = BlackColor,
+            modifier = Modifier.padding(horizontal = 5.dp)
+        )
+        SpaceMaker(height = 5.dp)
+        LabelText(
+            text = comment.date, color = SubColor, modifier = Modifier.padding(horizontal = 5.dp)
+        )
+        SpaceMaker(height = 5.dp)
+    }
+    SpaceMaker(height = 5.dp)
 }

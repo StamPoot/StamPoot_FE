@@ -26,5 +26,5 @@ data class DiaryDetailDTO(
     @SerializedName("id")
     val id: Int,
     @SerializedName("replyList")
-    val replyList: ReplyDTO,
+    val replyList: List<ReplyDTO>,
 )

@@ -88,8 +88,9 @@ object AppModule {
         tokenManager: TokenManager,
         boardService: BoardService,
         replyService: ReplyService,
+        diaryService: DiaryService
     ): BoardRepository {
-        return BoardRepository(tokenManager, boardService, replyService)
+        return BoardRepository(tokenManager, boardService, replyService, diaryService)
     }
 
     @Singleton

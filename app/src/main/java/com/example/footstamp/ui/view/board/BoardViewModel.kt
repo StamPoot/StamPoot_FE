@@ -3,6 +3,7 @@ package com.example.footstamp.ui.view.board
 import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.data_source.BoardService
+import com.example.footstamp.data.model.Comment
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.BoardRepository
 import com.example.footstamp.data.repository.BoardSortType
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BoardViewModel @Inject constructor(
-    private val repository: BoardRepository, private val boardService: BoardService
+    private val repository: BoardRepository
 ) : BaseViewModel() {
 
     private val _diaries = MutableStateFlow<List<Diary>>(emptyList())
@@ -27,6 +28,9 @@ class BoardViewModel @Inject constructor(
 
     private val _readingDiary = MutableStateFlow<Diary?>(null)
     val readingDiary = _readingDiary.asStateFlow()
+
+    private val _commentList = MutableStateFlow<List<Comment>>(emptyList())
+    val commentList = _commentList.asStateFlow()
 
     private val _openingImage = MutableStateFlow<Bitmap?>(null)
     val openingImage = _openingImage.asStateFlow()
@@ -76,6 +80,18 @@ class BoardViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun getDiaryComment() {
+        coroutineLoading {
+            repository.getDiaryComment(_readingDiary.value!!.id.toString())
+        }
+    }
+
+    fun writeComment(comment: String) {
+        coroutineLoading {
+            repository.addReply(id = _readingDiary.value!!.id.toString(), content = comment)
         }
     }
 
