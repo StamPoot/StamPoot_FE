@@ -18,7 +18,7 @@ data class DiaryDetailDTO(
     @SerializedName("thumbnailNo")
     val thumbnailNo: Int,
     @SerializedName("photos")
-    val photos: String,
+    val photos: List<String>,
     @SerializedName("likes")
     val likes: Int,
     @SerializedName("isLiked")

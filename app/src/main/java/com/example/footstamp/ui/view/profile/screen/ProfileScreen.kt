@@ -15,7 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,21 +40,21 @@ import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.CommonButton
 import com.example.footstamp.ui.components.HalfDialog
 import com.example.footstamp.ui.components.LabelText
-import com.example.footstamp.ui.view.util.LoadingScreen
 import com.example.footstamp.ui.components.ProfilePhotoSelector
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TextInput
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.components.TopBar
-import com.example.footstamp.ui.view.profile.ProfileViewModel
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import com.example.footstamp.ui.theme.WarnColor
 import com.example.footstamp.ui.theme.WhiteColor
+import com.example.footstamp.ui.view.profile.ProfileViewModel
 import com.example.footstamp.ui.view.util.AlertScreen
+import com.example.footstamp.ui.view.util.LoadingScreen
 
 @Composable
 fun ProfileScreen(
@@ -232,7 +232,7 @@ fun ProfileEditDialog(
             TitleLargeText(text = "프로필 수정", color = BlackColor)
             SpaceMaker(height = screenHeight / 40)
 
-            Divider(modifier = Modifier.fillMaxWidth(0.9f))
+            HorizontalDivider(modifier = Modifier.fillMaxWidth(0.9f))
             SpaceMaker(height = screenHeight / 80)
             TitleText(text = "닉네임", color = BlackColor)
             SpaceMaker(height = screenHeight / 80)

@@ -45,7 +45,7 @@ class BoardRepository @Inject constructor(
             return responseBody.replyList.map { replyDTO ->
                 Comment(
                     content = replyDTO.content,
-                    date = replyDTO.date,
+                    date = Formatter.dateStringToString(replyDTO.date),
                     writerId = replyDTO.writerId,
                     isMine = replyDTO.isMine,
                     id = replyDTO.id.toLong()

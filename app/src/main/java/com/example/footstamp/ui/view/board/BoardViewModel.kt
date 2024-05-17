@@ -1,6 +1,8 @@
 package com.example.footstamp.ui.view.board
 
+import android.content.ContentValues.TAG
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.data_source.BoardService
 import com.example.footstamp.data.model.Comment
@@ -47,6 +49,10 @@ class BoardViewModel @Inject constructor(
         }
     }
 
+    fun callComment() {
+        Log.d(TAG, "TAG: ${_commentList.value}")
+    }
+
     fun changeBoardState() {
         coroutineLoading {
             _boardState.value = when (_boardState.value) {
@@ -65,10 +71,12 @@ class BoardViewModel @Inject constructor(
 
     fun showReadScreen(diary: Diary) {
         _readingDiary.value = diary
+        getDiaryComment()
     }
 
     fun hideReadScreen() {
         _readingDiary.value = null
+        _commentList.value = emptyList()
     }
 
     fun likeDiary() {
@@ -83,9 +91,11 @@ class BoardViewModel @Inject constructor(
         }
     }
 
-    fun getDiaryComment() {
+    private fun getDiaryComment() {
         coroutineLoading {
-            repository.getDiaryComment(_readingDiary.value!!.id.toString())
+            repository.getDiaryComment(_readingDiary.value!!.id.toString()).let { commentList ->
+                _commentList.value = commentList
+            }
         }
     }
 
