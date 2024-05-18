@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -39,6 +40,7 @@ import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Comment
 import com.example.footstamp.data.model.Diary
+import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyLargeText
@@ -62,6 +64,7 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
     val readingDiary by boardViewModel.readingDiary.collectAsState()
     val openingImage by boardViewModel.openingImage.collectAsState()
     val commentList by boardViewModel.commentList.collectAsState()
+    val writerState by boardViewModel.writerState.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         val scrollState = rememberScrollState()
@@ -74,7 +77,9 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            WriterLayout(writer = "ㅇㅣ름업슴", screenWidth = screenWidth, screenHeight = screenHeight)
+            writerState?.let {
+                WriterLayout(writer = it, screenWidth = screenWidth, screenHeight = screenHeight)
+            }
             BoardDateAndLocationLayout(screenHeight = screenHeight, readingDiary = readingDiary!!)
             BoardDetailReadLayout(readingDiary = readingDiary!!,
                 screenWidth = screenWidth,
@@ -83,6 +88,7 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
             BoardShareLayout(diary = readingDiary!!,
                 onTapLike = { boardViewModel.likeDiary() },
                 commentList = commentList,
+                screenWidth = screenWidth,
                 onWriteComment = { comment -> boardViewModel.writeComment(comment) })
         }
         // 사진 크게보기
@@ -91,21 +97,30 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun WriterLayout(writer: String, screenWidth: Dp, screenHeight: Dp) {
+fun WriterLayout(writer: Profile, screenWidth: Dp, screenHeight: Dp) {
     Card(
         colors = CardColors(
             BackColor, TransparentColor, TransparentColor, TransparentColor
         )
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            AsyncImage(
-                model = R.drawable.icon_circle_small,
-                modifier = Modifier.size(screenWidth / 10, screenWidth / 10),
-                contentDescription = null
-            )
+        Row(
+            modifier = Modifier.size(screenWidth * 9 / 10, screenWidth / 8),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SpaceMaker(width = 10.dp)
+            Card(shape = CircleShape) {
+                AsyncImage(
+                    model = writer.image.let {
+                        if (it == null) R.drawable.icon_circle_small
+                        else Formatter.convertStringToBitmap(it)
+                    },
+                    modifier = Modifier.size(screenWidth / 10, screenWidth / 10),
+                    contentDescription = null
+                )
+            }
             SpaceMaker(width = 10.dp)
             BodyText(
-                text = writer, color = BlackColor, textAlign = TextAlign.Start
+                text = writer.nickname, color = MainColor, textAlign = TextAlign.Start
             )
         }
     }
@@ -173,20 +188,24 @@ fun BoardDetailReadLayout(
 fun BoardShareLayout(
     diary: Diary,
     commentList: List<Comment>,
+    screenWidth: Dp,
     onTapLike: () -> Unit,
     onWriteComment: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        BoardCommentLayout(diary = diary, commentList = commentList, onTapLike = onTapLike)
+        BoardCommentLayout(
+            diary = diary,
+            commentList = commentList,
+            screenWidth = screenWidth,
+            onTapLike = onTapLike
+        )
         BoardCommentWriteLayout(onWriteComment)
     }
 }
 
 @Composable
 fun BoardCommentLayout(
-    diary: Diary,
-    commentList: List<Comment>,
-    onTapLike: () -> Unit
+    diary: Diary, screenWidth: Dp, commentList: List<Comment>, onTapLike: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -209,7 +228,7 @@ fun BoardCommentLayout(
         HorizontalDivider(thickness = 1.dp, color = SubColor)
         SpaceMaker(height = 10.dp)
         Column {
-            commentList.map { BoardComment(comment = it) }
+            commentList.map { BoardComment(comment = it, screenWidth = screenWidth) }
         }
         SpaceMaker(height = 10.dp)
     }
@@ -248,26 +267,42 @@ fun BoardCommentWriteLayout(onWriteComment: (String) -> Unit) {
 }
 
 @Composable
-fun BoardComment(comment: Comment) {
+fun BoardComment(comment: Comment, screenWidth: Dp) {
     SpaceMaker(height = 5.dp)
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardColors(BackColor, BackColor, BackColor, BackColor)
     ) {
-        SpaceMaker(height = 5.dp)
-        BodyText(
-            text = comment.writerId.toString(),
-            color = MainColor,
-            modifier = Modifier.padding(horizontal = 5.dp)
-        )
-        SpaceMaker(height = 5.dp)
-        BodyLargeText(
-            text = comment.content,
-            color = BlackColor,
-            modifier = Modifier.padding(horizontal = 5.dp)
-        )
-        SpaceMaker(height = 5.dp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            SpaceMaker(width = 5.dp)
+            Card(shape = CircleShape) {
+                AsyncImage(
+                    model = comment.profileImage ?: R.drawable.icon_circle_small,
+                    modifier = Modifier.size(screenWidth / 10, screenWidth / 10),
+                    contentDescription = null
+                )
+            }
+            SpaceMaker(width = 5.dp)
+            Column {
+                SpaceMaker(height = 5.dp)
+                BodyText(
+                    text = comment.nickname,
+                    color = MainColor,
+                    modifier = Modifier.padding(horizontal = 5.dp)
+                )
+                SpaceMaker(height = 5.dp)
+                BodyLargeText(
+                    text = comment.content,
+                    color = BlackColor,
+                    modifier = Modifier.padding(horizontal = 5.dp)
+                )
+                SpaceMaker(height = 5.dp)
+            }
+        }
         LabelText(
-            text = comment.date, color = SubColor, modifier = Modifier.padding(horizontal = 5.dp)
+            text = comment.date,
+            color = SubColor,
+            modifier = Modifier.padding(horizontal = 5.dp)
         )
         SpaceMaker(height = 5.dp)
     }

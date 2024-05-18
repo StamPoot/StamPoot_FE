@@ -71,7 +71,10 @@ fun ProfileScreen(
         val profileDeleteText by profileViewModel.profileDeleteText.collectAsState()
 
         Column(
-            Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopBar(text = stringResource(R.string.screen_profile), backgroundColor = WhiteColor)
             ProfileCard(profileState = profileState,
@@ -158,7 +161,6 @@ fun ProfileMyHistory(
     Column(
         modifier = Modifier
             .fillMaxWidth(0.9f)
-            .verticalScroll(rememberScrollState())
     ) {
         notificationList.forEach { notification ->
             NotificationItem(

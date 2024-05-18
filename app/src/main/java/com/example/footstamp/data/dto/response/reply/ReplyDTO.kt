@@ -13,4 +13,6 @@ data class ReplyDTO(
     val isMine: Boolean,
     @SerializedName("id")
     val id: Int,
+    @SerializedName("writerInfo")
+    val writerInfo: UserProfileDTO
 )

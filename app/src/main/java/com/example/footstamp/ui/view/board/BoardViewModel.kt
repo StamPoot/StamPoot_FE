@@ -1,20 +1,15 @@
 package com.example.footstamp.ui.view.board
 
-import android.content.ContentValues.TAG
 import android.graphics.Bitmap
-import android.util.Log
-import androidx.lifecycle.viewModelScope
-import com.example.footstamp.data.data_source.BoardService
 import com.example.footstamp.data.model.Comment
 import com.example.footstamp.data.model.Diary
+import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.repository.BoardRepository
 import com.example.footstamp.data.repository.BoardSortType
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +25,9 @@ class BoardViewModel @Inject constructor(
 
     private val _readingDiary = MutableStateFlow<Diary?>(null)
     val readingDiary = _readingDiary.asStateFlow()
+
+    private val _writerState = MutableStateFlow<Profile?>(null)
+    val writerState = _writerState.asStateFlow()
 
     private val _commentList = MutableStateFlow<List<Comment>>(emptyList())
     val commentList = _commentList.asStateFlow()
@@ -47,10 +45,6 @@ class BoardViewModel @Inject constructor(
                 _diaries.value = diaryList
             }
         }
-    }
-
-    fun callComment() {
-        Log.d(TAG, "TAG: ${_commentList.value}")
     }
 
     fun changeBoardState() {
@@ -71,11 +65,12 @@ class BoardViewModel @Inject constructor(
 
     fun showReadScreen(diary: Diary) {
         _readingDiary.value = diary
-        getDiaryComment()
+        getDiaryDetail()
     }
 
     fun hideReadScreen() {
         _readingDiary.value = null
+        _writerState.value = null
         _commentList.value = emptyList()
     }
 
@@ -91,10 +86,14 @@ class BoardViewModel @Inject constructor(
         }
     }
 
-    private fun getDiaryComment() {
+    private fun getDiaryDetail() {
         coroutineLoading {
-            repository.getDiaryComment(_readingDiary.value!!.id.toString()).let { commentList ->
-                _commentList.value = commentList
+            repository.getDiaryComment(_readingDiary.value!!.id.toString()).let { pair ->
+                val writer = pair.first
+                val comments = pair.second
+
+                _writerState.value = writer
+                _commentList.value = comments
             }
         }
     }

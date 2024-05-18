@@ -6,8 +6,9 @@ import com.example.footstamp.data.data_source.DiaryService
 import com.example.footstamp.data.data_source.ReplyService
 import com.example.footstamp.data.dto.request.reply.CreateReplyReqDTO
 import com.example.footstamp.data.dto.response.diary.DiaryDTO
-import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.model.Comment
+import com.example.footstamp.data.model.Diary
+import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.TokenManager
 import com.example.footstamp.ui.base.BaseRepository
@@ -38,19 +39,30 @@ class BoardRepository @Inject constructor(
         }
     }
 
-    suspend fun getDiaryComment(id: String): List<Comment> {
+    suspend fun getDiaryComment(id: String): Pair<Profile, List<Comment>> {
         diaryService.diaryDetail(tokenManager.accessToken!!, id).let { response ->
             val responseBody = response.body()!!
 
-            return responseBody.replyList.map { replyDTO ->
+            val profile = Profile(
+                nickname = responseBody.writerInfo.nickname,
+                image = Formatter.fetchImageBitmap(responseBody.writerInfo.profileImage)?.let {
+                    Formatter.convertBitmapToString(it)
+                },
+                aboutMe = responseBody.writerInfo.sentence
+            )
+            val commentList = responseBody.replyList.map { replyDTO ->
                 Comment(
                     content = replyDTO.content,
                     date = Formatter.dateStringToString(replyDTO.date),
                     writerId = replyDTO.writerId,
+                    nickname = replyDTO.writerInfo.nickname,
+                    profileImage = Formatter.fetchImageBitmap(replyDTO.writerInfo.profileImage),
+                    sentence = replyDTO.writerInfo.sentence,
                     isMine = replyDTO.isMine,
                     id = replyDTO.id.toLong()
                 )
             }
+            return Pair(profile, commentList)
         }
     }
 
