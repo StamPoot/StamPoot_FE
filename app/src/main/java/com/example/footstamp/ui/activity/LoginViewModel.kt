@@ -1,11 +1,14 @@
 package com.example.footstamp.ui.activity
 
+import com.example.footstamp.data.model.LoginToken
 import com.example.footstamp.data.model.Provider
 import com.example.footstamp.data.repository.LoginRepository
+import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +23,18 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
     private val _loginToken = MutableStateFlow<String?>(null)
     val loginToken = _loginToken.asStateFlow()
 
+    init {
+        getTokenFromDB()
+    }
+
+    private fun getTokenFromDB() {
+        coroutineLoading {
+            repository.getTokenDao().let { token ->
+                if (token != null) _loginToken.value = token.token
+            }
+        }
+    }
+
     fun updateGoogleIdToken(googleToken: String) {
         _googleIdToken.value = googleToken
     }
@@ -31,7 +46,14 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
     fun googleAccessTokenLogin() {
         coroutineLoading {
             repository.accessTokenLogin(Provider.GOOGLE, _googleIdToken.value!!)
-                .also { _loginToken.value = it.body()?.auth }
+                .also {
+                    val loginToken = LoginToken(
+                        provider = Provider.GOOGLE,
+                        date = Formatter.localTimeToDiaryString(LocalDateTime.now()),
+                    ).apply { it.body()?.auth?.let { token -> insertToken(token) } }
+                    repository.setTokenDao(loginToken)
+                    _loginToken.value = it.body()?.auth
+                }
         }
     }
 

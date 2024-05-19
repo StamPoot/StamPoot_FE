@@ -13,6 +13,7 @@ class Profile(
 ) {
     @PrimaryKey(autoGenerate = false)
     var id: Long = 0
+
     override fun toString(): String {
         return "id = $id uid = $uid nickname = $nickname about me = $aboutMe"
     }

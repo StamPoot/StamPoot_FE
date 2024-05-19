@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.footstamp.data.dao.DiaryDao
 import com.example.footstamp.data.dao.ProfileDao
+import com.example.footstamp.data.dao.TokenDao
 import com.example.footstamp.data.data_source.AuthService
 import com.example.footstamp.data.data_source.BoardService
 import com.example.footstamp.data.data_source.DiaryService
@@ -11,6 +12,7 @@ import com.example.footstamp.data.data_source.ReplyService
 import com.example.footstamp.data.data_source.UserService
 import com.example.footstamp.data.database.DiaryDatabase
 import com.example.footstamp.data.database.ProfileDatabase
+import com.example.footstamp.data.database.TokenDatabase
 import com.example.footstamp.data.repository.BoardRepository
 import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.repository.LoginRepository
@@ -32,6 +34,10 @@ object AppModule {
     fun provideAuthService(retrofit: Retrofit): AuthService {
         return retrofit.create(AuthService::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun provideLoginTokenDao(tokenDatabase: TokenDatabase): TokenDao = tokenDatabase.tokenDao()
 
     @Singleton
     @Provides
@@ -68,9 +74,13 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideLoginRepository(tokenManager: TokenManager, authService: AuthService) =
-        LoginRepository(tokenManager, authService)
-
+    fun provideLoginRepository(
+        tokenManager: TokenManager,
+        authService: AuthService,
+        tokenDao: TokenDao
+    ): LoginRepository {
+        return LoginRepository(tokenManager, authService, tokenDao)
+    }
 
     @Singleton
     @Provides
@@ -107,6 +117,14 @@ object AppModule {
     @Provides
     fun provideTokenManager(@ApplicationContext context: Context): TokenManager {
         return TokenManager(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLoginTokenDatabase(@ApplicationContext context: Context): TokenDatabase {
+        return Room.databaseBuilder(
+            context, TokenDatabase::class.java, "token_database"
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Singleton

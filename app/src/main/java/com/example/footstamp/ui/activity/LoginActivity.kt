@@ -39,8 +39,8 @@ class LoginActivity : ComponentActivity() {
         }
 
         lifecycleScope.launch {
-            loginViewModel.loginToken.collect {
-                if (it != null) moveToHomeScreen()
+            loginViewModel.loginToken.collect { loginToken ->
+                if (loginToken != null) moveToHomeScreen()
             }
         }
     }
