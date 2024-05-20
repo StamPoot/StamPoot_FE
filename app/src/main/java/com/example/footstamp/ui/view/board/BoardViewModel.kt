@@ -1,6 +1,8 @@
 package com.example.footstamp.ui.view.board
 
 import android.graphics.Bitmap
+import com.example.footstamp.data.model.Alert
+import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Comment
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.model.Profile
@@ -76,22 +78,20 @@ class BoardViewModel @Inject constructor(
 
     fun likeDiary() {
         coroutineLoading {
-            repository.likeDiary(id = _readingDiary.value!!.id.toString()).let { likeCount ->
-                _diaries.value.apply {
-                    this.find { it.id == _readingDiary.value!!.id }.apply {
-                        this!!.likes = likeCount!!
-                    }
-                }
+            repository.likeDiary(id = _readingDiary.value!!.id.toString())?.let { likeCount ->
+                getDiaryDetail()
             }
         }
     }
 
     private fun getDiaryDetail() {
         coroutineLoading {
-            repository.getDiaryComment(_readingDiary.value!!.id.toString()).let { pair ->
-                val writer = pair.first
-                val comments = pair.second
+            repository.getDiaryDetail(_readingDiary.value!!.id.toString()).let { triple ->
+                val diary = triple.first
+                val writer = triple.second
+                val comments = triple.third
 
+                _readingDiary.value = diary
                 _writerState.value = writer
                 _commentList.value = comments
             }
@@ -100,7 +100,22 @@ class BoardViewModel @Inject constructor(
 
     fun writeComment(comment: String) {
         coroutineLoading {
-            repository.addReply(id = _readingDiary.value!!.id.toString(), content = comment)
+            repository.addReply(
+                id = _readingDiary.value!!.id.toString(),
+                content = comment
+            ).let { isSuccessful ->
+                if (isSuccessful) {
+                    updateBoardState().let {
+                        val alert = Alert(
+                            title = "댓글이 작성되었습니다",
+                            message = "",
+                            buttonCount = ButtonCount.ONE,
+                            onPressYes = { hideAlert() }
+                        )
+                        showAlert(alert)
+                    }
+                }
+            }
         }
     }
 

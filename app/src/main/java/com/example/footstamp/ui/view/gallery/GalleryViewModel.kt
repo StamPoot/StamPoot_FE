@@ -48,7 +48,9 @@ class GalleryViewModel @Inject constructor(
 
     private fun updateDiariesState() {
         coroutineLoading {
-            repository.getDiaries()
+            repository.getDiaries().let {
+                if (it != null) _diaries.value = it
+            }
         }
     }
 
@@ -65,16 +67,14 @@ class GalleryViewModel @Inject constructor(
         coroutineLoading {
             repository.writeDiary(_editingDiary.value, context).let { isSuccessful ->
                 if (isSuccessful) {
+                    val alert = Alert(title = "일기가 작성되었습니다",
+                        message = "",
+                        buttonCount = ButtonCount.ONE,
+                        onPressYes = { hideAlert() })
                     initializeViewState()
-                    getAllDiaries()
+                    showAlert(alert)
                 }
             }
-        }
-    }
-
-    fun removeDiary(id: Long) {
-        coroutineLoading {
-            repository.deleteDiaryDao(id)
         }
     }
 
@@ -103,7 +103,19 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun updateDiary(context: Context) {
+    fun updateDiaryAlert(context: Context) {
+        val alert = Alert(title = "일기를 수정하시겠습니까?",
+            message = "",
+            buttonCount = ButtonCount.TWO,
+            onPressYes = {
+                updateDiary(context)
+                hideAlert()
+            },
+            onPressNo = { hideAlert() })
+        showAlert(alert)
+    }
+
+    private fun updateDiary(context: Context) {
         coroutineLoading {
             repository.updateDiary(_editingDiary.value, context).let { isSuccessful ->
                 if (isSuccessful) initializeViewState()
@@ -113,13 +125,14 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun deleteDiaryAlert() {
-        val alert = Alert(
-            title = "정말 일기를 삭제하시겠습니까?",
-            message = "삭제된 일기는 복구할 수 없고 게시판에서도 삭제됩니다",
+        val alert = Alert(title = "정말 일기를 삭제하시겠습니까?",
+            message = "삭제된 일기는 복구할 수 없고\n게시판에서도 삭제됩니다",
             buttonCount = ButtonCount.TWO,
-            onPressYes = { deleteDiary() },
-            onPressNo = { hideAlert() }
-        )
+            onPressYes = {
+                deleteDiary()
+                hideAlert()
+            },
+            onPressNo = { hideAlert() })
         showAlert(alert)
     }
 
@@ -134,23 +147,38 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun shareTransDiaryAlert() {
-        val alert = Alert(
-            title = if (_readingDiary.value.isShared) "일기 공유를 취소하시겠어요?" else "정말 일기를 공유하시겠어요?",
-            message = if (_readingDiary.value.isShared) "공유했던 일기의 댓글과 별이 사라져요" else "공유한 일기는 모두가 볼 수 있어요",
-            buttonCount = ButtonCount.TWO,
-            onPressYes = {
-                shareTransDiary()
-                hideAlert()
-            },
-            onPressNo = { hideAlert() }
-        )
+        val alert =
+            Alert(title = if (_readingDiary.value.isShared) "일기 공유를 취소하시겠어요?" else "정말 일기를 공유하시겠어요?",
+                message = if (_readingDiary.value.isShared) "공유했던 일기의 댓글과 별이 사라져요" else "공유한 일기는 모두가 볼 수 있어요",
+                buttonCount = ButtonCount.TWO,
+                onPressYes = {
+                    shareTransDiary()
+                    hideAlert()
+                },
+                onPressNo = { hideAlert() })
+
         showAlert(alert)
     }
 
-    fun shareTransDiary() {
+    private fun shareTransDiary() {
         coroutineLoading {
-            repository.shareDiary(_readingDiary.value.id.toString())
-            initializeViewState()
+            repository.shareDiary(_readingDiary.value.id.toString()).let { isSuccessful ->
+                if (isSuccessful) {
+                    repository.getDiaries().let {
+                        if (it != null) _diaries.value = it
+                    }
+                    _diaries.value.find { it.id == _readingDiary.value.id }?.let {
+                        _readingDiary.value = it
+                        val alert =
+                            Alert(title = if (_readingDiary.value.isShared) "일기가 공유되었습니다" else "일기 공유가 해제되었습니다",
+                                message = "",
+                                buttonCount = ButtonCount.ONE,
+                                onPressYes = { hideAlert() })
+
+                        showAlert(alert)
+                    }
+                }
+            }
         }
     }
 
@@ -173,16 +201,13 @@ class GalleryViewModel @Inject constructor(
         _openingImage.value = null
     }
 
-    fun getAllDiaries(): List<Diary> {
-        return diaries.value
-    }
-
     fun initializeViewState() {
         _viewState.value = GalleryScreenState.NULL
         _dateOrLocation.value = DateAndLocation.NULL
         _openingImage.value = null
         _readingDiary.value = Diary()
         _editingDiary.value = Diary()
+        updateDiariesState()
     }
 
     fun showWriteScreen() {
@@ -194,11 +219,16 @@ class GalleryViewModel @Inject constructor(
         _viewState.value = GalleryScreenState.READ
     }
 
-    fun showEditScreen(context: Context) {
+    fun showEditScreen() {
         if (_readingDiary.value.isShared) {
-            Toast.makeText(context, "공유 중인 일기는 수정할 수 없어요", Toast.LENGTH_SHORT).show()
+            val alert = Alert(title = "일기를 수정할 수 없어요",
+                message = "공유 중인 일기는\n공유를 해제하고 수정할 수 있어요",
+                buttonCount = ButtonCount.ONE,
+                onPressYes = { hideAlert() })
+            showAlert(alert)
+        } else {
+            _viewState.value = GalleryScreenState.EDIT
         }
-        _viewState.value = GalleryScreenState.EDIT
     }
 
     fun hideHalfDialog() {

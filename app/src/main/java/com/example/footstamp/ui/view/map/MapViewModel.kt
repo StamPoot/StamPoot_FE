@@ -34,7 +34,9 @@ class MapViewModel @Inject constructor(
 
     private fun getDiaries() {
         coroutineLoading {
-            repository.getDiaries()
+            repository.getDiaries().let {
+                if (it != null) _diaries.value = it
+            }
         }
     }
 

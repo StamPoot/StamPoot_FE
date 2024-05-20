@@ -43,11 +43,11 @@ import com.example.footstamp.ui.theme.WarnColor
 
 @Composable
 fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
-    val readingDiary by galleryViewModel.readingDiary.collectAsState()
-    val openingImage by galleryViewModel.openingImage.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         val scrollState = rememberScrollState()
+        val readingDiary by galleryViewModel.readingDiary.collectAsState()
+        val openingImage by galleryViewModel.openingImage.collectAsState()
 
         Column(
             modifier = Modifier

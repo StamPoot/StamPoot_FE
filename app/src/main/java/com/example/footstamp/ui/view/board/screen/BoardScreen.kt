@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -23,7 +24,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -67,7 +70,10 @@ fun BoardScreen(
                     BoardSortType.LIKE -> Icons.Default.Star
                 },
                 onClickPressed = { boardViewModel.changeBoardState() })
-            BoardGridLayout(diaries = diaries, onClick = { boardViewModel.showReadScreen(it) })
+            BoardGridLayout(
+                diaries = diaries,
+                screenWidth = screenWidth,
+                onClick = { boardViewModel.showReadScreen(it) })
             BoardReadScreen(readingDiary = readingDiary,
                 onChangeState = { boardViewModel.hideReadScreen() })
         }
@@ -77,18 +83,19 @@ fun BoardScreen(
 }
 
 @Composable
-fun BoardGridLayout(diaries: List<Diary>, onClick: (Diary) -> Unit) {
+fun BoardGridLayout(diaries: List<Diary>, screenWidth: Dp, onClick: (Diary) -> Unit) {
     LazyVerticalGrid(columns = GridCells.Fixed(3)) {
         items(diaries) { diary ->
-            BoardGridItem(diary = diary, onClick = onClick)
+            BoardGridItem(diary = diary, screenWidth = screenWidth, onClick = onClick)
         }
     }
 }
 
 @Composable
-fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
+fun BoardGridItem(diary: Diary, screenWidth: Dp, onClick: (Diary) -> Unit) {
     Box(modifier = Modifier
         .padding(3.dp)
+        .size(screenWidth / 3, screenWidth / 15 * 7)
         .clickable { onClick(diary) }) {
         Card(
             colors = CardColors(
@@ -98,16 +105,20 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
             AsyncImage(
                 model = Formatter.convertStringToBitmap(diary.photoBitmapStrings[diary.thumbnail]),
                 contentDescription = null,
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(screenWidth / 3 - 5.dp, screenWidth / 15 * 5),
+                contentScale = ContentScale.Crop
             )
             Row(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column {
+                Column(modifier = Modifier.weight(0.8f)) {
                     BodyText(
                         text = diary.title,
                         color = BlackColor,
-                        modifier = Modifier.padding(horizontal = 10.dp)
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        maxLines = 1
                     )
                     SpaceMaker(height = 3.dp)
                     LabelText(
@@ -119,7 +130,9 @@ fun BoardGridItem(diary: Diary, onClick: (Diary) -> Unit) {
                 }
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(horizontal = 3.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 3.dp)
+                        .weight(0.2f)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Star,

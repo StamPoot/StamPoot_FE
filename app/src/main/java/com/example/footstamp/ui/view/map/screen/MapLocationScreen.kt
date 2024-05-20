@@ -127,7 +127,6 @@ fun MapReadScreen(readingDiary: Diary?, onChangeState: () -> Unit) {
         FullDialog(
             title = GalleryViewModel.GalleryScreenState.READ.text,
             screen = { MapDetailScreen() },
-            rightIcon = Icons.AutoMirrored.Filled.ArrowRightAlt,
             onBackIconPressed = onChangeState,
             onClickPressed = {}
         )

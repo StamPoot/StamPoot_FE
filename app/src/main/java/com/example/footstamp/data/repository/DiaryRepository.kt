@@ -23,7 +23,7 @@ class DiaryRepository @Inject constructor(
     private val diaryService: DiaryService
 ) : BaseRepository() {
 
-    suspend fun getDiaries() {
+    suspend fun getDiaries(): List<Diary>? {
         diaryService.diaryList(tokenManager.accessToken!!).let { response ->
             if (response.isSuccessful) {
                 val responseBody = response.body()!!
@@ -40,13 +40,17 @@ class DiaryRepository @Inject constructor(
                             photoBitmaps = photoBitmaps,
                             uid = responseBody.userId.toString()
                         )
-                    }.let { responseDiaries.addAll(it) }
+                    }.let {
+                        responseDiaries.addAll(it)
+                        return it
+                    }
                 }
                 // DB 내의 일기들 최신화
                 deleteAllDao()
                 insertDiariesDao(responseDiaries)
             }
         }
+        return null
     }
 
     suspend fun writeDiary(diary: Diary, context: Context): Boolean {
@@ -121,15 +125,16 @@ class DiaryRepository @Inject constructor(
     }
 
     // 일기 공유 상태 수정
-    suspend fun shareDiary(diaryId: String) {
+    suspend fun shareDiary(diaryId: String): Boolean {
         diaryService.diaryTransPublic(
             token = tokenManager.accessToken!!,
             id = diaryId
         ).let {
             if (it.isSuccessful) {
-                getDiaries()
+                return true
             }
         }
+        return false
     }
 
     // dao Database

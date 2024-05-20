@@ -30,8 +30,7 @@ class BoardRepository @Inject constructor(
                     val photoBitmaps = diaryDTO.photos.map { Formatter.fetchImageBitmap(it)!! }
 
                     diaryDTOToDiary(
-                        diaryDTO = diaryDTO,
-                        photoBitmaps = photoBitmaps
+                        diaryDTO = diaryDTO, photoBitmaps = photoBitmaps
                     )
                 }.let { return it }
             }
@@ -39,10 +38,23 @@ class BoardRepository @Inject constructor(
         }
     }
 
-    suspend fun getDiaryComment(id: String): Pair<Profile, List<Comment>> {
+    suspend fun getDiaryDetail(id: String): Triple<Diary, Profile, List<Comment>> {
         diaryService.diaryDetail(tokenManager.accessToken!!, id).let { response ->
             val responseBody = response.body()!!
 
+            val diary = Diary(
+                title = responseBody.title,
+                date = Formatter.dateStringToLocalDateTime(responseBody.date),
+                message = responseBody.content,
+                isShared = responseBody.isPublic,
+                location = responseBody.location,
+                photoBitmapStrings = responseBody.photos.map { photo ->
+                    Formatter.fetchImageBitmap(photo)!!.let { Formatter.convertBitmapToString(it) }
+                },
+                thumbnail = responseBody.thumbnailNo,
+                uid = "0",
+                likes = responseBody.likes
+            )
             val profile = Profile(
                 nickname = responseBody.writerInfo.nickname,
                 image = Formatter.fetchImageBitmap(responseBody.writerInfo.profileImage)?.let {
@@ -62,12 +74,17 @@ class BoardRepository @Inject constructor(
                     id = replyDTO.id.toLong()
                 )
             }
-            return Pair(profile, commentList)
+            return Triple(diary, profile, commentList)
         }
     }
 
-    suspend fun addReply(id: String, content: String) {
-        replyService.replyWrite(id, tokenManager.accessToken!!, CreateReplyReqDTO(content))
+    suspend fun addReply(id: String, content: String): Boolean {
+        replyService.replyWrite(
+            id, tokenManager.accessToken!!, CreateReplyReqDTO(content)
+        ).let { response ->
+            if (response.isSuccessful) return true
+        }
+        return false
     }
 
     // id는 게시글 id 인지 댓글 id 인지, 일기 신고, 좋아요 API 수정 요청
@@ -102,6 +119,5 @@ class BoardRepository @Inject constructor(
 }
 
 enum class BoardSortType(val sortCode: Int) {
-    RECENT(1),
-    LIKE(2)
+    RECENT(1), LIKE(2)
 }

@@ -77,7 +77,8 @@ fun BodyText(
     color: Color = SubColor,
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Start,
-    minLines: Int = 1
+    minLines: Int = 1,
+    maxLines: Int = 10
 ) {
     Text(
         text = text, color = color,
@@ -85,7 +86,8 @@ fun BodyText(
         modifier = modifier,
         textAlign = textAlign,
         fontSize = 16.sp,
-        minLines = minLines
+        minLines = minLines,
+        maxLines = maxLines
     )
 }
 

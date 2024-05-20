@@ -43,17 +43,17 @@ import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
 import com.example.footstamp.ui.components.FullDialog
-import com.example.footstamp.ui.view.util.LoadingScreen
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.components.TitleText
 import com.example.footstamp.ui.components.TopBar
 import com.example.footstamp.ui.components.TransparentButton
-import com.example.footstamp.ui.view.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
 import com.example.footstamp.ui.theme.WhiteColor
+import com.example.footstamp.ui.view.gallery.GalleryViewModel
 import com.example.footstamp.ui.view.util.AlertScreen
+import com.example.footstamp.ui.view.util.LoadingScreen
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -64,19 +64,17 @@ fun GalleryScreen(
     val alert by galleryViewModel.alertState.collectAsState()
 
     BaseScreen(floatingButton = {
-        GalleryFloatingButton {
-            galleryViewModel.showWriteScreen()
-        }
+        GalleryFloatingButton { galleryViewModel.showWriteScreen() }
     }) { paddingValue, screenWidth, screenHeight ->
         val viewState by galleryViewModel.viewState.collectAsState()
         val sortType by galleryViewModel.sortType.collectAsState()
-        val currentDiary by galleryViewModel.diaries.collectAsState()
+        val diaries by galleryViewModel.diaries.collectAsState()
         val context = LocalContext.current
 
         Column {
             TopBar(text = stringResource(R.string.screen_gallery), backgroundColor = WhiteColor)
 
-            GalleryGridLayout(diaries = currentDiary,
+            GalleryGridLayout(diaries = diaries,
                 paddingValues = paddingValue,
                 sortType = sortType,
                 context = context,
@@ -86,11 +84,9 @@ fun GalleryScreen(
 
         GalleryReadOrWriteScreen(viewState = viewState,
             onChangeState = { galleryViewModel.initializeViewState() },
-            onClickWrite = {
-                galleryViewModel.writeDiary(context)
-            },
-            onClickMenu = { galleryViewModel.showEditScreen(context) },
-            onClickEdit = { galleryViewModel.updateDiary(context) })
+            onClickWrite = { galleryViewModel.writeDiary(context) },
+            onClickMenu = { galleryViewModel.showEditScreen() },
+            onClickEdit = { galleryViewModel.updateDiaryAlert(context) })
     }
     isLoading.let { if (it) LoadingScreen() }
     alert?.let { AlertScreen(alert = it) }
