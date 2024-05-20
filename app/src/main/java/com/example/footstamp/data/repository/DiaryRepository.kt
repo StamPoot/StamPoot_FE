@@ -87,9 +87,14 @@ class DiaryRepository @Inject constructor(
     }
 
     // id 수정 필요
-    suspend fun deleteDiary(diary: Diary) {
-        diaryService.diaryDelete(diary.id.toString(), tokenManager.accessToken!!)
-        deleteDiaryDao(diary.id)
+    suspend fun deleteDiary(diary: Diary): Boolean {
+        diaryService.diaryDelete(diary.id.toString(), tokenManager.accessToken!!).let { response ->
+            if (response.isSuccessful) {
+                deleteDiaryDao(diary.id)
+                return true
+            }
+        }
+        return false
     }
 
     // 일기 수정 API 요청

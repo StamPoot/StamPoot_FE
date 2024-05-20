@@ -29,6 +29,7 @@ import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.BodyText
+import com.example.footstamp.ui.components.CommonButton
 import com.example.footstamp.ui.components.ImageDialog
 import com.example.footstamp.ui.components.ImagesLayout
 import com.example.footstamp.ui.components.SpaceMaker
@@ -38,6 +39,7 @@ import com.example.footstamp.ui.view.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.WarnColor
 
 @Composable
 fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
@@ -63,6 +65,7 @@ fun GalleryReadScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
                 onClick = { galleryViewModel.openImageDetail(it) },
                 onShare = { galleryViewModel.shareTransDiaryAlert() }
             )
+            DiaryDeleteLayout { galleryViewModel.deleteDiaryAlert() }
         }
 
         // 사진 크게보기
@@ -131,4 +134,9 @@ fun DiaryMainReadLayout(
             text = readingDiary.message, color = BlackColor, minLines = 8
         )
     }
+}
+
+@Composable
+fun DiaryDeleteLayout(onDeleteDiary: () -> Unit) {
+    CommonButton(text = "일기 삭제", buttonColor = WarnColor) { onDeleteDiary() }
 }

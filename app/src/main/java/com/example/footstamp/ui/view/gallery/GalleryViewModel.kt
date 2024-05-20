@@ -112,6 +112,27 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
+    fun deleteDiaryAlert() {
+        val alert = Alert(
+            title = "정말 일기를 삭제하시겠습니까?",
+            message = "삭제된 일기는 복구할 수 없고 게시판에서도 삭제됩니다",
+            buttonCount = ButtonCount.TWO,
+            onPressYes = { deleteDiary() },
+            onPressNo = { hideAlert() }
+        )
+        showAlert(alert)
+    }
+
+    private fun deleteDiary() {
+        coroutineLoading {
+            repository.deleteDiary(_readingDiary.value).let { isSuccessful ->
+                if (isSuccessful) {
+                    initializeViewState()
+                }
+            }
+        }
+    }
+
     fun shareTransDiaryAlert() {
         val alert = Alert(
             title = if (_readingDiary.value.isShared) "일기 공유를 취소하시겠어요?" else "정말 일기를 공유하시겠어요?",
