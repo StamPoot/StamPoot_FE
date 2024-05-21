@@ -1,8 +1,11 @@
 package com.example.footstamp.ui.base
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Alert
+import com.example.footstamp.data.model.ButtonCount
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,5 +47,16 @@ open class BaseViewModel : ViewModel() {
                 finishLoading()
             }
         }
+    }
+
+    fun showError(errorMessage: String = "") {
+        val alert = Alert(
+            title = "오류 발생",
+            message = errorMessage,
+            buttonCount = ButtonCount.ONE,
+            onPressYes = { hideAlert() }
+        )
+
+        showAlert(alert)
     }
 }

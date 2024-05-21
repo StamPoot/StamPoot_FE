@@ -58,6 +58,7 @@ fun BodyLargeText(
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Start,
     minLines: Int = 1,
+    maxLines: Int = 10,
     textDecoration: TextDecoration = TextDecoration.None
 ) {
     Text(
@@ -67,6 +68,7 @@ fun BodyLargeText(
         textAlign = textAlign,
         fontSize = 18.sp,
         minLines = minLines,
+        maxLines = maxLines,
         textDecoration = textDecoration
     )
 }
@@ -78,7 +80,8 @@ fun BodyText(
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Start,
     minLines: Int = 1,
-    maxLines: Int = 10
+    maxLines: Int = 10,
+    textDecoration: TextDecoration = TextDecoration.None
 ) {
     Text(
         text = text, color = color,
@@ -87,7 +90,8 @@ fun BodyText(
         textAlign = textAlign,
         fontSize = 16.sp,
         minLines = minLines,
-        maxLines = maxLines
+        maxLines = maxLines,
+        textDecoration = textDecoration
     )
 }
 

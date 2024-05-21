@@ -1,13 +1,16 @@
 package com.example.footstamp.ui.view.map
 
 import android.graphics.Bitmap
+import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +44,7 @@ class MapViewModel @Inject constructor(
     }
 
     private fun getDiariesFromDB() {
-        coroutineLoading {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getAllDao().let { diaryList ->
                 if (diaryList.isNotEmpty()) _diaries.value = diaryList
             }

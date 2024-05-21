@@ -92,8 +92,9 @@ fun GalleryWriteScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 fun DateAndLocationWriteLayout(
     writingDiary: Diary, onClickDate: () -> Unit, onClickLocation: () -> Unit
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CalendarChangeButton(writingDiary.date) {
             onClickDate()
@@ -116,7 +117,6 @@ fun DiaryMainWriteLayout(
     onTitleFieldChange: (text: String) -> Unit,
     onMessageFieldChange: (text: String) -> Unit,
 ) {
-    SpaceMaker(height = screenHeight / 20)
     TextInput(hint = "제목", onValueChange = onTitleFieldChange)
     SpaceMaker(height = screenHeight / 40)
     PhotoSelector(

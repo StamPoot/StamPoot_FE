@@ -90,7 +90,7 @@ fun ProfileScreen(
             ProfileBottomLayout(
                 screenHeight = screenHeight,
                 profileDeleteText = profileDeleteText,
-                onTextChange = { profileViewModel.deleteProfile(it, context) },
+                onTextChange = { profileViewModel.deleteProfileAlert(it, context) },
                 onClickDeleteProfile = { profileViewModel.checkProfileDelete() }
             )
         }

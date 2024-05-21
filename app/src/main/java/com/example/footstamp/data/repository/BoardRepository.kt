@@ -54,7 +54,7 @@ class BoardRepository @Inject constructor(
                 thumbnail = responseBody.thumbnailNo,
                 uid = "0",
                 likes = responseBody.likes
-            )
+            ).apply { this.insertId(responseBody.id.toLong()) }
             val profile = Profile(
                 nickname = responseBody.writerInfo.nickname,
                 image = Formatter.fetchImageBitmap(responseBody.writerInfo.profileImage)?.let {

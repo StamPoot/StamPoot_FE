@@ -183,7 +183,7 @@ class DiaryRepository @Inject constructor(
 
         return Diary(
             title = diaryDTO.title,
-            date = Formatter.dateStringToLocalDateTime(diaryDTO.date),
+            date = Formatter.dateStringToLocalDateTime(diaryDTO.date.substring(0, 10)),
             message = diaryDTO.content,
             isShared = diaryDTO.isPublic,
             location = diaryDTO.location,

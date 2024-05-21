@@ -95,7 +95,7 @@ fun BoardGridLayout(diaries: List<Diary>, screenWidth: Dp, onClick: (Diary) -> U
 fun BoardGridItem(diary: Diary, screenWidth: Dp, onClick: (Diary) -> Unit) {
     Box(modifier = Modifier
         .padding(3.dp)
-        .size(screenWidth / 3, screenWidth / 15 * 7)
+        .size(screenWidth / 3, screenWidth / 15 * 8)
         .clickable { onClick(diary) }) {
         Card(
             colors = CardColors(

@@ -34,9 +34,9 @@ import com.example.footstamp.ui.components.LocationPickerView
 import com.example.footstamp.ui.components.PhotoSelector
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TextInput
-import com.example.footstamp.ui.view.gallery.GalleryViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.TransparentColor
+import com.example.footstamp.ui.view.gallery.GalleryViewModel
 import java.time.LocalDateTime
 
 @Composable
@@ -92,15 +92,11 @@ fun GalleryEditScreen(galleryViewModel: GalleryViewModel = hiltViewModel()) {
 fun DateAndLocationEditLayout(
     writingDiary: Diary, onClickDate: () -> Unit, onClickLocation: () -> Unit
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()
+    Column(
+        modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        EditCalendarChangeButton(writingDiary.date) {
-            onClickDate()
-        }
-        EditLocationChangeButton(writingDiary.location) {
-            onClickLocation()
-        }
+        EditCalendarChangeButton(writingDiary.date) { onClickDate() }
+        EditLocationChangeButton(writingDiary.location) { onClickLocation() }
     }
 }
 
@@ -116,7 +112,6 @@ fun DiaryMainEditLayout(
     onTitleFieldChange: (text: String) -> Unit,
     onMessageFieldChange: (text: String) -> Unit,
 ) {
-    SpaceMaker(height = screenHeight / 20)
     TextInput(baseText = writingDiary.title, hint = "제목", onValueChange = onTitleFieldChange)
     SpaceMaker(height = screenHeight / 40)
     PhotoSelector(

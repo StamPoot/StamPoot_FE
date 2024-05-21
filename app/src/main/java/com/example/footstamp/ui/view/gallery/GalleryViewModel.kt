@@ -3,6 +3,7 @@ package com.example.footstamp.ui.view.gallery
 import android.content.Context
 import android.graphics.Bitmap
 import android.widget.Toast
+import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Diary
@@ -10,8 +11,10 @@ import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -55,7 +58,7 @@ class GalleryViewModel @Inject constructor(
     }
 
     private fun getDiariesFromDB() {
-        coroutineLoading {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getAllDao().let { diaryList ->
                 if (diaryList.isNotEmpty()) _diaries.value = diaryList
             }
@@ -182,17 +185,6 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun transDiaryReadToEdit() {
-        _editingDiary.value = _readingDiary.value
-    }
-
-    fun changeSortSwitch() {
-        _sortType.value = when (_sortType.value) {
-            SortByDateOrLocation.DATE -> SortByDateOrLocation.LOCATION
-            SortByDateOrLocation.LOCATION -> SortByDateOrLocation.DATE
-        }
-    }
-
     fun openImageDetail(image: Bitmap) {
         _openingImage.value = image
     }
@@ -225,8 +217,10 @@ class GalleryViewModel @Inject constructor(
                 message = "공유 중인 일기는\n공유를 해제하고 수정할 수 있어요",
                 buttonCount = ButtonCount.ONE,
                 onPressYes = { hideAlert() })
+
             showAlert(alert)
         } else {
+            _editingDiary.value = _readingDiary.value
             _viewState.value = GalleryScreenState.EDIT
         }
     }

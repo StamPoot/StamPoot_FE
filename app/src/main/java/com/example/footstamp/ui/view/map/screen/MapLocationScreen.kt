@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -102,7 +103,8 @@ fun StaggeredViewItem(diary: Diary, onClickBox: (diary: Diary) -> Unit) {
         ) {
             AsyncImage(
                 model = Formatter.convertStringToBitmap(diary.photoBitmapStrings[diary.thumbnail]),
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth()
             )
             SpaceMaker(height = 5.dp)
             TitleText(

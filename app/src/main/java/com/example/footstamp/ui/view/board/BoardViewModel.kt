@@ -1,6 +1,8 @@
 package com.example.footstamp.ui.view.board
 
+import android.content.ContentValues.TAG
 import android.graphics.Bitmap
+import android.util.Log
 import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Comment
@@ -74,6 +76,7 @@ class BoardViewModel @Inject constructor(
         _readingDiary.value = null
         _writerState.value = null
         _commentList.value = emptyList()
+        updateBoardState()
     }
 
     fun likeDiary() {

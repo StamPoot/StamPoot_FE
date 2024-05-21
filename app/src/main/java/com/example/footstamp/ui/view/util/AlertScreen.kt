@@ -11,6 +11,7 @@ import androidx.compose.material3.CardColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
@@ -30,23 +31,26 @@ import com.example.footstamp.ui.theme.WhiteColor
 fun AlertScreen(alert: Alert) {
     HalfDialog(onChangeState = {}) {
         Card(
-            modifier = Modifier.fillMaxWidth(0.9f),
+            modifier = Modifier
+                .fillMaxWidth(0.9f),
             colors = CardColors(
                 WhiteColor, TransparentColor, TransparentColor, TransparentColor
             ),
             border = BorderStroke(0.1.dp, SubColor),
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 SpaceMaker(height = 10.dp)
-                TitleLargeText(text = alert.title, color = MainColor)
+                TitleLargeText(text = alert.title, color = MainColor, textAlign = TextAlign.Center)
                 SpaceMaker(height = 10.dp)
-                TitleText(text = alert.message, color = BlackColor)
+                TitleText(text = alert.message, color = BlackColor, textAlign = TextAlign.Center)
                 SpaceMaker(height = 10.dp)
                 Row(
-                    modifier = Modifier.fillMaxWidth(0.9f),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     CommonButton("확인") { alert.onPressYes() }

@@ -82,8 +82,7 @@ fun ChangeButton(
     onClick: () -> Unit = {}
 ) {
     Button(
-        modifier = Modifier
-            .background(TransparentColor),
+        modifier = Modifier.background(TransparentColor),
         colors = ButtonDefaults.outlinedButtonColors(color),
         shape = RectangleShape,
         onClick = onClick,
@@ -95,6 +94,7 @@ fun ChangeButton(
         BodyLargeText(
             text = text,
             color = tint,
+            maxLines = 1,
             textDecoration = if (underLine) TextDecoration.Underline else TextDecoration.None
         )
     }
