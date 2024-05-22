@@ -2,9 +2,7 @@ package com.example.footstamp.ui.view.gallery.screen
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -167,7 +165,7 @@ fun DateAndLocationDialogLayout(
 fun CalendarChangeButton(time: LocalDateTime, onClick: () -> Unit) {
     ChangeButton(
         icon = Icons.Default.CalendarMonth,
-        text = Formatter.dateToUserString(time),
+        text = Formatter.dateTimeToString(time),
         color = TransparentColor,
         tint = MainColor,
         underLine = true,

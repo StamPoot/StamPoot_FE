@@ -86,7 +86,7 @@ fun DateAndLocationReadLayout(screenHeight: Dp, readingDiary: Diary) {
                 tint = MainColor
             )
             TitleText(
-                text = Formatter.dateToUserString(readingDiary.date),
+                text = Formatter.dateTimeToString(readingDiary.date),
                 color = MainColor,
                 textAlign = TextAlign.Start
             )

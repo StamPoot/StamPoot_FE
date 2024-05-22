@@ -1,6 +1,7 @@
 package com.example.footstamp.ui.view.login
 
-import com.example.footstamp.data.repository.LoginRepository
+import com.example.footstamp.data.repository.DiaryRepository
+import com.example.footstamp.data.repository.ProfileRepository
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,17 +9,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val repository: LoginRepository
-) : BaseViewModel() {
+class LoginViewModel @Inject constructor() : BaseViewModel() {
 
-    private val _isKakaoLoginPress = MutableStateFlow(false)
-    val isKakaoLoginPress = _isKakaoLoginPress.asStateFlow()
+    private val _isShowWebView = MutableStateFlow(false)
+    val isShowWebView = _isShowWebView.asStateFlow()
 
-    fun pressKakaoLogin() {
-        _isKakaoLoginPress.value = true
+    fun showKakaoLogin() {
+        _isShowWebView.value = true
     }
+
     fun hideKakaoLogin() {
-        _isKakaoLoginPress.value = false
+        _isShowWebView.value = false
     }
 }

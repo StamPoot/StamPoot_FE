@@ -5,8 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -29,12 +27,12 @@ import java.util.Date
 
 object Formatter {
 
-    fun dateToUserString(date: LocalDateTime): String {
+    fun dateTimeToString(date: LocalDateTime): String {
         val dateFormat = "yyyy년 MM월 dd일"
         return date.format(DateTimeFormatter.ofPattern(dateFormat))
     }
 
-    fun dateStringToString(dateString: String): String {
+    fun dateTimeToFormedString(dateString: String): String {
         val year = dateString.substring(0..3)
         val month = dateString.substring(5..6)
         val day = dateString.substring(8..9)
@@ -49,18 +47,9 @@ object Formatter {
         return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat))
     }
 
-    fun localTimeToReplyString(localDateTime: LocalDateTime): String {
-        return ""
-    }
-
-    fun dateStringToLocalDateTime(dateString: String): LocalDateTime {
+    fun stringToDateTime(dateString: String): LocalDateTime {
         val dateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return LocalDate.parse(dateString, dateTime).atStartOfDay()
-    }
-
-    fun replyStringToLocalDateTime(dateString: String): LocalDateTime {
-        val dateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-        return LocalDateTime.parse(dateString, dateTime)
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -87,10 +76,6 @@ object Formatter {
     fun convertStringToBitmap(encodedString: String): Bitmap {
         val encodeByte = Base64.decode(encodedString, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
-    }
-
-    fun drawableToBitmap(context: Context, drawable: Int): Bitmap {
-        return ContextCompat.getDrawable(context, drawable)?.toBitmap()!!
     }
 
     suspend fun fetchImageBitmap(imageUrl: String): Bitmap? {

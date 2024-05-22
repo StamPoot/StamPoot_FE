@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.WhiteColor
+import com.example.footstamp.ui.view.util.BackOnPressed
 
 @Composable
 fun BaseScreen(
@@ -27,6 +28,7 @@ fun BaseScreen(
     containerColor: Color = WhiteColor,
     content: @Composable (paddingValue: PaddingValues, screenWidth: Dp, screenHeight: Dp) -> Unit,
 ) {
+    BackOnPressed()
     Scaffold(
         modifier = modifier,
         floatingActionButtonPosition = FabPosition.End,

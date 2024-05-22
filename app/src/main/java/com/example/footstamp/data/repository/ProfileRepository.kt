@@ -92,6 +92,10 @@ class ProfileRepository @Inject constructor(
         return null
     }
 
+    fun logOut() {
+        tokenManager.accessToken = null
+    }
+
     suspend fun deleteUser(): Boolean {
         userService.profileDelete(tokenManager.accessToken!!).let {
             if (it.isSuccessful) return true

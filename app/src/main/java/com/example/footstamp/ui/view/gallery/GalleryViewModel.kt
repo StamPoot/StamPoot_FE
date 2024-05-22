@@ -76,6 +76,8 @@ class GalleryViewModel @Inject constructor(
                         onPressYes = { hideAlert() })
                     initializeViewState()
                     showAlert(alert)
+                } else {
+                    showError()
                 }
             }
         }
@@ -121,8 +123,11 @@ class GalleryViewModel @Inject constructor(
     private fun updateDiary(context: Context) {
         coroutineLoading {
             repository.updateDiary(_editingDiary.value, context).let { isSuccessful ->
-                if (isSuccessful) initializeViewState()
-                // TODO : 실패시 대응
+                if (isSuccessful) {
+                    initializeViewState()
+                } else {
+                    showError()
+                }
             }
         }
     }
@@ -144,6 +149,8 @@ class GalleryViewModel @Inject constructor(
             repository.deleteDiary(_readingDiary.value).let { isSuccessful ->
                 if (isSuccessful) {
                     initializeViewState()
+                } else {
+                    showError()
                 }
             }
         }
@@ -180,6 +187,8 @@ class GalleryViewModel @Inject constructor(
 
                         showAlert(alert)
                     }
+                } else {
+                    showError()
                 }
             }
         }

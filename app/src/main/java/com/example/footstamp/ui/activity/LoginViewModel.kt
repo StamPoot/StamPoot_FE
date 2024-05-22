@@ -2,7 +2,9 @@ package com.example.footstamp.ui.activity
 
 import com.example.footstamp.data.model.LoginToken
 import com.example.footstamp.data.model.Provider
+import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.repository.LoginRepository
+import com.example.footstamp.data.repository.ProfileRepository
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,26 +14,37 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val repository: LoginRepository) :
+class LoginViewModel @Inject constructor(
+    private val loginRepository: LoginRepository,
+    private val diaryRepository: DiaryRepository,
+    private val profileRepository: ProfileRepository
+) :
     BaseViewModel() {
     private val _googleIdToken = MutableStateFlow<String?>(null)
-    val googleIdToken = _googleIdToken.asStateFlow()
 
     private val _kakaoIdToken = MutableStateFlow<String?>(null)
-    val kakaoIdToken = _kakaoIdToken.asStateFlow()
 
     private val _loginToken = MutableStateFlow<String?>(null)
     val loginToken = _loginToken.asStateFlow()
 
     init {
-        getTokenFromDB()
+        getTokenFromDB().let {
+            if (_loginToken.value == null) deleteInformation()
+        }
     }
 
     private fun getTokenFromDB() {
         coroutineLoading {
-            repository.getTokenDao().let { token ->
+            loginRepository.getTokenDao().let { token ->
                 if (token != null) _loginToken.value = token.token
             }
+        }
+    }
+
+    private fun deleteInformation() {
+        coroutineLoading {
+            diaryRepository.deleteAllDao()
+            profileRepository.deleteProfileDao()
         }
     }
 
@@ -39,19 +52,15 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
         _googleIdToken.value = googleToken
     }
 
-    fun updateLoginToken(loginToken: String) {
-        _loginToken.value = loginToken
-    }
-
     fun googleAccessTokenLogin() {
         coroutineLoading {
-            repository.accessTokenLogin(Provider.GOOGLE, _googleIdToken.value!!)
+            loginRepository.accessTokenLogin(Provider.GOOGLE, _googleIdToken.value!!)
                 .also {
                     val loginToken = LoginToken(
                         provider = Provider.GOOGLE,
                         date = Formatter.localTimeToDiaryString(LocalDateTime.now()),
                     ).apply { it.body()?.auth?.let { token -> insertToken(token) } }
-                    repository.setTokenDao(loginToken)
+                    loginRepository.setTokenDao(loginToken)
                     _loginToken.value = it.body()?.auth
                 }
         }
@@ -59,14 +68,14 @@ class LoginViewModel @Inject constructor(private val repository: LoginRepository
 
     fun kakaoAccessTokenLogin(token: String) {
         coroutineLoading {
-            repository.accessTokenLogin(Provider.KAKAO, token)
+            loginRepository.accessTokenLogin(Provider.KAKAO, token)
                 .also { _loginToken.value = token }
         }
     }
 
     fun kakaoLogin() {
         coroutineLoading {
-            repository.kakaoLogin()
+            loginRepository.kakaoLogin()
         }
     }
 }

@@ -1,9 +1,17 @@
 package com.example.footstamp.ui.view.login.screen
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,6 +31,7 @@ import com.example.footstamp.ui.components.ImageButton
 import com.example.footstamp.ui.view.util.LoadingScreen
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
+import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.view.login.LoginViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.WhiteColor
@@ -32,9 +41,9 @@ import com.example.footstamp.ui.view.util.AlertScreen
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
     onGoogleLogin: () -> Unit,
-    onKakaoLogin: () -> Unit
+    onKakaoLogin: (String) -> Unit
 ) {
-    val isKakaoLoginPress = loginViewModel.isKakaoLoginPress.collectAsState()
+    val isShowWebView by loginViewModel.isShowWebView.collectAsState()
     val isLoading by loginViewModel.isLoading.collectAsState()
     val alert by loginViewModel.alertState.collectAsState()
 
@@ -61,31 +70,50 @@ fun LoginScreen(
                 ImageButton(
                     image = R.drawable.icon_google_login,
                     buttonWidth = screenWidth / 2,
-                    onClick = onGoogleLogin
+                    onClick = { if (!isShowWebView) onGoogleLogin() }
                 )
                 SpaceMaker(height = 10.dp)
-                ImageButton(image = R.drawable.icon_kakao_login,
+                ImageButton(
+                    image = R.drawable.icon_kakao_login,
                     buttonWidth = screenWidth / 2,
-                    onClick = {
-                        onKakaoLogin()
-                        loginViewModel.pressKakaoLogin()
-                    })
+                    onClick = { if (!isShowWebView) loginViewModel.showKakaoLogin() }
+                )
             }
             SpaceMaker(height = 0.dp)
         }
     }
     isLoading.let { if (it) LoadingScreen() }
     alert?.let { AlertScreen(alert = it) }
-    if (isKakaoLoginPress.value) KakaoLoginWebView { loginViewModel.hideKakaoLogin() }
+    if (isShowWebView) KakaoLoginWebView(
+        onCloseWebView = { loginViewModel.hideKakaoLogin() },
+        onAuthCodeReceived = { code ->
+            loginViewModel.hideKakaoLogin()
+            onKakaoLogin(code)
+        }
+    )
 }
 
 @Composable
-fun KakaoLoginWebView(onResult: () -> Unit) {
-    CustomWebView(
-        url = getString(
-            LocalContext.current,
-            R.string.kakao_auth_url,
-        ),
-        onResult = onResult
-    )
+fun KakaoLoginWebView(onCloseWebView: () -> Unit, onAuthCodeReceived: (String) -> Unit) {
+    val kakaoLoginUrl = getString(LocalContext.current, R.string.kakao_auth_url)
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(WhiteColor)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = null,
+            tint = BlackColor,
+            modifier = Modifier
+                .fillMaxHeight(0.1f)
+                .padding(horizontal = 10.dp)
+                .clickable { onCloseWebView() }
+        )
+        CustomWebView(
+            url = kakaoLoginUrl,
+            onResult = { code -> onAuthCodeReceived(code) }
+        )
+    }
 }

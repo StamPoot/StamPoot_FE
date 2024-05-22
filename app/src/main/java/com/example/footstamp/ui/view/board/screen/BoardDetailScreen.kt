@@ -28,7 +28,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -140,7 +139,7 @@ fun BoardDateAndLocationLayout(screenHeight: Dp, readingDiary: Diary) {
                 tint = MainColor
             )
             TitleText(
-                text = Formatter.dateToUserString(readingDiary.date),
+                text = Formatter.dateTimeToString(readingDiary.date),
                 color = MainColor,
                 textAlign = TextAlign.Start
             )

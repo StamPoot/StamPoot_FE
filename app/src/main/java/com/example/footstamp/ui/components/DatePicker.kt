@@ -10,16 +10,14 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.Formatter.convertMillisToDate
 import com.example.footstamp.data.util.Formatter.localDateTimeToLong
 import com.example.footstamp.data.util.Formatter.longToLocalDateTime
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.WhiteColor
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.Formatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

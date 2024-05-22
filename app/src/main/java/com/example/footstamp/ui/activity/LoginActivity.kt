@@ -10,9 +10,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.example.footstamp.data.login.GoogleLogin
-import com.example.footstamp.data.login.KakaoLogin
-import com.example.footstamp.ui.view.login.screen.LoginScreen
 import com.example.footstamp.ui.theme.FootStampTheme
+import com.example.footstamp.ui.view.login.screen.LoginScreen
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -22,7 +21,6 @@ class LoginActivity : ComponentActivity() {
 
     private val loginViewModel by viewModels<LoginViewModel>()
     private lateinit var googleLogin: GoogleLogin
-    private lateinit var kakaoLogin: KakaoLogin
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +32,7 @@ class LoginActivity : ComponentActivity() {
             FootStampTheme {
                 LoginScreen(
                     onGoogleLogin = { googleLoginEvent() },
-                    onKakaoLogin = { kakaoLoginEvent() })
+                    onKakaoLogin = { loginViewModel.kakaoAccessTokenLogin(it) })
             }
         }
 
@@ -64,18 +62,6 @@ class LoginActivity : ComponentActivity() {
         googleLogin = GoogleLogin(this)
         val signInIntent = googleLogin.signInIntent
         startActivityForResult(signInIntent, GOOGLE_API_CODE)
-    }
-
-    private fun kakaoLoginEvent() {
-        kakaoLogin = KakaoLogin(this) { token ->
-            loginViewModel.kakaoAccessTokenLogin(token)
-        }
-        if (kakaoLogin.checkKakaoLogin()) {
-//            kakaoLogin.kakaoAppLogin()
-            loginViewModel.kakaoLogin()
-        } else {
-            kakaoLogin.kakaoAccountLogin()
-        }
     }
 
     private fun moveToHomeScreen() {

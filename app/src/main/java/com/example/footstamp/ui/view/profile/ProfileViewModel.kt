@@ -6,6 +6,7 @@ import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Notification
 import com.example.footstamp.data.model.Profile
+import com.example.footstamp.data.repository.LoginRepository
 import com.example.footstamp.data.repository.ProfileRepository
 import com.example.footstamp.ui.activity.LoginActivity
 import com.example.footstamp.ui.base.BaseViewModel
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val repository: ProfileRepository
+    private val profileRepository: ProfileRepository, private val loginRepository: LoginRepository
 ) : BaseViewModel() {
 
     private val _profileState = MutableStateFlow(Profile())
@@ -42,7 +43,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getProfile() {
         coroutineLoading {
-            repository.getProfile(_isProfileExist.value).let { profile ->
+            profileRepository.getProfile(_isProfileExist.value).let { profile ->
                 if (profile != null) {
                     _profileState.value = profile
                     _isProfileExist.value = true
@@ -56,7 +57,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getProfileFromDB() {
         coroutineLoading {
-            repository.getProfileDao().let { profile ->
+            profileRepository.getProfileDao().let { profile ->
                 if (profile != null) {
                     _profileState.value = profile
                     _isProfileExist.value = true
@@ -79,12 +80,12 @@ class ProfileViewModel @Inject constructor(
         if (_editProfile.value!!.checkProfile() != null) return false
 
         coroutineLoading {
-            repository.updateProfile(_editProfile.value!!, context, _isProfileExist.value)
+            profileRepository.updateProfile(_editProfile.value!!, context, _isProfileExist.value)
                 .let { isSuccessful ->
                     if (isSuccessful) {
                         getProfile()
                         _isProfileExist.value = true
-                    }
+                    } else showError()
                 }
             _editProfile.value = null
         }
@@ -93,7 +94,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getNotificationList() {
         coroutineLoading {
-            repository.getNotification().let {
+            profileRepository.getNotification().let {
                 if (it != null) {
                     _notificationList.value = it
                 }
@@ -105,15 +106,41 @@ class ProfileViewModel @Inject constructor(
         _profileDeleteText.value = INITIALIZE_CODE
     }
 
+    fun logOutAlert(context: Context) {
+        val alert = Alert(title = "로그 아웃 하시겠습니까?",
+            message = "",
+            buttonCount = ButtonCount.TWO,
+            onPressYes = { logOut(context) },
+            onPressNo = { hideAlert() })
+
+        showAlert(alert)
+    }
+
+    private fun logOut(context: Context) {
+        coroutineLoading {
+            profileRepository.logOut()
+            loginRepository.deleteTokenDao()
+            val goHomeActivity = Intent(context, LoginActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+            val alert = Alert(title = "로그 아웃 되었습니다",
+                message = "",
+                buttonCount = ButtonCount.ONE,
+                onPressYes = {
+                    context.startActivity(goHomeActivity)
+                })
+
+            showAlert(alert)
+        }
+    }
+
     fun deleteProfileAlert(deleteText: String, context: Context) {
         if (deleteText == DELETE_CODE) {
-            val alert = Alert(
-                title = "정말 회원 탈퇴하시겠습니까?",
+            val alert = Alert(title = "정말 회원 탈퇴하시겠습니까?",
                 message = "회원 정보는 모두 삭제됩니다",
                 buttonCount = ButtonCount.TWO,
                 onPressYes = { deleteProfile(context) },
-                onPressNo = { hideAlert() }
-            )
+                onPressNo = { hideAlert() })
 
             showAlert(alert)
         }
@@ -121,17 +148,20 @@ class ProfileViewModel @Inject constructor(
 
     private fun deleteProfile(context: Context) {
         coroutineLoading {
-            repository.deleteUser().let { isSuccessful ->
+            loginRepository.deleteTokenDao()
+            profileRepository.deleteUser().let { isSuccessful ->
                 if (isSuccessful) {
-                    val goHomeActivity = Intent(context, LoginActivity::class.java)
-                    val alert = Alert(
-                        title = "회원 탈퇴되었습니다",
+                    val goHomeActivity = Intent(context, LoginActivity::class.java).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    }
+                    val alert = Alert(title = "회원 탈퇴되었습니다",
                         message = "",
                         buttonCount = ButtonCount.ONE,
-                        onPressYes = { context.startActivity(goHomeActivity) }
-                    )
+                        onPressYes = { context.startActivity(goHomeActivity) })
 
                     showAlert(alert)
+                } else {
+                    showError()
                 }
             }
         }

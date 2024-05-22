@@ -44,7 +44,7 @@ class BoardRepository @Inject constructor(
 
             val diary = Diary(
                 title = responseBody.title,
-                date = Formatter.dateStringToLocalDateTime(responseBody.date),
+                date = Formatter.stringToDateTime(responseBody.date),
                 message = responseBody.content,
                 isShared = responseBody.isPublic,
                 location = responseBody.location,
@@ -65,7 +65,7 @@ class BoardRepository @Inject constructor(
             val commentList = responseBody.replyList.map { replyDTO ->
                 Comment(
                     content = replyDTO.content,
-                    date = Formatter.dateStringToString(replyDTO.date),
+                    date = Formatter.dateTimeToFormedString(replyDTO.date),
                     writerId = replyDTO.writerId,
                     nickname = replyDTO.writerInfo.nickname,
                     profileImage = Formatter.fetchImageBitmap(replyDTO.writerInfo.profileImage),
@@ -105,7 +105,7 @@ class BoardRepository @Inject constructor(
 
         return Diary(
             title = diaryDTO.title,
-            date = Formatter.dateStringToLocalDateTime(diaryDTO.date),
+            date = Formatter.stringToDateTime(diaryDTO.date),
             message = diaryDTO.content,
             isShared = diaryDTO.isPublic,
             location = diaryDTO.location,

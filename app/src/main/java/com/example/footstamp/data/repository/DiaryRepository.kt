@@ -10,10 +10,6 @@ import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.data.util.TokenManager
 import com.example.footstamp.ui.base.BaseRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.flowOn
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -183,7 +179,7 @@ class DiaryRepository @Inject constructor(
 
         return Diary(
             title = diaryDTO.title,
-            date = Formatter.dateStringToLocalDateTime(diaryDTO.date.substring(0, 10)),
+            date = Formatter.stringToDateTime(diaryDTO.date.substring(0, 10)),
             message = diaryDTO.content,
             isShared = diaryDTO.isPublic,
             location = diaryDTO.location,

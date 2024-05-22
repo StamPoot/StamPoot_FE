@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowRightAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.runtime.Composable
@@ -114,7 +112,7 @@ fun StaggeredViewItem(diary: Diary, onClickBox: (diary: Diary) -> Unit) {
             )
             SpaceMaker(height = 5.dp)
             BodyText(
-                text = Formatter.dateToUserString(diary.date),
+                text = Formatter.dateTimeToString(diary.date),
                 color = SubColor,
                 modifier = Modifier.padding(horizontal = 10.dp)
             )

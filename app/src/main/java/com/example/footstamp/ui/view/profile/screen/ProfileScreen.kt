@@ -91,6 +91,7 @@ fun ProfileScreen(
                 screenHeight = screenHeight,
                 profileDeleteText = profileDeleteText,
                 onTextChange = { profileViewModel.deleteProfileAlert(it, context) },
+                onClickLogOut = { profileViewModel.logOutAlert(context) },
                 onClickDeleteProfile = { profileViewModel.checkProfileDelete() }
             )
         }
@@ -165,7 +166,7 @@ fun ProfileMyHistory(
         notificationList.forEach { notification ->
             NotificationItem(
                 text = notification.profile.nickname + getString(context, R.string.reply_message),
-                time = Formatter.dateStringToString(notification.dateTime),
+                time = Formatter.dateTimeToFormedString(notification.dateTime),
                 message = notification.content
             )
         }
@@ -196,12 +197,14 @@ fun ProfileBottomLayout(
     profileDeleteText: String?,
     screenHeight: Dp,
     onTextChange: (text: String) -> Unit,
+    onClickLogOut: () -> Unit,
     onClickDeleteProfile: () -> Unit,
 ) {
     SpaceMaker(height = screenHeight / 20)
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
         if (profileDeleteText == null) {
-            CommonButton(text = "회원 탈퇴", buttonColor = WarnColor) { onClickDeleteProfile() }
+            CommonButton(text = "로그 아웃", buttonColor = SubColor) { onClickLogOut() }
+            CommonButton(text = "회원 탈퇴", buttonColor = SubColor) { onClickDeleteProfile() }
         } else {
             TextInput(
                 hint = "탈퇴하시려면 '회원 탈퇴'를 입력해주세요",

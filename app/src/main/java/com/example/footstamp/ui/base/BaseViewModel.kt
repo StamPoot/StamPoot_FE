@@ -43,20 +43,27 @@ open class BaseViewModel : ViewModel() {
             try {
                 startLoading()
                 operation()
+            } catch (e: Exception) {
+                e.message?.let { showError(it) }
             } finally {
                 finishLoading()
             }
         }
     }
 
-    fun showError(errorMessage: String = "") {
+    fun showError(errorMessage: String = ERROR_RETRY) {
         val alert = Alert(
-            title = "오류 발생",
+            title = ERROR_OCCUR,
             message = errorMessage,
             buttonCount = ButtonCount.ONE,
             onPressYes = { hideAlert() }
         )
 
         showAlert(alert)
+    }
+
+    companion object {
+        const val ERROR_OCCUR = "오류 발생"
+        const val ERROR_RETRY = "다시 시도해주세요"
     }
 }

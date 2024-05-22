@@ -153,7 +153,7 @@ fun GalleryItemView(diary: Diary, screenHeight: Dp, onClick: (Diary) -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TitleText(Formatter.dateToUserString(diary.date), WhiteColor)
+            TitleText(Formatter.dateTimeToString(diary.date), WhiteColor)
             SpaceMaker(height = 10.dp)
             TitleLargeText(diary.title, WhiteColor)
             SpaceMaker(height = 10.dp)

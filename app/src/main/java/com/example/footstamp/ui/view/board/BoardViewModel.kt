@@ -117,6 +117,8 @@ class BoardViewModel @Inject constructor(
                         )
                         showAlert(alert)
                     }
+                } else {
+                    showError()
                 }
             }
         }
