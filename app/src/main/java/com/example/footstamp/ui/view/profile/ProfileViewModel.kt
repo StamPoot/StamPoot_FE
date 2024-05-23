@@ -2,6 +2,7 @@ package com.example.footstamp.ui.view.profile
 
 import android.content.Context
 import android.content.Intent
+import com.example.footstamp.R
 import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Notification
@@ -48,8 +49,7 @@ class ProfileViewModel @Inject constructor(
                     _profileState.value = profile
                     _isProfileExist.value = true
                 } else {
-                    _profileState.value =
-                        Profile(uid = "", nickname = SET_NICKNAME, aboutMe = SET_MESSAGE)
+                    _profileState.value = Profile(nickname = SET_NICKNAME, aboutMe = SET_MESSAGE)
                 }
             }
         }
@@ -107,8 +107,8 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun logOutAlert(context: Context) {
-        val alert = Alert(title = "로그 아웃 하시겠습니까?",
-            message = "",
+        val alert = Alert(title = R.string.profile_alert_ask_logout,
+            message = R.string.empty_string,
             buttonCount = ButtonCount.TWO,
             onPressYes = { logOut(context) },
             onPressNo = { hideAlert() })
@@ -123,8 +123,9 @@ class ProfileViewModel @Inject constructor(
             val goHomeActivity = Intent(context, LoginActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
-            val alert = Alert(title = "로그 아웃 되었습니다",
-                message = "",
+            val alert = Alert(
+                title = R.string.profile_alert_logout,
+                message = R.string.empty_string,
                 buttonCount = ButtonCount.ONE,
                 onPressYes = {
                     context.startActivity(goHomeActivity)
@@ -136,8 +137,8 @@ class ProfileViewModel @Inject constructor(
 
     fun deleteProfileAlert(deleteText: String, context: Context) {
         if (deleteText == DELETE_CODE) {
-            val alert = Alert(title = "정말 회원 탈퇴하시겠습니까?",
-                message = "회원 정보는 모두 삭제됩니다",
+            val alert = Alert(title = R.string.profile_alert_ask_delete_profile,
+                message = R.string.profile_alert_ask_delete_profile_content,
                 buttonCount = ButtonCount.TWO,
                 onPressYes = { deleteProfile(context) },
                 onPressNo = { hideAlert() })
@@ -154,8 +155,8 @@ class ProfileViewModel @Inject constructor(
                     val goHomeActivity = Intent(context, LoginActivity::class.java).apply {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     }
-                    val alert = Alert(title = "회원 탈퇴되었습니다",
-                        message = "",
+                    val alert = Alert(title = R.string.profile_alert_delete_profile,
+                        message = R.string.empty_string,
                         buttonCount = ButtonCount.ONE,
                         onPressYes = { context.startActivity(goHomeActivity) })
 

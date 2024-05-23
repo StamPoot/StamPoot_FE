@@ -2,8 +2,9 @@ package com.example.footstamp.ui.view.gallery
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.widget.Toast
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
+import com.example.footstamp.R
 import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Diary
@@ -70,8 +71,8 @@ class GalleryViewModel @Inject constructor(
         coroutineLoading {
             repository.writeDiary(_editingDiary.value, context).let { isSuccessful ->
                 if (isSuccessful) {
-                    val alert = Alert(title = "일기가 작성되었습니다",
-                        message = "",
+                    val alert = Alert(title = R.string.gallery_alert_write_written,
+                        message = R.string.empty_string,
                         buttonCount = ButtonCount.ONE,
                         onPressYes = { hideAlert() })
                     initializeViewState()
@@ -109,8 +110,8 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun updateDiaryAlert(context: Context) {
-        val alert = Alert(title = "일기를 수정하시겠습니까?",
-            message = "",
+        val alert = Alert(title = R.string.gallery_alert_ask_edit,
+            message = R.string.empty_string,
             buttonCount = ButtonCount.TWO,
             onPressYes = {
                 updateDiary(context)
@@ -133,8 +134,8 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun deleteDiaryAlert() {
-        val alert = Alert(title = "정말 일기를 삭제하시겠습니까?",
-            message = "삭제된 일기는 복구할 수 없고\n게시판에서도 삭제됩니다",
+        val alert = Alert(title = R.string.gallery_alert_ask_delete,
+            message = R.string.gallery_alert_content_delete,
             buttonCount = ButtonCount.TWO,
             onPressYes = {
                 deleteDiary()
@@ -157,15 +158,18 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun shareTransDiaryAlert() {
-        val alert =
-            Alert(title = if (_readingDiary.value.isShared) "일기 공유를 취소하시겠어요?" else "정말 일기를 공유하시겠어요?",
-                message = if (_readingDiary.value.isShared) "공유했던 일기의 댓글과 별이 사라져요" else "공유한 일기는 모두가 볼 수 있어요",
-                buttonCount = ButtonCount.TWO,
-                onPressYes = {
-                    shareTransDiary()
-                    hideAlert()
-                },
-                onPressNo = { hideAlert() })
+        val alert = Alert(title = if (_readingDiary.value.isShared) {
+            R.string.gallery_alert_ask_not_share
+        } else {
+            R.string.gallery_alert_ask_share
+        }, message = if (_readingDiary.value.isShared) {
+            R.string.gallery_alert_ask_not_share_content
+        } else {
+            R.string.gallery_alert_ask_share_content
+        }, buttonCount = ButtonCount.TWO, onPressYes = {
+            shareTransDiary()
+            hideAlert()
+        }, onPressNo = { hideAlert() })
 
         showAlert(alert)
     }
@@ -179,11 +183,14 @@ class GalleryViewModel @Inject constructor(
                     }
                     _diaries.value.find { it.id == _readingDiary.value.id }?.let {
                         _readingDiary.value = it
-                        val alert =
-                            Alert(title = if (_readingDiary.value.isShared) "일기가 공유되었습니다" else "일기 공유가 해제되었습니다",
-                                message = "",
-                                buttonCount = ButtonCount.ONE,
-                                onPressYes = { hideAlert() })
+                        val alert = Alert(title = if (_readingDiary.value.isShared) {
+                            R.string.gallery_alert_shared
+                        } else {
+                            R.string.gallery_alert_not_shared
+                        },
+                            message = R.string.empty_string,
+                            buttonCount = ButtonCount.ONE,
+                            onPressYes = { hideAlert() })
 
                         showAlert(alert)
                     }
@@ -222,8 +229,8 @@ class GalleryViewModel @Inject constructor(
 
     fun showEditScreen() {
         if (_readingDiary.value.isShared) {
-            val alert = Alert(title = "일기를 수정할 수 없어요",
-                message = "공유 중인 일기는\n공유를 해제하고 수정할 수 있어요",
+            val alert = Alert(title = R.string.gallery_alert_cant_edit,
+                message = R.string.gallery_alert_cant_edit_content,
                 buttonCount = ButtonCount.ONE,
                 onPressYes = { hideAlert() })
 

@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.footstamp.R
 import com.example.footstamp.ui.components.SpaceMaker
@@ -38,6 +39,6 @@ fun LoadingScreen() {
             tint = WhiteColor
         )
         SpaceMaker(height = 10.dp)
-        TitleLargeText(text = "로딩 중", color = WhiteColor)
+        TitleLargeText(text = stringResource(id = R.string.loading), color = WhiteColor)
     }
 }

@@ -1,9 +1,10 @@
 package com.example.footstamp.data.model
 
 data class Alert(
-    val title: String,
-    val message: String,
+    val title: Int,
+    val message: Int,
     val buttonCount: ButtonCount,
+    val errorMessage: String? = null,
     val onPressYes: () -> Unit = {},
     val onPressNo: () -> Unit = {},
 )

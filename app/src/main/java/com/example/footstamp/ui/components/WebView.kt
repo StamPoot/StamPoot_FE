@@ -16,7 +16,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.footstamp.R
 import com.example.footstamp.ui.theme.BlackColor
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -24,28 +26,30 @@ import com.example.footstamp.ui.theme.BlackColor
 fun CustomWebView(
     url: String, onResult: (String) -> Unit
 ) {
-    AndroidView(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.9f),
-        factory = { context ->
-            WebView(context).apply {
-                settings.javaScriptEnabled = true
-                webViewClient = CustomWebViewClient(onResult)
-                addJavascriptInterface(WebAppInterface(context), "Kakao")
+    val kakao = stringResource(R.string.kakao)
+    val kakaoAuthStarts = stringResource(R.string.kakao_auth_starts)
 
-                settings.loadWithOverviewMode = true
-                settings.useWideViewPort = true
-            }
-        }, update = { webView -> webView.loadUrl(url) })
+    AndroidView(modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight(0.9f), factory = { context ->
+        WebView(context).apply {
+            settings.javaScriptEnabled = true
+            webViewClient = CustomWebViewClient(kakaoAuthStarts, onResult)
+            addJavascriptInterface(WebAppInterface(context), kakao)
+
+            settings.loadWithOverviewMode = true
+            settings.useWideViewPort = true
+        }
+    }, update = { webView -> webView.loadUrl(url) })
 }
 
-class CustomWebViewClient(val onResult: (String) -> Unit) : WebViewClient() {
+class CustomWebViewClient(private val authStartString: String, val onResult: (String) -> Unit) :
+    WebViewClient() {
 
     @Deprecated("Deprecated in Java")
     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
         url?.let {
-            if (it.startsWith("https://impine.shop/login/oauth2/code/kakao")) {
+            if (it.startsWith(authStartString)) {
                 onResult(it)
                 return true
             }

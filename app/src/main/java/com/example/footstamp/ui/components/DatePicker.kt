@@ -10,7 +10,9 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.footstamp.R
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.Formatter.convertMillisToDate
 import com.example.footstamp.data.util.Formatter.localDateTimeToLong
@@ -51,7 +53,7 @@ fun DatePickerView(
             }
             onDismiss()
         }) {
-            BodyLargeText(text = "확인", color = WhiteColor)
+            BodyLargeText(text = stringResource(R.string.confirm), color = WhiteColor)
         }
         SpaceMaker(height = 32.dp)
     }

@@ -3,6 +3,9 @@ package com.example.footstamp.ui.view.board
 import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.util.Log
+import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat.getString
+import com.example.footstamp.R
 import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Comment
@@ -110,8 +113,8 @@ class BoardViewModel @Inject constructor(
                 if (isSuccessful) {
                     updateBoardState().let {
                         val alert = Alert(
-                            title = "댓글이 작성되었습니다",
-                            message = "",
+                            title = R.string.board_alert_commented,
+                            message = R.string.empty_string,
                             buttonCount = ButtonCount.ONE,
                             onPressYes = { hideAlert() }
                         )

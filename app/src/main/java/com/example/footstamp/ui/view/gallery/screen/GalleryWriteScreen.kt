@@ -17,8 +17,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.BitmapManager
 import com.example.footstamp.data.util.Formatter
@@ -115,7 +117,10 @@ fun DiaryMainWriteLayout(
     onTitleFieldChange: (text: String) -> Unit,
     onMessageFieldChange: (text: String) -> Unit,
 ) {
-    TextInput(hint = "제목", onValueChange = onTitleFieldChange)
+    TextInput(
+        hint = stringResource(R.string.gallery_write_title_hint),
+        onValueChange = onTitleFieldChange
+    )
     SpaceMaker(height = screenHeight / 40)
     PhotoSelector(
         maxSelectionCount = 5,
@@ -129,7 +134,12 @@ fun DiaryMainWriteLayout(
         onSetPhoto = onSetPhoto,
     )
     SpaceMaker(height = screenHeight / 40)
-    TextInput(hint = "내용을 입력하세요", minLines = 5, maxLines = 10, onValueChange = onMessageFieldChange)
+    TextInput(
+        hint = stringResource(R.string.gallery_write_content_hint),
+        minLines = 5,
+        maxLines = 10,
+        onValueChange = onMessageFieldChange
+    )
 }
 
 @Composable

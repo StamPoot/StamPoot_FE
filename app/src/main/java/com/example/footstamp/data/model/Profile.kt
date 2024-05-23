@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "profile")
 class Profile(
-    @ColumnInfo(name = "profile_uid") var uid: String = "uid",
+    @ColumnInfo(name = "profile_uid") var uid: String = "",
     @ColumnInfo(name = "profile_nickname") var nickname: String = "",
     @ColumnInfo(name = "profile_image") var image: String? = null,
     @ColumnInfo(name = "profile_about_me") var aboutMe: String = "",

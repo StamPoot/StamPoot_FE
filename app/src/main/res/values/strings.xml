@@ -7,11 +7,67 @@
     <string name="screen_board">게시판</string>
     <string name="screen_profile">프로필</string>
 
+    <string name="kakao">Kakao</string>
     <string name="google_url">https://impine.shop/</string>
     <string name="kakao_app_key">c17162ddfe7a97800cc572a4c27a4f4b</string>
     <string name="kakao_auth_url">https://kauth.kakao.com/oauth/authorize?client_id=1835b017f8241b82663c7f11a394c9cb&amp;redirect_uri=https://impine.shop/login/oauth2/code/kakao&amp;response_type=code</string>
+    <string name="kakao_auth_starts">https://impine.shop/login/oauth2/code/kakao</string>
 
-    <string name="reply_message">님이 댓글을 남겼습니다.</string>
+    <string name="login_login">로그인</string>
+
+    <string name="empty_string" />
+    <string name="board_comment">댓글</string>
+    <string name="board_comment_input">댓글을 입력해주세요</string>
+    <string name="board_alert_commented">댓글이 작성되었습니다</string>
 
     <string name="gallery_no_diary">"일기를 작성해주세요"</string>
+    <string name="gallery_title_hint">제목</string>
+    <string name="gallery_content_hint">내용을 입력하세요</string>
+    <string name="gallery_delete">일기 삭제</string>
+    <string name="gallery_write_title_hint">제목</string>
+    <string name="gallery_write_content_hint">내용을 입력하세요</string>
+    <string name="gallery_alert_write_written">일기가 작성되었습니다</string>
+    <string name="gallery_alert_ask_edit">일기를 수정하시겠습니까?</string>
+    <string name="gallery_alert_ask_delete">정말 일기를 삭제하시겠습니까?</string>
+    <string name="gallery_alert_content_delete">삭제된 일기는 복구할 수 없고\n게시판에서도 삭제됩니다</string>
+    <string name="gallery_alert_ask_share">정말 일기를 공유하시겠습니까?</string>
+    <string name="gallery_alert_ask_not_share">일기 공유를 취소하시겠습니까?</string>
+    <string name="gallery_alert_ask_share_content">공유한 일기는 게시판에 게시됩니다</string>
+    <string name="gallery_alert_ask_not_share_content">공유했던 일기의 댓글과 별이 사라집니다</string>
+    <string name="gallery_alert_shared">일기가 공유되었습니다</string>
+    <string name="gallery_alert_not_shared">일기 공유가 해제되었습니다</string>
+    <string name="gallery_alert_cant_edit">일기를 수정할 수 없어요</string>
+    <string name="gallery_alert_cant_edit_content">공유 중인 일기는\n공유를 해제하고 수정할 수 있어요</string>
+
+    <string name="profile_edit_title">수정하기</string>
+    <string name="profile_my_activity">나의 활동</string>
+    <string name="profile_log_out">로그 아웃</string>
+    <string name="profile_delete_profile">회원 탈퇴</string>
+    <string name="profile_delete_profile_hint">탈퇴하시려면 \'회원 탈퇴\'를 입력해주세요</string>
+    <string name="profile_edit">프로필 수정</string>
+    <string name="profile_nickname">닉네임</string>
+    <string name="profile_nickname_hint">닉네임을 설정해주세요</string>
+    <string name="profile_photo">사진</string>
+    <string name="profile_about_me">한 줄 소개</string>
+    <string name="profile_about_me_hint">자기소개를 설정해주세요</string>
+    <string name="profile_edit_done">수정</string>
+    <string name="profile_alert_ask_logout">로그 아웃 하시겠습니까?</string>
+    <string name="profile_alert_logout">로그 아웃 되었습니다</string>
+    <string name="profile_alert_ask_delete_profile">정말 회원 탈퇴하시겠습니까?</string>
+    <string name="profile_alert_ask_delete_profile_content">회원 정보는 모두 삭제됩니다</string>
+    <string name="profile_alert_delete_profile">회원 탈퇴되었습니다</string>
+    <string name="profile_reply_message">님이 댓글을 남겼습니다.</string>
+
+    <string name="error_occur">오류 발생</string>
+    <string name="error_occur_content">다시 시도해주세요</string>
+
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+
+    <string name="toast_on_back_press">한 번 더 누르시면 앱이 종료됩니다</string>
+
+    <string name="loading">로딩 중</string>
+
+    <string name="photo_select">사진 선택</string>
+
 </resources>

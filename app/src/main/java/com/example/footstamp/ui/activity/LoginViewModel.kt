@@ -18,12 +18,10 @@ class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     private val diaryRepository: DiaryRepository,
     private val profileRepository: ProfileRepository
-) :
-    BaseViewModel() {
+) : BaseViewModel() {
+
     private val _googleIdToken = MutableStateFlow<String?>(null)
-
     private val _kakaoIdToken = MutableStateFlow<String?>(null)
-
     private val _loginToken = MutableStateFlow<String?>(null)
     val loginToken = _loginToken.asStateFlow()
 
@@ -55,13 +53,16 @@ class LoginViewModel @Inject constructor(
     fun googleAccessTokenLogin() {
         coroutineLoading {
             loginRepository.accessTokenLogin(Provider.GOOGLE, _googleIdToken.value!!)
-                .also {
-                    val loginToken = LoginToken(
-                        provider = Provider.GOOGLE,
-                        date = Formatter.localTimeToDiaryString(LocalDateTime.now()),
-                    ).apply { it.body()?.auth?.let { token -> insertToken(token) } }
-                    loginRepository.setTokenDao(loginToken)
-                    _loginToken.value = it.body()?.auth
+                .let { authToken ->
+                    if (authToken != null) {
+                        val loginToken = LoginToken(
+                            provider = Provider.GOOGLE,
+                            date = Formatter.localTimeToDiaryString(LocalDateTime.now()),
+                        ).apply { insertToken(authToken) }
+
+                        loginRepository.setTokenDao(loginToken)
+                        _loginToken.value = authToken
+                    }
                 }
         }
     }
@@ -69,13 +70,17 @@ class LoginViewModel @Inject constructor(
     fun kakaoAccessTokenLogin(token: String) {
         coroutineLoading {
             loginRepository.accessTokenLogin(Provider.KAKAO, token)
-                .also { _loginToken.value = token }
-        }
-    }
+                .let { authToken ->
+                    if (authToken != null) {
+                        val loginToken = LoginToken(
+                            provider = Provider.KAKAO,
+                            date = Formatter.localTimeToDiaryString(LocalDateTime.now())
+                        ).apply { insertToken(authToken) }
 
-    fun kakaoLogin() {
-        coroutineLoading {
-            loginRepository.kakaoLogin()
+                        loginRepository.setTokenDao(loginToken)
+                        _loginToken.value = authToken
+                    }
+                }
         }
     }
 }

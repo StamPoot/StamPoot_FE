@@ -21,10 +21,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.footstamp.R
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.ui.base.BaseScreen
@@ -138,5 +140,8 @@ fun DiaryMainReadLayout(
 
 @Composable
 fun DiaryDeleteLayout(onDeleteDiary: () -> Unit) {
-    CommonButton(text = "일기 삭제", buttonColor = WarnColor) { onDeleteDiary() }
+    CommonButton(
+        text = stringResource(R.string.gallery_delete),
+        buttonColor = WarnColor
+    ) { onDeleteDiary() }
 }

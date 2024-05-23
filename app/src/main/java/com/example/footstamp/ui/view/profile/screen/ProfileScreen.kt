@@ -50,7 +50,6 @@ import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
-import com.example.footstamp.ui.theme.WarnColor
 import com.example.footstamp.ui.theme.WhiteColor
 import com.example.footstamp.ui.view.profile.ProfileViewModel
 import com.example.footstamp.ui.view.util.AlertScreen
@@ -150,7 +149,7 @@ fun ProfileCard(
         }
     }
     SpaceMaker(height = screenHeight / 40f)
-    CommonButton("수정하기") { onClickEditButton() }
+    CommonButton(stringResource(id = R.string.profile_edit_title)) { onClickEditButton() }
 }
 
 @Composable
@@ -158,14 +157,14 @@ fun ProfileMyHistory(
     context: Context, notificationList: List<Notification>, screenHeight: Dp
 ) {
     SpaceMaker(height = screenHeight / 40f)
-    TopBar(text = "나의 활동")
+    TopBar(text = stringResource(R.string.profile_my_activity))
     Column(
         modifier = Modifier
             .fillMaxWidth(0.9f)
     ) {
         notificationList.forEach { notification ->
             NotificationItem(
-                text = notification.profile.nickname + getString(context, R.string.reply_message),
+                text = notification.profile.nickname + getString(context, R.string.profile_reply_message),
                 time = Formatter.dateTimeToFormedString(notification.dateTime),
                 message = notification.content
             )
@@ -203,11 +202,17 @@ fun ProfileBottomLayout(
     SpaceMaker(height = screenHeight / 20)
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
         if (profileDeleteText == null) {
-            CommonButton(text = "로그 아웃", buttonColor = SubColor) { onClickLogOut() }
-            CommonButton(text = "회원 탈퇴", buttonColor = SubColor) { onClickDeleteProfile() }
+            CommonButton(
+                text = stringResource(R.string.profile_log_out),
+                buttonColor = SubColor
+            ) { onClickLogOut() }
+            CommonButton(
+                text = stringResource(R.string.profile_delete_profile),
+                buttonColor = SubColor
+            ) { onClickDeleteProfile() }
         } else {
             TextInput(
-                hint = "탈퇴하시려면 '회원 탈퇴'를 입력해주세요",
+                hint = stringResource(R.string.profile_delete_profile_hint),
                 onValueChange = onTextChange,
             )
         }
@@ -234,24 +239,24 @@ fun ProfileEditDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SpaceMaker(height = screenHeight / 40)
-            TitleLargeText(text = "프로필 수정", color = BlackColor)
+            TitleLargeText(text = stringResource(R.string.profile_edit), color = BlackColor)
             SpaceMaker(height = screenHeight / 40)
 
             HorizontalDivider(modifier = Modifier.fillMaxWidth(0.9f))
             SpaceMaker(height = screenHeight / 80)
-            TitleText(text = "닉네임", color = BlackColor)
+            TitleText(text = stringResource(R.string.profile_nickname), color = BlackColor)
             SpaceMaker(height = screenHeight / 80)
             TextInput(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
                     .background(WhiteColor),
                 baseText = editProfile.nickname,
-                hint = "닉네임을 설정해주세요",
+                hint = stringResource(R.string.profile_nickname_hint),
                 onValueChange = onChangeNickname
             )
 
             SpaceMaker(height = screenHeight / 80)
-            TitleText(text = "사진", color = BlackColor)
+            TitleText(text = stringResource(R.string.profile_photo), color = BlackColor)
             SpaceMaker(height = screenHeight / 80)
             ProfilePhotoSelector(
                 contentResolver = contentResolver,
@@ -263,19 +268,19 @@ fun ProfileEditDialog(
             )
 
             SpaceMaker(height = screenHeight / 80)
-            TitleText(text = "한 줄 소개", color = BlackColor)
+            TitleText(text = stringResource(R.string.profile_about_me), color = BlackColor)
             SpaceMaker(height = screenHeight / 80)
             TextInput(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
                     .background(WhiteColor),
                 baseText = editProfile.aboutMe,
-                hint = "자기소개를 설정해주세요",
+                hint = stringResource(R.string.profile_about_me_hint),
                 onValueChange = onChangeAboutMe
             )
 
             SpaceMaker(height = screenHeight / 80)
-            CommonButton("수정") { onEdit() }
+            CommonButton(stringResource(R.string.profile_edit_done)) { onEdit() }
             SpaceMaker(height = screenHeight / 80)
         }
     }

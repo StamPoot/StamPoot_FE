@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -212,7 +213,7 @@ fun BoardCommentLayout(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TitleLargeText(text = "댓글", color = MainColor)
+            TitleLargeText(text = stringResource(R.string.board_comment), color = MainColor)
             SpaceMaker(width = 10.dp)
             Icon(
                 imageVector = Icons.Default.Star,
@@ -235,7 +236,8 @@ fun BoardCommentLayout(
 
 @Composable
 fun BoardCommentWriteLayout(onWriteComment: (String) -> Unit) {
-    val commentText = remember { mutableStateOf("") }
+    val emptyString = stringResource(id = R.string.empty_string)
+    val commentText = remember { mutableStateOf(emptyString) }
 
     Row(
         modifier = Modifier
@@ -245,7 +247,7 @@ fun BoardCommentWriteLayout(onWriteComment: (String) -> Unit) {
     ) {
         TextInput(
             onValueChange = {},
-            hint = "댓글을 입력해주세요",
+            hint = stringResource(id = R.string.board_comment_input),
             modifier = Modifier.weight(0.9f),
             textState = commentText
         )
@@ -257,7 +259,7 @@ fun BoardCommentWriteLayout(onWriteComment: (String) -> Unit) {
                 .fillMaxHeight()
                 .clickable {
                     onWriteComment(commentText.value)
-                    commentText.value = ""
+                    commentText.value = emptyString
                 },
             tint = MainColor
         )

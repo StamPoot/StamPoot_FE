@@ -1,5 +1,7 @@
 package com.example.footstamp.data.repository
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.example.footstamp.data.dao.TokenDao
 import com.example.footstamp.data.data_source.AuthService
 import com.example.footstamp.data.dto.response.auth.AuthToken
@@ -18,16 +20,15 @@ class LoginRepository @Inject constructor(
 
     suspend fun accessTokenLogin(
         provider: Provider, token: String
-    ): Response<AuthToken> {
-        return authService.authLoginToken(provider.provider, token).also { response ->
+    ): String? {
+        authService.authLoginToken(provider.provider, token).let { response ->
             if (response.isSuccessful && response.body() != null) {
-                tokenManager.accessToken = response.body()?.auth
+                val responseBody = response.body()!!
+                tokenManager.accessToken = responseBody.auth
+                return responseBody.auth
             }
         }
-    }
-
-    suspend fun kakaoLogin(): Response<AuthToken> {
-        return authService.kakaoLogin()
+        return null
     }
 
     suspend fun setTokenDao(token: LoginToken) =

@@ -9,12 +9,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.footstamp.R
 
 @Composable
 fun BackOnPressed() {
     val context = LocalContext.current
     var backPressedState by remember { mutableStateOf(true) }
     var backPressedTime = 0L
+    val comment = stringResource(R.string.toast_on_back_press)
 
     BackHandler(enabled = backPressedState) {
         if (System.currentTimeMillis() - backPressedTime <= 400L) {
@@ -22,7 +25,7 @@ fun BackOnPressed() {
             (context as Activity).finish()
         } else {
             backPressedState = true
-            Toast.makeText(context, "한 번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, comment, Toast.LENGTH_SHORT).show()
         }
         backPressedTime = System.currentTimeMillis()
     }

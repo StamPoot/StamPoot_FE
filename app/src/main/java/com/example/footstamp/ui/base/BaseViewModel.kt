@@ -1,9 +1,8 @@
 package com.example.footstamp.ui.base
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.footstamp.R
 import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import kotlinx.coroutines.CoroutineDispatcher
@@ -51,19 +50,15 @@ open class BaseViewModel : ViewModel() {
         }
     }
 
-    fun showError(errorMessage: String = ERROR_RETRY) {
+    fun showError(errorMessage: String? = null) {
         val alert = Alert(
-            title = ERROR_OCCUR,
-            message = errorMessage,
+            title = R.string.error_occur,
+            message = R.string.error_occur_content,
+            errorMessage = errorMessage,
             buttonCount = ButtonCount.ONE,
             onPressYes = { hideAlert() }
         )
 
         showAlert(alert)
-    }
-
-    companion object {
-        const val ERROR_OCCUR = "오류 발생"
-        const val ERROR_RETRY = "다시 시도해주세요"
     }
 }

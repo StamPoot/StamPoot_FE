@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -215,7 +216,7 @@ fun PhotoSelector(
     basePhoto: List<Bitmap> = emptyList()
 ) {
     var selectedImages by remember { mutableStateOf(basePhoto) }
-    val buttonText = "사진 선택"
+    val buttonText = stringResource(R.string.photo_select)
     val multiplePhotoPickerLauncher =
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(

@@ -7,8 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.example.footstamp.R
 import com.example.footstamp.data.login.GoogleLogin
 import com.example.footstamp.ui.theme.FootStampTheme
 import com.example.footstamp.ui.view.login.screen.LoginScreen
@@ -31,6 +33,7 @@ class LoginActivity : ComponentActivity() {
         setContent {
             FootStampTheme {
                 LoginScreen(
+                    kakaoLoginUrl = stringResource(id = R.string.kakao_auth_url),
                     onGoogleLogin = { googleLoginEvent() },
                     onKakaoLogin = { loginViewModel.kakaoAccessTokenLogin(it) })
             }

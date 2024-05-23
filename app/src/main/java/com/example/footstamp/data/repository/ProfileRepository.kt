@@ -97,8 +97,8 @@ class ProfileRepository @Inject constructor(
     }
 
     suspend fun deleteUser(): Boolean {
-        userService.profileDelete(tokenManager.accessToken!!).let {
-            if (it.isSuccessful) return true
+        userService.profileDelete(tokenManager.accessToken!!).let {response->
+            if (response.isSuccessful) return true
         }
         return false
     }

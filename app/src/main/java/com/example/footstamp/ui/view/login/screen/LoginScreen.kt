@@ -1,7 +1,5 @@
 package com.example.footstamp.ui.view.login.screen
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,28 +16,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.footstamp.R
 import com.example.footstamp.ui.base.BaseScreen
 import com.example.footstamp.ui.components.CustomWebView
 import com.example.footstamp.ui.components.ImageButton
-import com.example.footstamp.ui.view.util.LoadingScreen
 import com.example.footstamp.ui.components.SpaceMaker
 import com.example.footstamp.ui.components.TitleLargeText
 import com.example.footstamp.ui.theme.BlackColor
-import com.example.footstamp.ui.view.login.LoginViewModel
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.WhiteColor
+import com.example.footstamp.ui.view.login.LoginViewModel
 import com.example.footstamp.ui.view.util.AlertScreen
+import com.example.footstamp.ui.view.util.LoadingScreen
 
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
+    kakaoLoginUrl: String,
     onGoogleLogin: () -> Unit,
     onKakaoLogin: (String) -> Unit
 ) {
@@ -62,9 +60,13 @@ fun LoginScreen(
                 contentScale = ContentScale.FillWidth
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                TitleLargeText(text = "발도장", color = WhiteColor, fontSize = 40.sp)
+                TitleLargeText(
+                    text = stringResource(R.string.app_name),
+                    color = WhiteColor,
+                    fontSize = 40.sp
+                )
                 SpaceMaker(height = 20.dp)
-                TitleLargeText(text = "로그인", color = WhiteColor)
+                TitleLargeText(text = stringResource(R.string.login_login), color = WhiteColor)
             }
             Column {
                 ImageButton(
@@ -85,6 +87,7 @@ fun LoginScreen(
     isLoading.let { if (it) LoadingScreen() }
     alert?.let { AlertScreen(alert = it) }
     if (isShowWebView) KakaoLoginWebView(
+        kakaoLoginUrl = kakaoLoginUrl,
         onCloseWebView = { loginViewModel.hideKakaoLogin() },
         onAuthCodeReceived = { code ->
             loginViewModel.hideKakaoLogin()
@@ -94,8 +97,11 @@ fun LoginScreen(
 }
 
 @Composable
-fun KakaoLoginWebView(onCloseWebView: () -> Unit, onAuthCodeReceived: (String) -> Unit) {
-    val kakaoLoginUrl = getString(LocalContext.current, R.string.kakao_auth_url)
+fun KakaoLoginWebView(
+    kakaoLoginUrl: String,
+    onCloseWebView: () -> Unit,
+    onAuthCodeReceived: (String) -> Unit
+) {
 
     Column(
         modifier = Modifier

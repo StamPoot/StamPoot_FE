@@ -18,8 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.footstamp.R
 import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.WhiteColor
@@ -118,7 +120,7 @@ fun ImageDialog(image: Bitmap, onClick: () -> Unit = {}) {
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             TopBackBar(
-                text = "",
+                text = stringResource(R.string.empty_string),
                 leftIcon = Icons.Default.Close,
                 backgroundColor = BlackColor,
                 iconColor = WhiteColor,
