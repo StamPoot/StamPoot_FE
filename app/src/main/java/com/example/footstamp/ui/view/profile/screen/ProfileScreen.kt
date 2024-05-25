@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -50,6 +51,7 @@ import com.example.footstamp.ui.theme.BackColor
 import com.example.footstamp.ui.theme.BlackColor
 import com.example.footstamp.ui.theme.MainColor
 import com.example.footstamp.ui.theme.SubColor
+import com.example.footstamp.ui.theme.TransparentColor
 import com.example.footstamp.ui.theme.WhiteColor
 import com.example.footstamp.ui.view.profile.ProfileViewModel
 import com.example.footstamp.ui.view.util.AlertScreen
@@ -120,7 +122,11 @@ fun ProfileCard(
 ) {
 
     SpaceMaker(height = screenHeight / 20f)
-    Card(modifier = Modifier.fillMaxWidth(0.9f)) {
+    Card(
+        modifier = Modifier.fillMaxWidth(0.9f), colors = CardColors(
+            BackColor, TransparentColor, TransparentColor, TransparentColor
+        )
+    ) {
         Column(
             modifier = Modifier.padding(
                 vertical = screenHeight / 40, horizontal = screenWidth / 40
@@ -164,7 +170,10 @@ fun ProfileMyHistory(
     ) {
         notificationList.forEach { notification ->
             NotificationItem(
-                text = notification.profile.nickname + getString(context, R.string.profile_reply_message),
+                text = notification.profile.nickname + getString(
+                    context,
+                    R.string.profile_reply_message
+                ),
                 time = Formatter.dateTimeToFormedString(notification.dateTime),
                 message = notification.content
             )
@@ -176,7 +185,8 @@ fun ProfileMyHistory(
 fun NotificationItem(text: String, time: String, message: String) {
     SpaceMaker(height = 5.dp)
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardColors(BackColor, TransparentColor, TransparentColor, TransparentColor)
     ) {
         SpaceMaker(height = 5.dp)
         BodyText(text = text, color = MainColor, modifier = Modifier.padding(horizontal = 5.dp))
