@@ -1,17 +1,13 @@
 package com.example.footstamp.ui.view.board
 
-import android.content.ContentValues.TAG
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.ContextCompat.getString
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Comment
 import com.example.footstamp.data.model.Diary
 import com.example.footstamp.data.model.Profile
-import com.example.footstamp.data.repository.BoardRepository
 import com.example.footstamp.data.repository.BoardSortType
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BoardViewModel @Inject constructor(
-    private val repository: BoardRepository
+    private val fetchBoardDiariesUseCase: FetchBoardDiariesUseCase,
+    private val fetchDiaryDetailUseCase: FetchDiaryDetailUseCase,
+    private val fetchAddReplyUseCase: FetchAddReplyUseCase,
+    private val likeUseCase: LikeUseCase,
+    private val deleteReplyUseCase: DeleteReplyUseCase
 ) : BaseViewModel() {
 
     private val _diaries = MutableStateFlow<List<Diary>>(emptyList())
@@ -48,7 +48,7 @@ class BoardViewModel @Inject constructor(
 
     private fun updateBoardState() {
         coroutineLoading {
-            repository.getBoardDiaryList(BoardSortType.RECENT)?.let { diaryList ->
+            fetchBoardDiariesUseCase(BoardSortType.RECENT)?.let { diaryList ->
                 _diaries.value = diaryList
             }
         }
@@ -58,13 +58,94 @@ class BoardViewModel @Inject constructor(
         coroutineLoading {
             _boardState.value = when (_boardState.value) {
                 BoardSortType.RECENT -> {
-                    repository.getBoardDiaryList(BoardSortType.LIKE)
+                    fetchBoardDiariesUseCase(BoardSortType.LIKE)
                     BoardSortType.LIKE
                 }
 
                 BoardSortType.LIKE -> {
-                    repository.getBoardDiaryList(BoardSortType.RECENT)
+                    fetchBoardDiariesUseCase(BoardSortType.RECENT)
                     BoardSortType.RECENT
+                }
+            }
+        }
+    }
+
+    fun likeDiary() {
+        coroutineLoading {
+            likeUseCase(id = _readingDiary.value!!.id.toString())?.let { likeCount ->
+                getDiaryDetail()
+            }
+        }
+    }
+
+    private fun getDiaryDetail() {
+        coroutineLoading {
+            fetchDiaryDetailUseCase(_readingDiary.value!!.id.toString()).let { triple ->
+                val diary = triple.first
+                val writer = triple.second
+                val comments = triple.third
+
+                _readingDiary.value = diary
+                _writerState.value = writer
+                _commentList.value = comments
+            }
+        }
+    }
+
+    fun writeComment(comment: String) {
+        coroutineLoading {
+            fetchAddReplyUseCase(
+                id = _readingDiary.value!!.id.toString(),
+                content = comment
+            ).let { isSuccessful ->
+                if (isSuccessful) {
+                    getDiaryDetail().let {
+                        val alert = Alert(
+                            title = R.string.board_alert_commented,
+                            message = R.string.empty_string,
+                            buttonCount = ButtonCount.ONE,
+                            onPressYes = { hideAlert() }
+                        )
+                        showAlert(alert)
+                    }
+                } else {
+                    showError()
+                }
+            }
+        }
+    }
+
+    fun deleteCommentAlert(id: Long) {
+        val alert = Alert(
+            title = R.string.board_alert_comment_delete,
+            message = R.string.board_alert_comment_delete_message,
+            ButtonCount.TWO,
+            onPressYes = {
+                deleteComment(id)
+                hideAlert()
+            },
+            onPressNo = { hideAlert() }
+        )
+
+        showAlert(alert)
+    }
+
+    private fun deleteComment(id: Long) {
+        coroutineLoading {
+            deleteReplyUseCase(id.toString()).let { isSuccessful ->
+                if (isSuccessful) {
+                    getDiaryDetail().let {
+                        val alert = Alert(
+                            title = R.string.board_alert_comment_deleted,
+                            message = R.string.empty_string,
+                            buttonCount = ButtonCount.ONE,
+                            onPressYes = { hideAlert() }
+                        )
+
+                        showAlert(alert)
+                    }
+                } else {
+                    showError()
                 }
             }
         }
@@ -80,51 +161,6 @@ class BoardViewModel @Inject constructor(
         _writerState.value = null
         _commentList.value = emptyList()
         updateBoardState()
-    }
-
-    fun likeDiary() {
-        coroutineLoading {
-            repository.likeDiary(id = _readingDiary.value!!.id.toString())?.let { likeCount ->
-                getDiaryDetail()
-            }
-        }
-    }
-
-    private fun getDiaryDetail() {
-        coroutineLoading {
-            repository.getDiaryDetail(_readingDiary.value!!.id.toString()).let { triple ->
-                val diary = triple.first
-                val writer = triple.second
-                val comments = triple.third
-
-                _readingDiary.value = diary
-                _writerState.value = writer
-                _commentList.value = comments
-            }
-        }
-    }
-
-    fun writeComment(comment: String) {
-        coroutineLoading {
-            repository.addReply(
-                id = _readingDiary.value!!.id.toString(),
-                content = comment
-            ).let { isSuccessful ->
-                if (isSuccessful) {
-                    updateBoardState().let {
-                        val alert = Alert(
-                            title = R.string.board_alert_commented,
-                            message = R.string.empty_string,
-                            buttonCount = ButtonCount.ONE,
-                            onPressYes = { hideAlert() }
-                        )
-                        showAlert(alert)
-                    }
-                } else {
-                    showError()
-                }
-            }
-        }
     }
 
     fun openImageDetail(image: Bitmap) {

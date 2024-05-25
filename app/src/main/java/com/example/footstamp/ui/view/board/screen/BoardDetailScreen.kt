@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
@@ -85,11 +86,14 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
                 onClick = { boardViewModel.openImageDetail(it) })
-            BoardShareLayout(diary = readingDiary!!,
+            BoardShareLayout(
+                diary = readingDiary!!,
                 onTapLike = { boardViewModel.likeDiary() },
                 commentList = commentList,
                 screenWidth = screenWidth,
-                onWriteComment = { comment -> boardViewModel.writeComment(comment) })
+                onWriteComment = { comment -> boardViewModel.writeComment(comment) },
+                onDeleteComment = { id -> boardViewModel.deleteCommentAlert(id) }
+            )
         }
         // 사진 크게보기
         openingImage?.let { ImageDialog(image = it, onClick = { boardViewModel.closeImage() }) }
@@ -190,14 +194,16 @@ fun BoardShareLayout(
     commentList: List<Comment>,
     screenWidth: Dp,
     onTapLike: () -> Unit,
-    onWriteComment: (String) -> Unit
+    onWriteComment: (String) -> Unit,
+    onDeleteComment: (id: Long) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         BoardCommentLayout(
             diary = diary,
             commentList = commentList,
             screenWidth = screenWidth,
-            onTapLike = onTapLike
+            onTapLike = onTapLike,
+            onDeleteComment = onDeleteComment
         )
         BoardCommentWriteLayout(onWriteComment)
     }
@@ -205,7 +211,11 @@ fun BoardShareLayout(
 
 @Composable
 fun BoardCommentLayout(
-    diary: Diary, screenWidth: Dp, commentList: List<Comment>, onTapLike: () -> Unit
+    diary: Diary,
+    screenWidth: Dp,
+    commentList: List<Comment>,
+    onTapLike: () -> Unit,
+    onDeleteComment: (id: Long) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -228,7 +238,13 @@ fun BoardCommentLayout(
         HorizontalDivider(thickness = 1.dp, color = SubColor)
         SpaceMaker(height = 10.dp)
         Column {
-            commentList.map { BoardComment(comment = it, screenWidth = screenWidth) }
+            commentList.map {
+                BoardComment(
+                    comment = it,
+                    screenWidth = screenWidth,
+                    onDeleteComment = onDeleteComment
+                )
+            }
         }
         SpaceMaker(height = 10.dp)
     }
@@ -268,29 +284,34 @@ fun BoardCommentWriteLayout(onWriteComment: (String) -> Unit) {
 }
 
 @Composable
-fun BoardComment(comment: Comment, screenWidth: Dp) {
+fun BoardComment(comment: Comment, screenWidth: Dp, onDeleteComment: (id: Long) -> Unit) {
     SpaceMaker(height = 5.dp)
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardColors(BackColor, BackColor, BackColor, BackColor)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            SpaceMaker(width = 5.dp)
-            Card(shape = CircleShape) {
+            Card(shape = CircleShape, modifier = Modifier.padding(horizontal = 5.dp)) {
                 AsyncImage(
                     model = comment.profileImage ?: R.drawable.icon_circle_small,
                     modifier = Modifier.size(screenWidth / 10, screenWidth / 10),
                     contentDescription = null
                 )
             }
-            SpaceMaker(width = 5.dp)
-            Column {
+            Column(modifier = Modifier.padding(horizontal = 5.dp).weight(0.7f)) {
                 SpaceMaker(height = 5.dp)
-                BodyText(
-                    text = comment.nickname,
-                    color = MainColor,
-                    modifier = Modifier.padding(horizontal = 5.dp)
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    BodyText(
+                        text = comment.nickname,
+                        color = MainColor,
+                        modifier = Modifier.padding(horizontal = 5.dp)
+                    )
+                    if (comment.isMine) AsyncImage(
+                        model = R.drawable.icon_my,
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxHeight()
+                    )
+                }
                 SpaceMaker(height = 5.dp)
                 BodyLargeText(
                     text = comment.content,
@@ -299,11 +320,13 @@ fun BoardComment(comment: Comment, screenWidth: Dp) {
                 )
                 SpaceMaker(height = 5.dp)
             }
+            Icon(imageVector = Icons.Default.Close,
+                contentDescription = null,
+                tint = SubColor,
+                modifier = Modifier.weight(0.1f).clickable { onDeleteComment(comment.id) })
         }
         LabelText(
-            text = comment.date,
-            color = SubColor,
-            modifier = Modifier.padding(horizontal = 5.dp)
+            text = comment.date, color = SubColor, modifier = Modifier.padding(horizontal = 5.dp)
         )
         SpaceMaker(height = 5.dp)
     }

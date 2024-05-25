@@ -20,6 +20,9 @@
     <string name="board_comment">댓글</string>
     <string name="board_comment_input">댓글을 입력해주세요</string>
     <string name="board_alert_commented">댓글이 작성되었습니다</string>
+    <string name="board_alert_comment_delete">댓글을 삭제하시겠습니까?</string>
+    <string name="board_alert_comment_delete_message">삭제한 댓글은 되돌릴 수 없습니다</string>
+    <string name="board_alert_comment_deleted">댓글이 삭제되었습니다</string>
 
     <string name="gallery_no_diary">"일기를 작성해주세요"</string>
     <string name="gallery_title_hint">제목</string>

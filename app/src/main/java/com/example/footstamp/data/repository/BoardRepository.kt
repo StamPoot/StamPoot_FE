@@ -21,7 +21,7 @@ class BoardRepository @Inject constructor(
     private val diaryService: DiaryService
 ) : BaseRepository() {
 
-    suspend fun getBoardDiaryList(sortType: BoardSortType): List<Diary>? {
+    suspend fun fetchBoardDiaryList(sortType: BoardSortType): List<Diary>? {
         boardService.boardFeeds(sortType.sortCode).let { response ->
             if (response.isSuccessful) {
                 val responseBody = response.body()!!
@@ -38,7 +38,7 @@ class BoardRepository @Inject constructor(
         }
     }
 
-    suspend fun getDiaryDetail(id: String): Triple<Diary, Profile, List<Comment>> {
+    suspend fun fetchDiaryDetail(id: String): Triple<Diary, Profile, List<Comment>> {
         diaryService.diaryDetail(tokenManager.accessToken!!, id).let { response ->
             val responseBody = response.body()!!
 
@@ -78,7 +78,7 @@ class BoardRepository @Inject constructor(
         }
     }
 
-    suspend fun addReply(id: String, content: String): Boolean {
+    suspend fun fetchAddReply(id: String, content: String): Boolean {
         replyService.replyWrite(
             id, tokenManager.accessToken!!, CreateReplyReqDTO(content)
         ).let { response ->
@@ -87,17 +87,18 @@ class BoardRepository @Inject constructor(
         return false
     }
 
-    // id는 게시글 id 인지 댓글 id 인지, 일기 신고, 좋아요 API 수정 요청
-    suspend fun deleteReply(id: String) {
-        replyService.replyDelete(id, tokenManager.accessToken!!)
-    }
-
     suspend fun likeDiary(id: String): Int? {
         boardService.diaryLikes(tokenManager.accessToken!!, id).let { response ->
             return if (response.isSuccessful) {
                 val responseBody = response.body()!!
                 responseBody.substring(8).toInt()
             } else null
+        }
+    }
+
+    suspend fun deleteReply(id: String): Boolean {
+        replyService.replyDelete(id, tokenManager.accessToken!!).let { response ->
+            return response.isSuccessful
         }
     }
 
