@@ -75,11 +75,11 @@ fun LoginScreen(
                     onClick = { if (!isShowWebView) onGoogleLogin() }
                 )
                 SpaceMaker(height = 10.dp)
-                ImageButton(
-                    image = R.drawable.icon_kakao_login,
-                    buttonWidth = screenWidth / 2,
-                    onClick = { if (!isShowWebView) loginViewModel.showKakaoLogin() }
-                )
+//                ImageButton(
+//                    image = R.drawable.icon_kakao_login,
+//                    buttonWidth = screenWidth / 2,
+//                    onClick = { if (!isShowWebView) loginViewModel.showKakaoLogin() }
+//                )
             }
             SpaceMaker(height = 0.dp)
         }
