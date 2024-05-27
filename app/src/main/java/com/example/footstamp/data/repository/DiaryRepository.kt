@@ -19,7 +19,7 @@ class DiaryRepository @Inject constructor(
     private val diaryService: DiaryService
 ) : BaseRepository() {
 
-    suspend fun getDiaries(): List<Diary>? {
+    suspend fun fetchDiaries(): List<Diary>? {
         diaryService.diaryList(tokenManager.accessToken!!).let { response ->
             if (response.isSuccessful) {
                 val responseBody = response.body()!!
@@ -86,11 +86,10 @@ class DiaryRepository @Inject constructor(
         return null
     }
 
-    // id 수정 필요
-    suspend fun deleteDiary(diary: Diary): Boolean {
-        diaryService.diaryDelete(diary.id.toString(), tokenManager.accessToken!!).let { response ->
+    suspend fun deleteDiary(diaryId: String): Boolean {
+        diaryService.diaryDelete(diaryId, tokenManager.accessToken!!).let { response ->
             if (response.isSuccessful) {
-                deleteDiaryDao(diary.id)
+                deleteDiaryDao(diaryId.toLong())
                 return true
             }
         }
@@ -113,7 +112,7 @@ class DiaryRepository @Inject constructor(
             id = diary.id.toString()
         ).let {
             if (it.isSuccessful) {
-                getDiaries()
+                fetchDiaries()
                 return true
             }
             return false
@@ -133,7 +132,7 @@ class DiaryRepository @Inject constructor(
         return false
     }
 
-    // dao Database
+    // dao Database DB 함수만 구현
 
     suspend fun insertDiaryDao(diary: Diary) = diaryDao.insertDiary(diary)
 
@@ -171,6 +170,7 @@ class DiaryRepository @Inject constructor(
     suspend fun getDiaryByLocationDao(location: SeoulLocation): List<Diary> =
         diaryDao.getDiaryByLocation(location)
 
+    // Backend 에서 사용하는 모델을 앱 내의 Diary 모델로 변환
     private fun diaryDTOToDiary(
         diaryDTO: DiaryDTO,
         photoBitmaps: List<Bitmap>,

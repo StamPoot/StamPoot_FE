@@ -2,13 +2,11 @@ package com.example.footstamp.ui.view.gallery
 
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.R
 import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Diary
-import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +19,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
-    private val repository: DiaryRepository
+    private val fetchDiariesUseCase: FetchDiariesUseCase,
+    private val writeDiaryUseCase: WriteDiaryUseCase,
+    private val readDiaryUseCase: ReadDiaryUseCase,
+    private val deleteDiaryUseCase: DeleteDiaryUseCase,
+    private val updateDiaryUseCase: UpdateDiaryUseCase,
+    private val shareDiaryUseCase: ShareDiaryUseCase,
+    private val getAllDiaryDaoUseCase: GetAllDiaryDaoUseCase
 ) : BaseViewModel() {
 
     private val _diaries = MutableStateFlow<List<Diary>>(emptyList())
@@ -52,7 +56,7 @@ class GalleryViewModel @Inject constructor(
 
     private fun updateDiariesState() {
         coroutineLoading {
-            repository.getDiaries().let {
+            fetchDiariesUseCase().let {
                 if (it != null) _diaries.value = it
             }
         }
@@ -60,7 +64,7 @@ class GalleryViewModel @Inject constructor(
 
     private fun getDiariesFromDB() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getAllDao().let { diaryList ->
+            getAllDiaryDaoUseCase().let { diaryList ->
                 if (diaryList.isNotEmpty()) _diaries.value = diaryList
             }
         }
@@ -69,7 +73,7 @@ class GalleryViewModel @Inject constructor(
     fun writeDiary(context: Context) {
         if (_editingDiary.value.checkDiary() != null) return
         coroutineLoading {
-            repository.writeDiary(_editingDiary.value, context).let { isSuccessful ->
+            writeDiaryUseCase(_editingDiary.value, context).let { isSuccessful ->
                 if (isSuccessful) {
                     val alert = Alert(title = R.string.gallery_alert_write_written,
                         message = R.string.empty_string,
@@ -123,7 +127,7 @@ class GalleryViewModel @Inject constructor(
 
     private fun updateDiary(context: Context) {
         coroutineLoading {
-            repository.updateDiary(_editingDiary.value, context).let { isSuccessful ->
+            updateDiaryUseCase(_editingDiary.value, context).let { isSuccessful ->
                 if (isSuccessful) {
                     initializeViewState()
                 } else {
@@ -147,7 +151,7 @@ class GalleryViewModel @Inject constructor(
 
     private fun deleteDiary() {
         coroutineLoading {
-            repository.deleteDiary(_readingDiary.value).let { isSuccessful ->
+            deleteDiaryUseCase(_readingDiary.value.id.toString()).let { isSuccessful ->
                 if (isSuccessful) {
                     initializeViewState()
                 } else {
@@ -176,9 +180,9 @@ class GalleryViewModel @Inject constructor(
 
     private fun shareTransDiary() {
         coroutineLoading {
-            repository.shareDiary(_readingDiary.value.id.toString()).let { isSuccessful ->
+            shareDiaryUseCase(_readingDiary.value.id.toString()).let { isSuccessful ->
                 if (isSuccessful) {
-                    repository.getDiaries().let {
+                    fetchDiariesUseCase().let {
                         if (it != null) _diaries.value = it
                     }
                     _diaries.value.find { it.id == _readingDiary.value.id }?.let {
@@ -201,14 +205,6 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun openImageDetail(image: Bitmap) {
-        _openingImage.value = image
-    }
-
-    fun closeImage() {
-        _openingImage.value = null
-    }
-
     fun initializeViewState() {
         _viewState.value = GalleryScreenState.NULL
         _dateOrLocation.value = DateAndLocation.NULL
@@ -217,6 +213,15 @@ class GalleryViewModel @Inject constructor(
         _editingDiary.value = Diary()
         updateDiariesState()
     }
+
+    fun openImageDetail(image: Bitmap) {
+        _openingImage.value = image
+    }
+
+    fun closeImage() {
+        _openingImage.value = null
+    }
+
 
     fun showWriteScreen() {
         _viewState.value = GalleryScreenState.WRITE

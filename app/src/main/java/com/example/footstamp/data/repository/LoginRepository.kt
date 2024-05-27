@@ -1,15 +1,11 @@
 package com.example.footstamp.data.repository
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import com.example.footstamp.data.dao.TokenDao
 import com.example.footstamp.data.data_source.AuthService
-import com.example.footstamp.data.dto.response.auth.AuthToken
 import com.example.footstamp.data.model.LoginToken
 import com.example.footstamp.data.model.Provider
 import com.example.footstamp.data.util.TokenManager
 import com.example.footstamp.ui.base.BaseRepository
-import retrofit2.Response
 import javax.inject.Inject
 
 class LoginRepository @Inject constructor(
@@ -18,7 +14,7 @@ class LoginRepository @Inject constructor(
     private val tokenDao: TokenDao
 ) : BaseRepository() {
 
-    suspend fun accessTokenLogin(
+    suspend fun fetchAccessToken(
         provider: Provider, token: String
     ): String? {
         authService.authLoginToken(provider.provider, token).let { response ->

@@ -3,9 +3,10 @@ package com.example.footstamp.ui.view.map
 import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
 import com.example.footstamp.data.model.Diary
-import com.example.footstamp.data.repository.DiaryRepository
 import com.example.footstamp.data.util.SeoulLocation
 import com.example.footstamp.ui.base.BaseViewModel
+import com.example.footstamp.ui.view.gallery.FetchDiariesUseCase
+import com.example.footstamp.ui.view.gallery.GetAllDiaryDaoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val repository: DiaryRepository
+    private val fetchDiariesUseCase: FetchDiariesUseCase,
+    private val getAllDiaryDaoUseCase: GetAllDiaryDaoUseCase,
 ) : BaseViewModel() {
 
     private val _screenMapState = MutableStateFlow<SeoulLocation?>(null)
@@ -37,7 +39,7 @@ class MapViewModel @Inject constructor(
 
     private fun getDiaries() {
         coroutineLoading {
-            repository.getDiaries().let {
+            fetchDiariesUseCase().let {
                 if (it != null) _diaries.value = it
             }
         }
@@ -45,7 +47,7 @@ class MapViewModel @Inject constructor(
 
     private fun getDiariesFromDB() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getAllDao().let { diaryList ->
+            getAllDiaryDaoUseCase().let { diaryList ->
                 if (diaryList.isNotEmpty()) _diaries.value = diaryList
             }
         }

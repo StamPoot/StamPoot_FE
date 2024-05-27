@@ -54,6 +54,20 @@ class BoardViewModel @Inject constructor(
         }
     }
 
+    private fun getDiaryDetail() {
+        coroutineLoading {
+            fetchDiaryDetailUseCase(_readingDiary.value!!.id.toString()).let { triple ->
+                val diary = triple.first
+                val writer = triple.second
+                val comments = triple.third
+
+                _readingDiary.value = diary
+                _writerState.value = writer
+                _commentList.value = comments
+            }
+        }
+    }
+
     fun changeBoardState() {
         coroutineLoading {
             _boardState.value = when (_boardState.value) {
@@ -74,20 +88,6 @@ class BoardViewModel @Inject constructor(
         coroutineLoading {
             likeUseCase(id = _readingDiary.value!!.id.toString())?.let { likeCount ->
                 getDiaryDetail()
-            }
-        }
-    }
-
-    private fun getDiaryDetail() {
-        coroutineLoading {
-            fetchDiaryDetailUseCase(_readingDiary.value!!.id.toString()).let { triple ->
-                val diary = triple.first
-                val writer = triple.second
-                val comments = triple.third
-
-                _readingDiary.value = diary
-                _writerState.value = writer
-                _commentList.value = comments
             }
         }
     }

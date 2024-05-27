@@ -8,11 +8,6 @@ import com.example.footstamp.data.model.Profile
 import com.example.footstamp.data.util.Formatter
 import com.example.footstamp.data.util.TokenManager
 import com.example.footstamp.ui.base.BaseRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.flowOn
-import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 class ProfileRepository @Inject constructor(
@@ -21,7 +16,7 @@ class ProfileRepository @Inject constructor(
     private val userService: UserService
 ) : BaseRepository() {
 
-    suspend fun getProfile(isProfileExist: Boolean): Profile? {
+    suspend fun fetchProfile(isProfileExist: Boolean): Profile? {
         userService.profileGet(tokenManager.accessToken!!).let { response ->
             if (response.isSuccessful) {
                 val responseBody = response.body()!!
@@ -65,7 +60,7 @@ class ProfileRepository @Inject constructor(
         return false
     }
 
-    suspend fun getNotification(): List<Notification>? {
+    suspend fun fetchNotification(): List<Notification>? {
         userService.profileNotification(tokenManager.accessToken!!).let { listResponse ->
             if (listResponse.isSuccessful) {
                 val response = listResponse.body()!!
@@ -97,7 +92,7 @@ class ProfileRepository @Inject constructor(
     }
 
     suspend fun deleteUser(): Boolean {
-        userService.profileDelete(tokenManager.accessToken!!).let {response->
+        userService.profileDelete(tokenManager.accessToken!!).let { response ->
             if (response.isSuccessful) return true
         }
         return false

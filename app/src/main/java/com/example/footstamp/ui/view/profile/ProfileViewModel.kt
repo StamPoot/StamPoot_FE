@@ -7,10 +7,9 @@ import com.example.footstamp.data.model.Alert
 import com.example.footstamp.data.model.ButtonCount
 import com.example.footstamp.data.model.Notification
 import com.example.footstamp.data.model.Profile
-import com.example.footstamp.data.repository.LoginRepository
-import com.example.footstamp.data.repository.ProfileRepository
 import com.example.footstamp.ui.activity.LoginActivity
 import com.example.footstamp.ui.base.BaseViewModel
+import com.example.footstamp.ui.view.login.DeleteTokenDaoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +17,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val profileRepository: ProfileRepository, private val loginRepository: LoginRepository
+    private val fetchProfileUseCase: FetchProfileUseCase,
+    private val updateProfileUseCase: UpdateProfileUseCase,
+    private val fetchNotificationUseCase: FetchNotificationUseCase,
+    private val logOutProfileUseCase: LogOutProfileUseCase,
+    private val deleteUserUseCase: DeleteUserUseCase,
+    private val getProfileDaoUseCase: GetProfileDaoUseCase,
+    private val deleteTokenDaoUseCase: DeleteTokenDaoUseCase
 ) : BaseViewModel() {
 
     private val _profileState = MutableStateFlow(Profile())
@@ -44,7 +49,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getProfile() {
         coroutineLoading {
-            profileRepository.getProfile(_isProfileExist.value).let { profile ->
+            fetchProfileUseCase(_isProfileExist.value).let { profile ->
                 if (profile != null) {
                     _profileState.value = profile
                     _isProfileExist.value = true
@@ -57,7 +62,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getProfileFromDB() {
         coroutineLoading {
-            profileRepository.getProfileDao().let { profile ->
+            getProfileDaoUseCase().let { profile ->
                 if (profile != null) {
                     _profileState.value = profile
                     _isProfileExist.value = true
@@ -80,7 +85,7 @@ class ProfileViewModel @Inject constructor(
         if (_editProfile.value!!.checkProfile() != null) return false
 
         coroutineLoading {
-            profileRepository.updateProfile(_editProfile.value!!, context, _isProfileExist.value)
+            updateProfileUseCase(_editProfile.value!!, context, _isProfileExist.value)
                 .let { isSuccessful ->
                     if (isSuccessful) {
                         getProfile()
@@ -94,7 +99,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getNotificationList() {
         coroutineLoading {
-            profileRepository.getNotification().let {
+            fetchNotificationUseCase().let {
                 if (it != null) {
                     _notificationList.value = it
                 }
@@ -118,8 +123,8 @@ class ProfileViewModel @Inject constructor(
 
     private fun logOut(context: Context) {
         coroutineLoading {
-            profileRepository.logOut()
-            loginRepository.deleteTokenDao()
+            logOutProfileUseCase()
+            deleteTokenDaoUseCase()
             val goHomeActivity = Intent(context, LoginActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
@@ -149,8 +154,8 @@ class ProfileViewModel @Inject constructor(
 
     private fun deleteProfile(context: Context) {
         coroutineLoading {
-            loginRepository.deleteTokenDao()
-            profileRepository.deleteUser().let { isSuccessful ->
+            deleteTokenDaoUseCase()
+            deleteUserUseCase().let { isSuccessful ->
                 if (isSuccessful) {
                     val goHomeActivity = Intent(context, LoginActivity::class.java).apply {
                         addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
