@@ -8,6 +8,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/sangillee/androidKeyStore")
+            storePassword = "kd01933892@@"
+            keyAlias = "20240528_FootStamp"
+            keyPassword = "kd01933892@@"
+        }
+    }
     namespace = "com.example.footstamp"
     compileSdk = 34
 
@@ -54,6 +62,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        signingConfig = signingConfigs.getByName("release")
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += mapOf(
