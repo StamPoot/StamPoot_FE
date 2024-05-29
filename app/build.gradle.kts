@@ -10,21 +10,21 @@ plugins {
 android {
     signingConfigs {
         create("release") {
-            storeFile = file("/Users/sangillee/androidKeyStore")
-            storePassword = "kd01933892@@"
-            keyAlias = "20240528_FootStamp"
-            keyPassword = "kd01933892@@"
+            storeFile = file(project.property("KEYSTORE_FILE")!!)
+            storePassword = project.property("KEYSTORE_PASSWORD").toString()
+            keyAlias = project.property("KEY_ALIAS").toString()
+            keyPassword = project.property("KEY_PASSWORD").toString()
         }
     }
-    namespace = "com.example.footstamp"
+    namespace = "project.android.footstamp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.footstamp"
+        applicationId = "project.android.footstamp"
         minSdk = 31
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "2.0"
 
         buildConfigField(
             "String",
@@ -51,7 +51,11 @@ android {
             "GOOGLE_CLIENT_ID",
             "\"59599924227-masr58k95rljkkfa6oglphbiufnadatc.apps.googleusercontent.com\""
         )
-        buildConfigField("String", "GOOGLE_CLIENT_SECRET", "\"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\"")
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_SECRET",
+            "\"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\""
+        )
         buildConfigField(
             "String",
             "KAKAO_NATIVE_APP_KEY",
