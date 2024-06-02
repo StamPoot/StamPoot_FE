@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">발도장</string>
-    <string name="web_client_id">59599924227-hf77pr69cndh9j880pml9kgsn8d24fhk.apps.googleusercontent.com</string>
-    <string name="web_client_id_debug">59599924227-masr58k95rljkkfa6oglphbiufnadatc.apps.googleusercontent.com</string>
 
     <string name="screen_map">지도</string>
     <string name="screen_gallery">앨범</string>
