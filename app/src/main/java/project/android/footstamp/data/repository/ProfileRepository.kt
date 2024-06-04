@@ -1,6 +1,8 @@
 package project.android.footstamp.data.repository
 
 import android.content.Context
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import project.android.footstamp.data.dao.ProfileDao
 import project.android.footstamp.data.data_source.UserService
 import project.android.footstamp.data.model.Notification
@@ -15,9 +17,12 @@ class ProfileRepository @Inject constructor(
     private val profileDao: ProfileDao,
     private val userService: UserService
 ) : BaseRepository() {
+    private val accessToken = runBlocking {
+        tokenManager.accessToken.first()!!
+    }
 
     suspend fun fetchProfile(isProfileExist: Boolean): Profile? {
-        userService.profileGet(tokenManager.accessToken!!).let { response ->
+        userService.profileGet(accessToken).let { response ->
             if (response.isSuccessful) {
                 val responseBody = response.body()!!
                 val responseImage = Formatter.fetchImageBitmap(responseBody.profileImg)
@@ -46,7 +51,7 @@ class ProfileRepository @Inject constructor(
         val imageBitmap = profile.image?.let { Formatter.convertStringToBitmap(it) }
 
         userService.profileEdit(
-            tokenManager.accessToken!!,
+            accessToken,
             Formatter.createPartFromString(profile.nickname),
             imageBitmap?.let { Formatter.convertBitmapToFile("picture", it, context) },
             Formatter.createPartFromString(profile.aboutMe),
@@ -61,7 +66,7 @@ class ProfileRepository @Inject constructor(
     }
 
     suspend fun fetchNotification(): List<Notification>? {
-        userService.profileNotification(tokenManager.accessToken!!).let { listResponse ->
+        userService.profileNotification(accessToken).let { listResponse ->
             if (listResponse.isSuccessful) {
                 val response = listResponse.body()!!
                 val notificationList = response.map { notificationDto ->
@@ -87,12 +92,12 @@ class ProfileRepository @Inject constructor(
         return null
     }
 
-    fun logOut() {
-        tokenManager.accessToken = null
+    suspend fun logOut() {
+        tokenManager.clearAccessToken()
     }
 
     suspend fun deleteUser(): Boolean {
-        userService.profileDelete(tokenManager.accessToken!!).let { response ->
+        userService.profileDelete(accessToken).let { response ->
             if (response.isSuccessful) return true
         }
         return false

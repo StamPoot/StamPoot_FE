@@ -2,6 +2,8 @@ package project.android.footstamp.data.repository
 
 import android.content.Context
 import android.graphics.Bitmap
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import project.android.footstamp.data.dao.DiaryDao
 import project.android.footstamp.data.data_source.DiaryService
 import project.android.footstamp.data.dto.response.diary.DiaryDTO
@@ -18,9 +20,12 @@ class DiaryRepository @Inject constructor(
     private val diaryDao: DiaryDao,
     private val diaryService: DiaryService
 ) : BaseRepository() {
+    private val accessToken = runBlocking { 
+        tokenManager.accessToken.first()!!
+    }
 
     suspend fun fetchDiaries(): List<Diary>? {
-        diaryService.diaryList(tokenManager.accessToken!!).let { response ->
+        diaryService.diaryList(accessToken).let { response ->
             if (response.isSuccessful) {
                 val responseBody = response.body()!!
                 val responseDiaries = mutableListOf<Diary>()
@@ -51,7 +56,7 @@ class DiaryRepository @Inject constructor(
 
     suspend fun writeDiary(diary: Diary, context: Context): Boolean {
         diaryService.diaryWrite(
-            token = tokenManager.accessToken!!,
+            token = accessToken,
             title = Formatter.createPartFromString(diary.title),
             content = Formatter.createPartFromString(diary.message),
             date = Formatter.createPartFromString(Formatter.localTimeToDiaryString(diary.date)),
@@ -72,7 +77,7 @@ class DiaryRepository @Inject constructor(
     }
 
     suspend fun readDiary(diaryId: String): Diary? {
-        diaryService.diaryDetail(tokenManager.accessToken!!, diaryId).let {
+        diaryService.diaryDetail(accessToken, diaryId).let {
             if (it.isSuccessful) {
                 val response = it.body()!!
                 return Diary(
@@ -87,7 +92,7 @@ class DiaryRepository @Inject constructor(
     }
 
     suspend fun deleteDiary(diaryId: String): Boolean {
-        diaryService.diaryDelete(diaryId, tokenManager.accessToken!!).let { response ->
+        diaryService.diaryDelete(diaryId, accessToken).let { response ->
             if (response.isSuccessful) {
                 deleteDiaryDao(diaryId.toLong())
                 return true
@@ -99,7 +104,7 @@ class DiaryRepository @Inject constructor(
     // 일기 수정 API 요청
     suspend fun updateDiary(diary: Diary, context: Context): Boolean {
         diaryService.diaryEdit(
-            token = tokenManager.accessToken!!,
+            token = accessToken,
             title = Formatter.createPartFromString(diary.title),
             content = Formatter.createPartFromString(diary.message),
             date = Formatter.createPartFromString(Formatter.localTimeToDiaryString(diary.date)),
@@ -122,7 +127,7 @@ class DiaryRepository @Inject constructor(
     // 일기 공유 상태 수정
     suspend fun shareDiary(diaryId: String): Boolean {
         diaryService.diaryTransPublic(
-            token = tokenManager.accessToken!!,
+            token = accessToken,
             id = diaryId
         ).let {
             if (it.isSuccessful) {

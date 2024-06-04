@@ -1,6 +1,8 @@
 package project.android.footstamp.data.repository
 
 import android.graphics.Bitmap
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import project.android.footstamp.data.data_source.BoardService
 import project.android.footstamp.data.data_source.DiaryService
 import project.android.footstamp.data.data_source.ReplyService
@@ -20,6 +22,9 @@ class BoardRepository @Inject constructor(
     private val replyService: ReplyService,
     private val diaryService: DiaryService
 ) : BaseRepository() {
+    private val accessToken = runBlocking {
+        tokenManager.accessToken.first()!!
+    }
 
     suspend fun fetchBoardDiaryList(sortType: BoardSortType): List<Diary>? {
         boardService.boardFeeds(sortType.sortCode).let { response ->
@@ -39,7 +44,7 @@ class BoardRepository @Inject constructor(
     }
 
     suspend fun fetchDiaryDetail(id: String): Triple<Diary, Profile, List<Comment>> {
-        diaryService.diaryDetail(tokenManager.accessToken!!, id).let { response ->
+        diaryService.diaryDetail(accessToken, id).let { response ->
             val responseBody = response.body()!!
 
             val diary = Diary(
@@ -80,7 +85,7 @@ class BoardRepository @Inject constructor(
 
     suspend fun fetchAddReply(id: String, content: String): Boolean {
         replyService.replyWrite(
-            id, tokenManager.accessToken!!, CreateReplyReqDTO(content)
+            id, accessToken, CreateReplyReqDTO(content)
         ).let { response ->
             if (response.isSuccessful) return true
         }
@@ -88,7 +93,7 @@ class BoardRepository @Inject constructor(
     }
 
     suspend fun likeDiary(id: String): Int? {
-        boardService.diaryLikes(tokenManager.accessToken!!, id).let { response ->
+        boardService.diaryLikes(accessToken, id).let { response ->
             return if (response.isSuccessful) {
                 val responseBody = response.body()!!
                 responseBody.substring(8).toInt()
@@ -97,7 +102,7 @@ class BoardRepository @Inject constructor(
     }
 
     suspend fun deleteReply(id: String): Boolean {
-        replyService.replyDelete(id, tokenManager.accessToken!!).let { response ->
+        replyService.replyDelete(id, accessToken).let { response ->
             return response.isSuccessful
         }
     }

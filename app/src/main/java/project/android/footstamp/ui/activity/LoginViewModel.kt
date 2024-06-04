@@ -40,7 +40,7 @@ class LoginViewModel @Inject constructor(
     private fun getTokenFromDB() {
         coroutineLoading {
             getTokenDaoUseCase().let { token ->
-                if (token != null) _loginToken.value = token.token
+                if (token != null) _loginToken.value = token
             }
         }
     }

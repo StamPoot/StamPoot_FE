@@ -24,7 +24,7 @@ class SetTokenDaoUseCase @Inject constructor(
 class GetTokenDaoUseCase @Inject constructor(
     private val loginRepository: LoginRepository
 ) {
-    suspend operator fun invoke(): LoginToken? {
+    suspend operator fun invoke(): String? {
         return loginRepository.getTokenDao()
     }
 }
