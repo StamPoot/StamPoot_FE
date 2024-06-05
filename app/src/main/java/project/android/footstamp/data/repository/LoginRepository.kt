@@ -1,5 +1,7 @@
 package project.android.footstamp.data.repository
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import project.android.footstamp.data.data_source.AuthService
@@ -13,9 +15,7 @@ class LoginRepository @Inject constructor(
     private val tokenManager: TokenManager,
     private val authService: AuthService
 ) : BaseRepository() {
-    private val accessToken = runBlocking {
-        tokenManager.accessToken.first()
-    }
+    private val accessToken = tokenManager.accessToken
 
     suspend fun fetchAccessToken(
         provider: Provider, token: String
@@ -34,7 +34,7 @@ class LoginRepository @Inject constructor(
         tokenManager.updateAccessToken(token.token)
 
     suspend fun getTokenDao(): String? =
-        accessToken
+        if (accessToken.first() == null) null else accessToken.first()
 
     suspend fun deleteTokenDao() =
         tokenManager.clearAccessToken()

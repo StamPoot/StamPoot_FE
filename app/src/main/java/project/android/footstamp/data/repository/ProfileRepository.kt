@@ -17,12 +17,10 @@ class ProfileRepository @Inject constructor(
     private val profileDao: ProfileDao,
     private val userService: UserService
 ) : BaseRepository() {
-    private val accessToken = runBlocking {
-        tokenManager.accessToken.first()!!
-    }
+    private val accessToken = tokenManager.accessToken
 
     suspend fun fetchProfile(isProfileExist: Boolean): Profile? {
-        userService.profileGet(accessToken).let { response ->
+        userService.profileGet(accessToken.first()!!).let { response ->
             if (response.isSuccessful) {
                 val responseBody = response.body()!!
                 val responseImage = Formatter.fetchImageBitmap(responseBody.profileImg)
@@ -51,7 +49,7 @@ class ProfileRepository @Inject constructor(
         val imageBitmap = profile.image?.let { Formatter.convertStringToBitmap(it) }
 
         userService.profileEdit(
-            accessToken,
+            accessToken.first()!!,
             Formatter.createPartFromString(profile.nickname),
             imageBitmap?.let { Formatter.convertBitmapToFile("picture", it, context) },
             Formatter.createPartFromString(profile.aboutMe),
@@ -66,7 +64,7 @@ class ProfileRepository @Inject constructor(
     }
 
     suspend fun fetchNotification(): List<Notification>? {
-        userService.profileNotification(accessToken).let { listResponse ->
+        userService.profileNotification(accessToken.first()!!).let { listResponse ->
             if (listResponse.isSuccessful) {
                 val response = listResponse.body()!!
                 val notificationList = response.map { notificationDto ->
@@ -97,7 +95,7 @@ class ProfileRepository @Inject constructor(
     }
 
     suspend fun deleteUser(): Boolean {
-        userService.profileDelete(accessToken).let { response ->
+        userService.profileDelete(accessToken.first()!!).let { response ->
             if (response.isSuccessful) return true
         }
         return false

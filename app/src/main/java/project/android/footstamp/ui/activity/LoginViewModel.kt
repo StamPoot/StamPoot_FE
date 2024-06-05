@@ -1,5 +1,8 @@
 package project.android.footstamp.ui.activity
 
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import project.android.footstamp.data.model.LoginToken
 import project.android.footstamp.data.model.Provider
 import project.android.footstamp.data.util.Formatter
@@ -10,9 +13,6 @@ import project.android.footstamp.ui.view.login.FetchAccessTokenUseCase
 import project.android.footstamp.ui.view.login.GetTokenDaoUseCase
 import project.android.footstamp.ui.view.login.SetTokenDaoUseCase
 import project.android.footstamp.ui.view.profile.DeleteProfileDaoUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -39,8 +39,8 @@ class LoginViewModel @Inject constructor(
 
     private fun getTokenFromDB() {
         coroutineLoading {
-            getTokenDaoUseCase().let { token ->
-                if (token != null) _loginToken.value = token
+            getTokenDaoUseCase()?.let { token ->
+                _loginToken.value = token
             }
         }
     }
@@ -49,7 +49,6 @@ class LoginViewModel @Inject constructor(
         coroutineLoading {
             deleteAllDaoUseCase()
             deleteProfileDaoUseCase()
-            deleteTokenDaoUseCase()
         }
     }
 
@@ -59,18 +58,17 @@ class LoginViewModel @Inject constructor(
 
     fun googleAccessTokenLogin() {
         coroutineLoading {
-            fetchAccessTokenUseCase(Provider.GOOGLE, _googleIdToken.value!!)
-                .let { authToken ->
-                    if (authToken != null) {
-                        val loginToken = LoginToken(
-                            provider = Provider.GOOGLE,
-                            date = Formatter.localTimeToDiaryString(LocalDateTime.now()),
-                        ).apply { insertToken(authToken) }
+            fetchAccessTokenUseCase(Provider.GOOGLE, _googleIdToken.value!!).let { authToken ->
+                if (authToken != null) {
+                    val loginToken = LoginToken(
+                        provider = Provider.GOOGLE,
+                        date = Formatter.localTimeToDiaryString(LocalDateTime.now()),
+                    ).apply { insertToken(authToken) }
 
-                        setTokenDaoUseCase(loginToken)
-                        _loginToken.value = authToken
-                    }
+                    setTokenDaoUseCase(loginToken)
+                    _loginToken.value = authToken
                 }
+            }
         }
     }
 

@@ -22,9 +22,7 @@ class BoardRepository @Inject constructor(
     private val replyService: ReplyService,
     private val diaryService: DiaryService
 ) : BaseRepository() {
-    private val accessToken = runBlocking {
-        tokenManager.accessToken.first()!!
-    }
+    private val accessToken = tokenManager.accessToken
 
     suspend fun fetchBoardDiaryList(sortType: BoardSortType): List<Diary>? {
         boardService.boardFeeds(sortType.sortCode).let { response ->
@@ -44,7 +42,7 @@ class BoardRepository @Inject constructor(
     }
 
     suspend fun fetchDiaryDetail(id: String): Triple<Diary, Profile, List<Comment>> {
-        diaryService.diaryDetail(accessToken, id).let { response ->
+        diaryService.diaryDetail(accessToken.first()!!, id).let { response ->
             val responseBody = response.body()!!
 
             val diary = Diary(
@@ -85,7 +83,7 @@ class BoardRepository @Inject constructor(
 
     suspend fun fetchAddReply(id: String, content: String): Boolean {
         replyService.replyWrite(
-            id, accessToken, CreateReplyReqDTO(content)
+            id, accessToken.first()!!, CreateReplyReqDTO(content)
         ).let { response ->
             if (response.isSuccessful) return true
         }
@@ -93,7 +91,7 @@ class BoardRepository @Inject constructor(
     }
 
     suspend fun likeDiary(id: String): Int? {
-        boardService.diaryLikes(accessToken, id).let { response ->
+        boardService.diaryLikes(accessToken.first()!!, id).let { response ->
             return if (response.isSuccessful) {
                 val responseBody = response.body()!!
                 responseBody.substring(8).toInt()
@@ -102,7 +100,7 @@ class BoardRepository @Inject constructor(
     }
 
     suspend fun deleteReply(id: String): Boolean {
-        replyService.replyDelete(id, accessToken).let { response ->
+        replyService.replyDelete(id, accessToken.first()!!).let { response ->
             return response.isSuccessful
         }
     }
