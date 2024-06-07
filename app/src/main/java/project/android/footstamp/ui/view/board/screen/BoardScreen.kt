@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Report
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -63,19 +65,24 @@ fun BoardScreen(
         val readingDiary by boardViewModel.readingDiary.collectAsState()
 
         Column(modifier = Modifier.fillMaxSize()) {
-            TopBar(text = stringResource(R.string.screen_board),
+            TopBar(
+                text = stringResource(R.string.screen_board),
                 backgroundColor = WhiteColor,
                 icon = when (boardState) {
                     BoardSortType.RECENT -> Icons.Default.AccessTime
                     BoardSortType.LIKE -> Icons.Default.Star
                 },
-                onClickPressed = { boardViewModel.changeBoardState() })
+                onClickPressed = { boardViewModel.changeBoardState() },
+            )
             BoardGridLayout(
                 diaries = diaries,
                 screenWidth = screenWidth,
                 onClick = { boardViewModel.showReadScreen(it) })
-            BoardReadScreen(readingDiary = readingDiary,
-                onChangeState = { boardViewModel.hideReadScreen() })
+            BoardReadScreen(
+                readingDiary = readingDiary,
+                onChangeState = { boardViewModel.hideReadScreen() },
+                onClickIcon = { boardViewModel.showReportDiaryDialog() },
+            )
         }
     }
     isLoading.let { if (it) LoadingScreen() }
@@ -148,11 +155,12 @@ fun BoardGridItem(diary: Diary, screenWidth: Dp, onClick: (Diary) -> Unit) {
 }
 
 @Composable
-fun BoardReadScreen(readingDiary: Diary?, onChangeState: () -> Unit) {
+fun BoardReadScreen(readingDiary: Diary?, onChangeState: () -> Unit, onClickIcon: () -> Unit) {
     if (readingDiary != null) {
         FullDialog(title = GalleryViewModel.GalleryScreenState.READ.text,
             screen = { BoardDetailScreen() },
+            rightIcon = Icons.Default.Error,
             onBackIconPressed = onChangeState,
-            onClickPressed = {})
+            onClickPressed = { onClickIcon() })
     }
 }

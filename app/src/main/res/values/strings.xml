@@ -20,6 +20,8 @@
     <string name="board_comment_input">댓글을 입력해주세요</string>
     <string name="board_alert_commented">댓글이 작성되었습니다</string>
     <string name="board_alert_comment_delete">댓글을 삭제하시겠습니까?</string>
+    <string name="board_alert_comment_report">일기를 신고하시겠습니까?</string>
+    <string name="board_alert_comment_report_message">신고 사유</string>
     <string name="board_alert_comment_delete_message">삭제한 댓글은 되돌릴 수 없습니다</string>
     <string name="board_alert_comment_deleted">댓글이 삭제되었습니다</string>
 

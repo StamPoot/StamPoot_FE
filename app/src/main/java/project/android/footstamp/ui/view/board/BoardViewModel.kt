@@ -20,13 +20,15 @@ class BoardViewModel @Inject constructor(
     private val fetchDiaryDetailUseCase: FetchDiaryDetailUseCase,
     private val fetchAddReplyUseCase: FetchAddReplyUseCase,
     private val likeUseCase: LikeUseCase,
+    private val reportDiaryUseCase: ReportDiaryUseCase,
+    private val reportReplyUseCase: ReportReplyUseCase,
     private val deleteReplyUseCase: DeleteReplyUseCase
 ) : BaseViewModel() {
 
     private val _diaries = MutableStateFlow<List<Diary>>(emptyList())
     val diaries = _diaries.asStateFlow()
 
-    private val _boardState = MutableStateFlow<BoardSortType>(BoardSortType.RECENT)
+    private val _boardState = MutableStateFlow(BoardSortType.RECENT)
     val boardState = _boardState.asStateFlow()
 
     private val _readingDiary = MutableStateFlow<Diary?>(null)
@@ -40,6 +42,9 @@ class BoardViewModel @Inject constructor(
 
     private val _openingImage = MutableStateFlow<Bitmap?>(null)
     val openingImage = _openingImage.asStateFlow()
+
+    private val _reportState = MutableStateFlow<ReportType?>(null)
+    val reportState = _reportState.asStateFlow()
 
     init {
         updateBoardState()
@@ -63,6 +68,7 @@ class BoardViewModel @Inject constructor(
                 _readingDiary.value = diary
                 _writerState.value = writer
                 _commentList.value = comments
+                _reportState.value = null
             }
         }
     }
@@ -88,6 +94,24 @@ class BoardViewModel @Inject constructor(
             likeUseCase(id = _readingDiary.value!!.id.toString())?.let { likeCount ->
                 getDiaryDetail()
             }
+        }
+    }
+
+    fun reportDiary(reason: String) {
+        coroutineLoading {
+            reportDiaryUseCase(
+                id = _readingDiary.value!!.id.toString(),
+                reason = reason
+            )
+        }
+    }
+
+    fun reportReply(replyId: String, reason: String) {
+        coroutineLoading {
+            reportReplyUseCase(
+                id = replyId,
+                reason = reason
+            )
         }
     }
 
@@ -162,6 +186,18 @@ class BoardViewModel @Inject constructor(
         updateBoardState()
     }
 
+    fun showReportDiaryDialog() {
+        _reportState.value = ReportType.DIARY
+    }
+
+    fun showReportReplyDialog() {
+        _reportState.value = ReportType.REPLY
+    }
+
+    fun hideReportDialog() {
+        _reportState.value = null
+    }
+
     fun openImageDetail(image: Bitmap) {
         _openingImage.value = image
     }
@@ -169,4 +205,9 @@ class BoardViewModel @Inject constructor(
     fun closeImage() {
         _openingImage.value = null
     }
+}
+
+enum class ReportType {
+    DIARY,
+    REPLY
 }

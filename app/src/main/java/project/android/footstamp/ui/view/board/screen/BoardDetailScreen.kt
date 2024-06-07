@@ -46,6 +46,8 @@ import project.android.footstamp.data.util.Formatter
 import project.android.footstamp.ui.base.BaseScreen
 import project.android.footstamp.ui.components.BodyLargeText
 import project.android.footstamp.ui.components.BodyText
+import project.android.footstamp.ui.components.CommonButton
+import project.android.footstamp.ui.components.HalfDialog
 import project.android.footstamp.ui.components.ImageDialog
 import project.android.footstamp.ui.components.ImagesLayout
 import project.android.footstamp.ui.components.LabelText
@@ -66,6 +68,7 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
     val openingImage by boardViewModel.openingImage.collectAsState()
     val commentList by boardViewModel.commentList.collectAsState()
     val writerState by boardViewModel.writerState.collectAsState()
+    val reportState by boardViewModel.reportState.collectAsState()
 
     BaseScreen { paddingValue, screenWidth, screenHeight ->
         val scrollState = rememberScrollState()
@@ -97,6 +100,12 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
         }
         // 사진 크게보기
         openingImage?.let { ImageDialog(image = it, onClick = { boardViewModel.closeImage() }) }
+        reportState?.let {
+            BoardReportDialog(
+                onDismiss = { boardViewModel.hideReportDialog() },
+                onConfirm = { boardViewModel.reportDiary(it) }
+            )
+        }
     }
 }
 
@@ -298,9 +307,11 @@ fun BoardComment(comment: Comment, screenWidth: Dp, onDeleteComment: (id: Long) 
                     contentDescription = null
                 )
             }
-            Column(modifier = Modifier
-                .padding(horizontal = 5.dp)
-                .weight(0.7f)) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .weight(0.7f)
+            ) {
                 SpaceMaker(height = 5.dp)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     BodyText(
@@ -335,4 +346,39 @@ fun BoardComment(comment: Comment, screenWidth: Dp, onDeleteComment: (id: Long) 
         SpaceMaker(height = 5.dp)
     }
     SpaceMaker(height = 5.dp)
+}
+
+@Composable
+fun BoardReportDialog(onDismiss: () -> Unit, onConfirm: (reason: String) -> Unit) {
+    HalfDialog(onChangeState = { onDismiss() }) {
+        val textInput = remember { mutableStateOf("") }
+        TitleLargeText(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            text = stringResource(id = R.string.board_alert_comment_report),
+            color = MainColor,
+            textAlign = TextAlign.Center
+        )
+        TitleText(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            text = stringResource(id = R.string.board_alert_comment_report_message),
+            color = BackColor,
+            textAlign = TextAlign.Center
+        )
+        TextInput(
+            modifier = Modifier.fillMaxWidth(0.9f),
+            textState = textInput
+        ) {}
+        Row(
+            modifier = Modifier.fillMaxWidth(0.9f),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            CommonButton(onClick = { onConfirm(textInput.value) })
+            SpaceMaker(width = 10.dp)
+            CommonButton(onClick = { onDismiss() })
+        }
+    }
 }

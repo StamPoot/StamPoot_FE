@@ -39,6 +39,22 @@ class LikeUseCase @Inject constructor(
     }
 }
 
+class ReportDiaryUseCase @Inject constructor(
+    private val boardRepository: BoardRepository
+) {
+    suspend operator fun invoke(id: String, reason: String): Boolean {
+        return boardRepository.reportDiary(id, reason)
+    }
+}
+
+class ReportReplyUseCase @Inject constructor(
+    private val boardRepository: BoardRepository
+) {
+    suspend operator fun invoke(id: String, reason: String): Boolean {
+        return boardRepository.reportReply(id, reason)
+    }
+}
+
 class DeleteReplyUseCase @Inject constructor(
     private val boardRepository: BoardRepository
 ) {

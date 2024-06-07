@@ -7,6 +7,7 @@ import project.android.footstamp.data.data_source.BoardService
 import project.android.footstamp.data.data_source.DiaryService
 import project.android.footstamp.data.data_source.ReplyService
 import project.android.footstamp.data.dto.request.reply.CreateReplyReqDTO
+import project.android.footstamp.data.dto.request.reply.ReportReqDTO
 import project.android.footstamp.data.dto.response.diary.DiaryDTO
 import project.android.footstamp.data.model.Comment
 import project.android.footstamp.data.model.Diary
@@ -96,6 +97,22 @@ class BoardRepository @Inject constructor(
                 val responseBody = response.body()!!
                 responseBody.substring(8).toInt()
             } else null
+        }
+    }
+
+    suspend fun reportDiary(id: String, reason: String): Boolean {
+        val reportReqDTO = ReportReqDTO(reason = reason)
+
+        boardService.diaryReport(id, accessToken.first()!!, reportReqDTO).let { response ->
+            return response.isSuccessful
+        }
+    }
+
+    suspend fun reportReply(id: String, reason: String): Boolean {
+        val reportReqDTO = ReportReqDTO(reason = reason)
+
+        boardService.replyReport(id, accessToken.first()!!, reportReqDTO).let { response ->
+            return response.isSuccessful
         }
     }
 
