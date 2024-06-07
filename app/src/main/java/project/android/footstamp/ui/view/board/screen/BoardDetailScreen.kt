@@ -60,6 +60,7 @@ import project.android.footstamp.ui.theme.BlackColor
 import project.android.footstamp.ui.theme.MainColor
 import project.android.footstamp.ui.theme.SubColor
 import project.android.footstamp.ui.theme.TransparentColor
+import project.android.footstamp.ui.theme.WarnColor
 import project.android.footstamp.ui.view.board.BoardViewModel
 
 @Composable
@@ -351,34 +352,48 @@ fun BoardComment(comment: Comment, screenWidth: Dp, onDeleteComment: (id: Long) 
 @Composable
 fun BoardReportDialog(onDismiss: () -> Unit, onConfirm: (reason: String) -> Unit) {
     HalfDialog(onChangeState = { onDismiss() }) {
-        val textInput = remember { mutableStateOf("") }
-        TitleLargeText(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            text = stringResource(id = R.string.board_alert_comment_report),
-            color = MainColor,
-            textAlign = TextAlign.Center
-        )
-        TitleText(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            text = stringResource(id = R.string.board_alert_comment_report_message),
-            color = BackColor,
-            textAlign = TextAlign.Center
-        )
-        TextInput(
+        Column(
             modifier = Modifier.fillMaxWidth(0.9f),
-            textState = textInput
-        ) {}
-        Row(
-            modifier = Modifier.fillMaxWidth(0.9f),
-            horizontalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CommonButton(onClick = { onConfirm(textInput.value) })
-            SpaceMaker(width = 10.dp)
-            CommonButton(onClick = { onDismiss() })
+            val textInput = remember { mutableStateOf("") }
+            TitleLargeText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                text = stringResource(id = R.string.board_alert_comment_report),
+                color = MainColor,
+                textAlign = TextAlign.Center
+            )
+            TitleText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                text = stringResource(id = R.string.board_alert_comment_report_message),
+                color = SubColor,
+                textAlign = TextAlign.Center
+            )
+            TextInput(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .background(BackColor),
+                textState = textInput
+            ) {}
+            SpaceMaker(height = 10.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(0.9f),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                CommonButton(
+                    text = stringResource(id = R.string.confirm),
+                    onClick = { onConfirm(textInput.value) })
+                SpaceMaker(width = 10.dp)
+                CommonButton(
+                    text = stringResource(id = R.string.cancel),
+                    buttonColor = WarnColor,
+                    onClick = { onDismiss() })
+            }
+            SpaceMaker(height = 10.dp)
         }
     }
 }

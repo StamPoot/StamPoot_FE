@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -24,6 +25,7 @@ import androidx.compose.ui.window.DialogProperties
 import project.android.footstamp.R
 import project.android.footstamp.ui.theme.BackColor
 import project.android.footstamp.ui.theme.BlackColor
+import project.android.footstamp.ui.theme.TransparentColor
 import project.android.footstamp.ui.theme.WhiteColor
 
 @Composable
@@ -105,7 +107,14 @@ fun HalfDialog(
             dismissOnClickOutside = true
         )
     ) {
-        Card {
+        Card(
+            colors = CardColors(
+                WhiteColor,
+                TransparentColor,
+                TransparentColor,
+                TransparentColor
+            )
+        ) {
             screen()
         }
     }

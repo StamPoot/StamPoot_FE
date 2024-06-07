@@ -102,7 +102,22 @@ class BoardViewModel @Inject constructor(
             reportDiaryUseCase(
                 id = _readingDiary.value!!.id.toString(),
                 reason = reason
-            )
+            ).let { isSuccessful ->
+                hideReportDialog()
+                if (isSuccessful) {
+                    val alert = Alert(
+                        title = R.string.board_alert_comment_report_done,
+                        message = R.string.empty_string,
+                        buttonCount = ButtonCount.ONE,
+                        onPressYes = {
+                            hideAlert()
+                        },
+                    )
+                    showAlert(alert)
+                } else {
+                    showError()
+                }
+            }
         }
     }
 
