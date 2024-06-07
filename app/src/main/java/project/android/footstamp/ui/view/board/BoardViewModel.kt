@@ -46,6 +46,8 @@ class BoardViewModel @Inject constructor(
     private val _reportState = MutableStateFlow<ReportType?>(null)
     val reportState = _reportState.asStateFlow()
 
+    private var currentCommentId = 0L
+
     init {
         updateBoardState()
     }
@@ -69,6 +71,7 @@ class BoardViewModel @Inject constructor(
                 _writerState.value = writer
                 _commentList.value = comments
                 _reportState.value = null
+                currentCommentId = 0L
             }
         }
     }
@@ -121,12 +124,27 @@ class BoardViewModel @Inject constructor(
         }
     }
 
-    fun reportReply(replyId: String, reason: String) {
+    fun reportReply(reason: String) {
         coroutineLoading {
             reportReplyUseCase(
-                id = replyId,
+                id = currentCommentId.toString(),
                 reason = reason
-            )
+            ).let { isSuccessful ->
+                hideReportDialog()
+                if (isSuccessful) {
+                    val alert = Alert(
+                        title = R.string.board_alert_reply_report_done,
+                        message = R.string.empty_string,
+                        buttonCount = ButtonCount.ONE,
+                        onPressYes = {
+                            hideAlert()
+                        },
+                    )
+                    showAlert(alert)
+                } else {
+                    showError()
+                }
+            }
         }
     }
 
@@ -205,8 +223,9 @@ class BoardViewModel @Inject constructor(
         _reportState.value = ReportType.DIARY
     }
 
-    fun showReportReplyDialog() {
+    fun showReportReplyDialog(id: Long) {
         _reportState.value = ReportType.REPLY
+        currentCommentId = id
     }
 
     fun hideReportDialog() {

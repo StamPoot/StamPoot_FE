@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.PinDrop
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
@@ -62,6 +63,7 @@ import project.android.footstamp.ui.theme.SubColor
 import project.android.footstamp.ui.theme.TransparentColor
 import project.android.footstamp.ui.theme.WarnColor
 import project.android.footstamp.ui.view.board.BoardViewModel
+import project.android.footstamp.ui.view.board.ReportType
 
 @Composable
 fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
@@ -96,15 +98,20 @@ fun BoardDetailScreen(boardViewModel: BoardViewModel = hiltViewModel()) {
                 commentList = commentList,
                 screenWidth = screenWidth,
                 onWriteComment = { comment -> boardViewModel.writeComment(comment) },
-                onDeleteComment = { id -> boardViewModel.deleteCommentAlert(id) }
+                onDeleteComment = { id -> boardViewModel.deleteCommentAlert(id) },
+                onReportComment = { id -> boardViewModel.showReportReplyDialog(id) },
             )
         }
         // 사진 크게보기
         openingImage?.let { ImageDialog(image = it, onClick = { boardViewModel.closeImage() }) }
-        reportState?.let {
+        reportState?.let { reportType ->
             BoardReportDialog(
+                reportType = reportType,
                 onDismiss = { boardViewModel.hideReportDialog() },
-                onConfirm = { boardViewModel.reportDiary(it) }
+                onConfirm = { reason ->
+                    if (reportType == ReportType.DIARY) boardViewModel.reportDiary(reason)
+                    else boardViewModel.reportReply(reason)
+                }
             )
         }
     }
@@ -205,7 +212,8 @@ fun BoardShareLayout(
     screenWidth: Dp,
     onTapLike: () -> Unit,
     onWriteComment: (String) -> Unit,
-    onDeleteComment: (id: Long) -> Unit
+    onDeleteComment: (id: Long) -> Unit,
+    onReportComment: (id: Long) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         BoardCommentLayout(
@@ -213,7 +221,8 @@ fun BoardShareLayout(
             commentList = commentList,
             screenWidth = screenWidth,
             onTapLike = onTapLike,
-            onDeleteComment = onDeleteComment
+            onDeleteComment = onDeleteComment,
+            onReportComment = onReportComment,
         )
         BoardCommentWriteLayout(onWriteComment)
     }
@@ -225,7 +234,8 @@ fun BoardCommentLayout(
     screenWidth: Dp,
     commentList: List<Comment>,
     onTapLike: () -> Unit,
-    onDeleteComment: (id: Long) -> Unit
+    onDeleteComment: (id: Long) -> Unit,
+    onReportComment: (id: Long) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -252,7 +262,8 @@ fun BoardCommentLayout(
                 BoardComment(
                     comment = it,
                     screenWidth = screenWidth,
-                    onDeleteComment = onDeleteComment
+                    onDeleteComment = onDeleteComment,
+                    onReportComment = onReportComment
                 )
             }
         }
@@ -294,7 +305,12 @@ fun BoardCommentWriteLayout(onWriteComment: (String) -> Unit) {
 }
 
 @Composable
-fun BoardComment(comment: Comment, screenWidth: Dp, onDeleteComment: (id: Long) -> Unit) {
+fun BoardComment(
+    comment: Comment,
+    screenWidth: Dp,
+    onDeleteComment: (id: Long) -> Unit,
+    onReportComment: (id: Long) -> Unit
+) {
     SpaceMaker(height = 5.dp)
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -334,12 +350,18 @@ fun BoardComment(comment: Comment, screenWidth: Dp, onDeleteComment: (id: Long) 
                 )
                 SpaceMaker(height = 5.dp)
             }
-            Icon(imageVector = Icons.Default.Close,
+            if (comment.isMine) Icon(imageVector = Icons.Default.Close,
                 contentDescription = null,
                 tint = SubColor,
                 modifier = Modifier
                     .weight(0.1f)
                     .clickable { onDeleteComment(comment.id) })
+            else Icon(imageVector = Icons.Default.Error,
+                contentDescription = null,
+                tint = MainColor,
+                modifier = Modifier
+                    .weight(0.1f)
+                    .clickable { onReportComment(comment.id) })
         }
         LabelText(
             text = comment.date, color = SubColor, modifier = Modifier.padding(horizontal = 5.dp)
@@ -350,18 +372,25 @@ fun BoardComment(comment: Comment, screenWidth: Dp, onDeleteComment: (id: Long) 
 }
 
 @Composable
-fun BoardReportDialog(onDismiss: () -> Unit, onConfirm: (reason: String) -> Unit) {
+fun BoardReportDialog(
+    reportType: ReportType,
+    onConfirm: (reason: String) -> Unit,
+    onDismiss: () -> Unit,
+) {
     HalfDialog(onChangeState = { onDismiss() }) {
         Column(
             modifier = Modifier.fillMaxWidth(0.9f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val diaryReportTitle = stringResource(id = R.string.board_alert_comment_report)
+            val replyReportTitle = stringResource(id = R.string.board_alert_reply_report)
             val textInput = remember { mutableStateOf("") }
+
             TitleLargeText(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
-                text = stringResource(id = R.string.board_alert_comment_report),
+                text = if (reportType == ReportType.DIARY) diaryReportTitle else replyReportTitle,
                 color = MainColor,
                 textAlign = TextAlign.Center
             )
