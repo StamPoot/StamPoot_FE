@@ -15,9 +15,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.Report
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
@@ -26,8 +23,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -65,15 +65,21 @@ fun BoardScreen(
         val readingDiary by boardViewModel.readingDiary.collectAsState()
 
         Column(modifier = Modifier.fillMaxSize()) {
-            TopBar(
-                text = stringResource(R.string.screen_board),
-                backgroundColor = WhiteColor,
-                icon = when (boardState) {
-                    BoardSortType.RECENT -> Icons.Default.AccessTime
-                    BoardSortType.LIKE -> Icons.Default.Star
-                },
-                onClickPressed = { boardViewModel.changeBoardState() },
-            )
+            when (boardState) {
+                BoardSortType.RECENT -> TopBar(
+                    text = stringResource(R.string.screen_board),
+                    backgroundColor = WhiteColor,
+                    icon = Icons.Default.AccessTime,
+                    onClickPressed = { boardViewModel.changeBoardState() },
+                )
+
+                BoardSortType.LIKE -> TopBar(
+                    text = stringResource(R.string.screen_board),
+                    backgroundColor = WhiteColor,
+                    iconDrawable = painterResource(id = R.drawable.icon_heart_full),
+                    onClickPressed = { boardViewModel.changeBoardState() },
+                )
+            }
             BoardGridLayout(
                 diaries = diaries,
                 screenWidth = screenWidth,
@@ -142,7 +148,7 @@ fun BoardGridItem(diary: Diary, screenWidth: Dp, onClick: (Diary) -> Unit) {
                         .weight(0.2f)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Star,
+                        painterResource(R.drawable.icon_heart_full),
                         contentDescription = null,
                         tint = MainColor
                     )
@@ -159,7 +165,7 @@ fun BoardReadScreen(readingDiary: Diary?, onChangeState: () -> Unit, onClickIcon
     if (readingDiary != null) {
         FullDialog(title = GalleryViewModel.GalleryScreenState.READ.text,
             screen = { BoardDetailScreen() },
-            rightIcon = Icons.Default.Error,
+            rightIconDrawable = painterResource(id = R.drawable.icon_warn),
             onBackIconPressed = onChangeState,
             onClickPressed = { onClickIcon() })
     }

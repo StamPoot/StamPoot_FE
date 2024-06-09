@@ -246,7 +246,7 @@ fun BoardCommentLayout(
             TitleLargeText(text = stringResource(R.string.board_comment), color = MainColor)
             SpaceMaker(width = 10.dp)
             Icon(
-                imageVector = Icons.Default.Star,
+                painterResource(R.drawable.icon_heart_full),
                 modifier = Modifier.clickable { onTapLike() },
                 contentDescription = null,
                 tint = MainColor
@@ -356,12 +356,14 @@ fun BoardComment(
                 modifier = Modifier
                     .weight(0.1f)
                     .clickable { onDeleteComment(comment.id) })
-            else Icon(imageVector = Icons.Default.Error,
+            else Icon(
+                painterResource(id = R.drawable.icon_warn),
                 contentDescription = null,
                 tint = MainColor,
                 modifier = Modifier
                     .weight(0.1f)
-                    .clickable { onReportComment(comment.id) })
+                    .clickable { onReportComment(comment.id) },
+            )
         }
         LabelText(
             text = comment.date, color = SubColor, modifier = Modifier.padding(horizontal = 5.dp)

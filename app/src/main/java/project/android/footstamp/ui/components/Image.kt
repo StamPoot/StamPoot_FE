@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -175,7 +176,11 @@ fun PhotoItem(
                 .background(MainColor)
                 .padding(5.dp)
         ) {
-            Icon(imageVector = Icons.Default.Star, contentDescription = null, tint = WhiteColor)
+            Icon(
+                painterResource(R.drawable.icon_heart_full),
+                contentDescription = null,
+                tint = WhiteColor
+            )
         }
         TransparentButton(onClick = { onClick(item) })
     }

@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
@@ -33,6 +34,7 @@ fun FullDialog(
     title: String = "",
     leftIcon: ImageVector = Icons.Default.ArrowBackIosNew,
     rightIcon: ImageVector? = null,
+    rightIconDrawable: Painter? = null,
     onBackIconPressed: () -> Unit,
     onClickPressed: () -> Unit = {},
     screen: @Composable () -> Unit,
@@ -56,6 +58,7 @@ fun FullDialog(
                 leftIcon = leftIcon,
                 backgroundColor = WhiteColor,
                 rightIcon = rightIcon,
+                rightIconDrawable = rightIconDrawable,
                 onBackPressed = onBackIconPressed,
                 onClickPressed = onClickPressed
             )

@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import project.android.footstamp.ui.theme.MainColor
 import project.android.footstamp.ui.theme.SubColor
@@ -27,6 +28,7 @@ fun TopBar(
     text: String,
     backgroundColor: Color = TransparentColor,
     icon: ImageVector? = null,
+    iconDrawable: Painter? = null,
     iconColor: Color = MainColor,
     onClickPressed: () -> Unit = {}
 ) {
@@ -62,6 +64,19 @@ fun TopBar(
                     ) {
                         Icon(icon, null)
                     }
+                } else if (iconDrawable != null) {
+                    Button(
+                        onClick = onClickPressed,
+                        modifier = Modifier.background(backgroundColor),
+                        colors = ButtonColors(
+                            containerColor = TransparentColor,
+                            contentColor = iconColor,
+                            disabledContainerColor = TransparentColor,
+                            disabledContentColor = TransparentColor
+                        )
+                    ) {
+                        Icon(iconDrawable, null)
+                    }
                 }
             }
         },
@@ -75,6 +90,7 @@ fun TopBackBar(
     text: String,
     leftIcon: ImageVector,
     rightIcon: ImageVector? = null,
+    rightIconDrawable: Painter? = null,
     backgroundColor: Color = SubColor,
     iconColor: Color = MainColor,
     onBackPressed: () -> Unit = {},
@@ -124,6 +140,20 @@ fun TopBackBar(
                         )
                     ) {
                         Icon(rightIcon, null)
+                    }
+                } else if (rightIconDrawable != null) {
+                    Button(
+                        onClick = onClickPressed,
+                        modifier = Modifier
+                            .background(backgroundColor),
+                        colors = ButtonColors(
+                            containerColor = TransparentColor,
+                            contentColor = iconColor,
+                            disabledContainerColor = TransparentColor,
+                            disabledContentColor = TransparentColor
+                        )
+                    ) {
+                        Icon(rightIconDrawable, null)
                     }
                 }
             }
