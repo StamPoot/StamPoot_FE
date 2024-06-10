@@ -16,6 +16,9 @@ Jetpack Compose를 통한 새로운 UI 구성, MVVM 패턴을 활용해 유지�
 DB에 직접 읽고쓰는 방식보다는 Retrofit 라이브러리를 통해 RestfulAPI로 서버와 통신할거에요.  
 Hilt 라이브러리를 통해 의존성을 주입하고 클래스의 수명 주기를 관리할거에요.
 
+### 프로젝트 구조
+![footstamp_diagram.png](app%2Fsrc%2Fmain%2Fres%2Fdrawable%2Ffootstamp_diagram.png)
+
 ### 화면별 기능 목록
 
 1. 로그인 Page
@@ -73,6 +76,7 @@ Hilt 라이브러리를 통해 의존성을 주입하고 클래스의 수명 주
     - [x] 랜덤 일기 확인에서는 랜덤으로 공유된 일기를 노출
     - [x] 랭킹 일기에서는 많은 추천을 받은 공유 일기를 노출
     - [x] 일기를 선택하면 해당 일기와 댓글을 노출
+    - [x] 일기와 댓글에 문제가 있을 때 사유와 함께 신고
 
 ## 개발 환경
 
