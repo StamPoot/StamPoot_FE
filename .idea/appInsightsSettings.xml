@@ -8,7 +8,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.da312.dailynews" />
+                  <option name="appId" value="project.android.footstamp" />
                 </ConnectionSetting>
               </option>
               <option name="failureTypes">

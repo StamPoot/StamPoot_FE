@@ -32,6 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import project.android.footstamp.R
 import dagger.hilt.android.AndroidEntryPoint
 import project.android.footstamp.ui.activity.MainActivity.Companion.screens
+import project.android.footstamp.ui.base.BaseActivity
 import project.android.footstamp.ui.components.BodyText
 import project.android.footstamp.ui.theme.FootStampTheme
 import project.android.footstamp.ui.theme.MainColor
@@ -42,7 +43,7 @@ import project.android.footstamp.ui.view.map.screen.MapScreen
 import project.android.footstamp.ui.view.profile.screen.ProfileScreen
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : BaseActivity() {
 
     private val mainViewModel by viewModels<MainViewModel>()
 

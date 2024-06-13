@@ -13,16 +13,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import project.android.footstamp.data.login.GoogleLogin
-import project.android.footstamp.ui.theme.FootStampTheme
-import project.android.footstamp.ui.view.login.screen.LoginScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import project.android.footstamp.R
+import project.android.footstamp.data.login.GoogleLogin
+import project.android.footstamp.data.util.FirebaseAnalytics
+import project.android.footstamp.ui.base.BaseActivity
+import project.android.footstamp.ui.base.LogState
+import project.android.footstamp.ui.theme.FootStampTheme
+import project.android.footstamp.ui.view.login.screen.LoginScreen
 import project.android.footstamp.ui.view.util.AlertScreen
+import kotlin.math.log
 
 @AndroidEntryPoint
-class LoginActivity : ComponentActivity() {
+class LoginActivity : BaseActivity() {
 
     private val loginViewModel by viewModels<LoginViewModel>()
     private lateinit var googleLogin: GoogleLogin
@@ -62,7 +66,15 @@ class LoginActivity : ComponentActivity() {
             googleLogin.handleSignInResult(task).let { token ->
                 if (token == null) {
                     loginViewModel.showError()
+                    sendAnalyticsEvent(
+                        LogState.LOGIN_ERROR,
+                        loginViewModel.loginToken.value.toString()
+                    )
                 } else {
+                    sendAnalyticsEvent(
+                        LogState.SUCCESS,
+                        loginViewModel.loginToken.value.toString()
+                    )
                     loginViewModel.updateGoogleIdToken(token)
                     loginViewModel.googleAccessTokenLogin()
                 }
