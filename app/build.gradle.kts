@@ -25,8 +25,8 @@ android {
         applicationId = "project.android.footstamp"
         minSdk = 31
         targetSdk = 33
-        versionCode = 4
-        versionName = "2.0"
+        versionCode = 5
+        versionName = "2.1"
 
         buildConfigField(
             "String",
