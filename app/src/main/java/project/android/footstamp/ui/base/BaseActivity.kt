@@ -7,6 +7,10 @@ open class BaseActivity : ComponentActivity() {
 
     private lateinit var analytics: FirebaseAnalytics
 
+    fun setAnalytics(analytics: FirebaseAnalytics) {
+        this.analytics = analytics
+    }
+
     fun sendAnalyticsEvent(state: LogState, message: String) {
 
         val params = mapOf(

@@ -36,6 +36,7 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
+        setAnalytics(FirebaseAnalytics(this))
 
         setContent {
             FootStampTheme {

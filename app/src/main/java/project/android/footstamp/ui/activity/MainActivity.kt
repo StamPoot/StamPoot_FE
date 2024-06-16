@@ -31,6 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import project.android.footstamp.R
 import dagger.hilt.android.AndroidEntryPoint
+import project.android.footstamp.data.util.FirebaseAnalytics
 import project.android.footstamp.ui.activity.MainActivity.Companion.screens
 import project.android.footstamp.ui.base.BaseActivity
 import project.android.footstamp.ui.components.BodyText
@@ -51,6 +52,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
+        setAnalytics(FirebaseAnalytics(this))
 
         setContent {
             FootStampTheme(darkTheme = false) {
@@ -72,7 +74,6 @@ class MainActivity : BaseActivity() {
 
 @Composable
 fun MainView(viewModel: MainViewModel) {
-    val isLoading by viewModel.isLoading.collectAsState()
     val navController = rememberNavController()
     val navItems = screens
 
