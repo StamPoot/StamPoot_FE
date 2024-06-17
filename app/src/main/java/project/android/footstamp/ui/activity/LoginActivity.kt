@@ -30,13 +30,14 @@ class LoginActivity : BaseActivity() {
 
     private val loginViewModel by viewModels<LoginViewModel>()
     private lateinit var googleLogin: GoogleLogin
+    private val analytics = FirebaseAnalytics(this)
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
-        setAnalytics(FirebaseAnalytics(this))
+        setAnalytics(analytics)
 
         setContent {
             FootStampTheme {
