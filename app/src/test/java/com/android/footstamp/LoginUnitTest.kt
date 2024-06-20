@@ -8,4 +8,9 @@ class LoginUnitTest {
     fun testLogin() {
 
     }
+
+    @Test
+    fun testAnalytics() {
+
+    }
 }
