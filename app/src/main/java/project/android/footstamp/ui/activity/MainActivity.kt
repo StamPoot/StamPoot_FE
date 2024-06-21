@@ -47,13 +47,12 @@ import project.android.footstamp.ui.view.profile.screen.ProfileScreen
 class MainActivity : BaseActivity() {
 
     private val mainViewModel by viewModels<MainViewModel>()
-    private val analytics = FirebaseAnalytics(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
-        setAnalytics(analytics)
+        setAnalytics(FirebaseAnalytics(this))
 
         setContent {
             FootStampTheme(darkTheme = false) {

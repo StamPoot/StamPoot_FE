@@ -23,6 +23,7 @@ import project.android.footstamp.ui.base.LogState
 import project.android.footstamp.ui.theme.FootStampTheme
 import project.android.footstamp.ui.view.login.screen.LoginScreen
 import project.android.footstamp.ui.view.util.AlertScreen
+import javax.inject.Inject
 import kotlin.math.log
 
 @AndroidEntryPoint
@@ -30,14 +31,13 @@ class LoginActivity : BaseActivity() {
 
     private val loginViewModel by viewModels<LoginViewModel>()
     private lateinit var googleLogin: GoogleLogin
-    private val analytics = FirebaseAnalytics(this)
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
-        setAnalytics(analytics)
+        setAnalytics(FirebaseAnalytics(this))
 
         setContent {
             FootStampTheme {
@@ -85,7 +85,7 @@ class LoginActivity : BaseActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-    private fun googleLoginEvent() {
+    fun googleLoginEvent() {
         googleLogin = GoogleLogin(this)
         val signInIntent = googleLogin.signInIntent
         startActivityForResult(signInIntent, GOOGLE_API_CODE)

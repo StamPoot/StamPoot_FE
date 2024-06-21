@@ -1,7 +1,13 @@
 package project.android.footstamp.data.util
 
+import android.app.Activity
 import android.content.Context
 import androidx.room.Room
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import project.android.footstamp.data.dao.DiaryDao
 import project.android.footstamp.data.dao.ProfileDao
 import project.android.footstamp.data.data_source.AuthService
@@ -11,21 +17,22 @@ import project.android.footstamp.data.data_source.ReplyService
 import project.android.footstamp.data.data_source.UserService
 import project.android.footstamp.data.database.DiaryDatabase
 import project.android.footstamp.data.database.ProfileDatabase
+import project.android.footstamp.data.login.GoogleLogin
 import project.android.footstamp.data.repository.BoardRepository
 import project.android.footstamp.data.repository.DiaryRepository
 import project.android.footstamp.data.repository.LoginRepository
 import project.android.footstamp.data.repository.ProfileRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    fun provideGoogleLogin(activity: Activity): GoogleLogin {
+        return GoogleLogin(activity)
+    }
 
     @Singleton
     @Provides

@@ -3,12 +3,12 @@ package project.android.footstamp.data.login
 import android.app.Activity
 import android.content.ContentValues.TAG
 import android.util.Log
-import project.android.footstamp.BuildConfig
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import project.android.footstamp.BuildConfig
 
 class GoogleLogin(activity: Activity) {
     private val googleSignInOptions =
